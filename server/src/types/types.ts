@@ -1,0 +1,23 @@
+export type UserDTO = {
+  firstName: string;
+  lastName: string;
+  userName: string;
+  email: string;
+  password: string;
+  role: string;
+};
+
+export interface LoginDTO {
+  email: string;
+  password: string;
+}
+
+export interface JWTPayload {
+  userId: string;
+  role: "player" | "admin";
+}
+
+export interface Avatar {
+  url: string;
+  publicId: string;
+}
