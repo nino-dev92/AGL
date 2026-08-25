@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import Joi from "joi";
 import jwt from "jsonwebtoken";
+import multer from "multer";
 
 import ApiError from "../utils/apiError";
 import logger from "../logger/logger";
@@ -31,6 +32,20 @@ const errorMiddleware = (
     return res.status(401).json({
       success: false,
       message: "Unauthorized",
+    });
+  }
+
+  if (err instanceof multer.MulterError) {
+    if (err.code === "LIMIT_FILE_SIZE") {
+      return res.status(400).json({
+        success: false,
+        message: "Image size must not exceed 5MB",
+      });
+    }
+
+    return res.status(400).json({
+      success: false,
+      message: err.message,
     });
   }
 

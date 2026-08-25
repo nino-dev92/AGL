@@ -21,3 +21,10 @@ export interface Avatar {
   url: string;
   publicId: string;
 }
+
+export interface PlayerProfile {
+  bio?: string;
+  country?: string;
+  game?: string;
+  playerRole?: string;
+}

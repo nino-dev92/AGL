@@ -8,7 +8,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /auth/signup:
+ * /v1/auth/signup:
  *   post:
  *     summary: Register a new user
  *     tags:
@@ -58,7 +58,7 @@ router.post("/signup", validate(userValidationSchema), authController.signUp);
 
 /**
  * @swagger
- * /auth/login:
+ * /v1/auth/login:
  *   post:
  *     summary: Login a user
  *     tags:
@@ -90,7 +90,7 @@ router.post("/login", authLimiter, authController.login);
 
 /**
  * @swagger
- * /auth/logout:
+ * /v1/auth/logout:
  *   post:
  *     summary: Logout the current user
  *     tags:
@@ -108,7 +108,7 @@ router.post("/logout", authController.logout);
 
 /**
  * @swagger
- * /auth/refresh:
+ * /v1/auth/refresh:
  *   post:
  *     summary: Refresh access token
  *     tags:

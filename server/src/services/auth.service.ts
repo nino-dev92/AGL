@@ -2,7 +2,7 @@ import Users from "../models/Users";
 import ApiError from "../utils/apiError";
 import bcrypt from "bcrypt";
 import ROLES from "../constants/ROLES";
-import { UserDTO, LoginDTO, JWTPayload } from "../types/types";
+import { UserDTO, LoginDTO, JWTPayload } from "../types/user.types";
 import { generateAccessToken, generaterefreshToken } from "../utils/jwt";
 import jwt from "jsonwebtoken";
 import env from "../config/env";

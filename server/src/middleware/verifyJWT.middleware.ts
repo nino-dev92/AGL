@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import { Express } from "express";
 import ApiError from "../utils/apiError";
 import env from "../config/env";
-import { JWTPayload } from "../types/types";
+import { JWTPayload } from "../types/user.types";
 import Users from "../models/Users";
 import asyncHandler from "../utils/asyncHandler";
 

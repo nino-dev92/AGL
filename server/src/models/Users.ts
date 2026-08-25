@@ -20,6 +20,11 @@ export interface IUser extends Document {
 
   avatar?: Avatar;
 
+  bio?: string;
+  country?: string;
+  game?: string;
+  playerRole?: string;
+
   role: UserRole;
 
   refreshToken?: string;
@@ -51,14 +56,12 @@ const userSchema = new Schema<IUser>(
       type: String,
       required: true,
       trim: true,
-      lowercase: true,
     },
 
     lastName: {
       type: String,
       required: true,
       trim: true,
-      lowercase: true,
     },
 
     userName: {
@@ -86,6 +89,31 @@ const userSchema = new Schema<IUser>(
     avatar: {
       type: avatarSchema,
       default: undefined,
+    },
+    bio: {
+      type: String,
+      trim: true,
+      maxlength: 500,
+      default: "",
+    },
+
+    country: {
+      type: String,
+      trim: true,
+      lowercase: true,
+      default: "",
+    },
+
+    game: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+
+    playerRole: {
+      type: String,
+      trim: true,
+      default: "",
     },
 
     role: {
