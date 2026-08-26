@@ -13,6 +13,7 @@ import errorMiddleware from "./middleware/errorHandler.middleware";
 import authRoutes from "./routes/auth.routes";
 import userRoutes from "./routes/playerProfile.routes";
 import publicPlayerRoutes from "./routes/publicPlayer.routes";
+import teamRoutes from "./routes/team.routes";
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/players", publicPlayerRoutes);
+app.use("/api/v1/teams", teamRoutes);
 
 app.use(errorMiddleware);
 
