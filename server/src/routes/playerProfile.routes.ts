@@ -4,7 +4,7 @@ import verifyJWT from "../middleware/verifyJWT.middleware";
 import ROLES from "../constants/ROLES";
 import * as playerProfileController from "../controllers/playerProfile.controller";
 import validate from "../middleware/validation.middleware";
-import playerProfileValidator from "../validators/playerProfile.validator";
+import { playerProfileValidator } from "../validators/user.validator";
 import upload from "../middleware/upload.middleware";
 
 const router = express.Router();

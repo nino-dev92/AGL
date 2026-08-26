@@ -1,6 +1,6 @@
 import express from "express";
 import validate from "../middleware/validation.middleware";
-import userValidationSchema from "../validators/user.validator";
+import { userValidationSchema } from "../validators/user.validator";
 import * as authController from "../controllers/auth.controller";
 import { authLimiter } from "../middleware/rateLimit.middleware";
 

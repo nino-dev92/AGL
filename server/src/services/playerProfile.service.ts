@@ -84,7 +84,7 @@ export const uploadAvatar = async (
   const oldAvatar = user.avatar;
 
   // Upload new image
-  const uploadResult = await uploadToCloudinary(file.buffer, "arenax/players");
+  const uploadResult = await uploadToCloudinary(file.buffer, "AGL/players");
 
   try {
     // Save new avatar in MongoDB
@@ -110,8 +110,7 @@ export const uploadAvatar = async (
     throw error;
   }
 
-  // MongoDB successfully saved the new avatar.
-  // Now remove the old one.
+  // MongoDB successfully saved the new avatar now remove the old one.
   if (oldAvatar?.publicId) {
     try {
       await cloudinary.uploader.destroy(oldAvatar.publicId);

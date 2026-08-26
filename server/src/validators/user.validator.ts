@@ -1,6 +1,6 @@
 import Joi from "joi";
 
-const userValidationSchema = Joi.object({
+export const userValidationSchema = Joi.object({
   firstName: Joi.string().trim().required(),
   lastName: Joi.string().trim().required(),
   userName: Joi.string().trim().required(),
@@ -10,4 +10,14 @@ const userValidationSchema = Joi.object({
   role: Joi.string().required(),
 });
 
-export default userValidationSchema;
+export const playerProfileValidator = Joi.object({
+  bio: Joi.string().trim().max(500).optional(),
+
+  country: Joi.string().trim().max(100).optional(),
+
+  game: Joi.string().trim().max(100).optional(),
+
+  playerRole: Joi.string().trim().max(100).optional(),
+});
+
+export default playerProfileValidator;
