@@ -15,6 +15,7 @@ import userRoutes from "./routes/playerProfile.routes";
 import publicPlayerRoutes from "./routes/publicPlayer.routes";
 import teamRoutes from "./routes/team.routes";
 import gameRoutes from "./routes/game.routes";
+import categoryRoutes from "./routes/category.routes";
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/players", publicPlayerRoutes);
 app.use("/api/v1/teams", teamRoutes);
 app.use("/api/v1/games", gameRoutes);
+app.use("/api/v1/category", categoryRoutes);
 
 app.use(errorMiddleware);
 

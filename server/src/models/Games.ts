@@ -1,8 +1,8 @@
-import mongoose, { Document, Schema, model } from "mongoose";
+import mongoose, { Document, Schema, model, Types } from "mongoose";
 
 export interface IGame extends Document {
   name: string;
-  category: string;
+  category: Types.ObjectId;
   picture?:
     | {
         url: string;
@@ -38,7 +38,11 @@ const gameSchema: Schema = new mongoose.Schema(
       minlength: 3,
       maxlength: 50,
     },
-    category: { type: String, required: true },
+    category: {
+      type: mongoose.Types.ObjectId,
+      ref: "Category",
+      required: true,
+    },
     picture: { type: pictureSchema, default: undefined },
   },
   {
