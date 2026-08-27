@@ -13,12 +13,16 @@ export const registerUser = async (data: UserDTO) => {
   const normalizedEmail = email.toLowerCase();
   const normalizedUsername = userName.toLowerCase();
 
-  const existingUser = await Users.findOne({
-    $or: [{ email: normalizedEmail }, { userName: normalizedUsername }],
-  });
+  const existingEmail = await Users.findOne({ email: normalizedEmail });
+
+  if (existingEmail) {
+    throw new ApiError("Email already exists", 409);
+  }
+
+  const existingUser = await Users.findOne({ userName: normalizedUsername });
 
   if (existingUser) {
-    throw new ApiError("Email or username already exists", 409);
+    throw new ApiError("Username already exists", 409);
   }
 
   const newUser = await Users.create({

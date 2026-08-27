@@ -57,7 +57,7 @@ export const createTeam = async (data: CreateTeamDTO) => {
     slug,
     captain: checkCaptain._id,
     members: [checkCaptain._id],
-    game: data.game.trim(),
+    game: new Types.ObjectId(data.game.trim()),
     description: data.description?.trim() || "",
     maxMembers: data.maxMembers,
   });
@@ -142,11 +142,11 @@ export const updateTeam = async (
   if (!team) throw new ApiError("Team not found", 404);
 
   // Only admin or the captain of this team can update it
-  const isAdmin = user.role === "admin";
+  const isAdminOrManager = user.role === "admin" || user.role !== "manager";
 
   const isCaptain = team.captain.toString() === user._id.toString();
 
-  if (!isAdmin && !isCaptain)
+  if (!isAdminOrManager && !isCaptain)
     throw new ApiError("You do not have permission to update this team", 403);
 
   // Prevent maxMembers from becoming smaller
@@ -214,11 +214,11 @@ export const updateTeamLogo = async (
 
   if (!team) throw new ApiError("Team not found", 404);
 
-  const isAdmin = user.role === "admin";
+  const isAdminOrManager = user.role === "admin" || user.role === "manager";
 
   const isCaptain = team.captain.toString() === user._id.toString();
 
-  if (!isAdmin && !isCaptain)
+  if (!isAdminOrManager && !isCaptain)
     throw new ApiError(
       "You do not have permission to update this team's logo",
       403,
@@ -283,11 +283,11 @@ export const deleteTeamLogo = async (userId: string, teamId: string) => {
 
   if (!team) throw new ApiError("Team not found", 404);
 
-  const isAdmin = user.role === "admin";
+  const isAdminOrManager = user.role === "admin" || user.role === "manager";
 
   const isCaptain = team.captain.toString() === user._id.toString();
 
-  if (!isAdmin && !isCaptain)
+  if (!isAdminOrManager && !isCaptain)
     throw new ApiError(
       "You do not have permission to delete this team's logo",
       403,
@@ -384,11 +384,11 @@ export const addTeamMember = async (
   }
 
   // Admin OR this team's captain can add members
-  const isAdmin = user.role === "admin";
+  const isAdminOrManager = user.role === "admin" || user.role === "manager";
 
   const isCaptain = dbTeam.captain.toString() === user._id.toString();
 
-  if (!isAdmin && !isCaptain) {
+  if (!isAdminOrManager && !isCaptain) {
     throw new ApiError(
       "You do not have permission to add members to this team",
       403,
@@ -496,10 +496,10 @@ export const deleteTeamMember = async (
 
   const isCaptain = user._id.toString() === team.captain.toString();
 
-  const isAdmin = user.role === "admin";
+  const isAdminOrManager = user.role === "admin" || user.role === "manager";
 
   // Only admin or captain can remove members
-  if (!isAdmin && !isCaptain) {
+  if (!isAdminOrManager && !isCaptain) {
     throw new ApiError("Forbidden", 403);
   }
 
@@ -579,9 +579,9 @@ export const deleteTeam = async (userId: string, teamId: string) => {
     throw new ApiError("User not found", 404);
   }
 
-  // Only admin can delete a team
-  if (user.role !== "admin") {
-    throw new ApiError("Only an admin can delete a team", 403);
+  // Only admin or manager can delete a team
+  if (user.role !== "admin" && user.role !== "manager") {
+    throw new ApiError("Forbidden", 403);
   }
 
   const deletedTeam = await Teams.findByIdAndDelete(teamId);

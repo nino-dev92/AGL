@@ -16,9 +16,9 @@ export const addTeam = asyncHandler(async (req: Request, res: Response) => {
 
 export const findAllTeams = asyncHandler(
   async (req: Request, res: Response) => {
-    const search = String(req.params.search) ?? "";
-    const page = Math.max(Number(req.query.page) ?? 1, 1);
-    const limit = Math.min(Number(req.query.limit) ?? 10, 50);
+    const search = String(req.params.search ?? "");
+    const page = Math.max(Number(req.query.page ?? 1), 1);
+    const limit = Math.min(Number(req.query.limit ?? 10), 50);
     const game = String(req.query.game ?? "");
 
     const allTeams = await teamService.getAllTeams(search, page, limit, game);

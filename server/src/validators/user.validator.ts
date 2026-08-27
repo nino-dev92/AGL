@@ -10,6 +10,11 @@ export const userValidationSchema = Joi.object({
   role: Joi.string().required(),
 });
 
+export const loginValidationSchema = Joi.object({
+  email: Joi.string().email().required(),
+  password: Joi.string().required(),
+});
+
 export const playerProfileValidator = Joi.object({
   bio: Joi.string().trim().max(500).optional(),
 

@@ -4,7 +4,7 @@ export interface ITeam extends Document {
   name: string;
   slug: string;
   description: string;
-  game: string;
+  game: Types.ObjectId;
   captain: Types.ObjectId;
   members: Types.ObjectId[];
   maxMembers: number;
@@ -42,7 +42,7 @@ const teamSchema: Schema = new mongoose.Schema(
       maxlength: 500,
       default: "",
     },
-    game: { type: String, required: true },
+    game: { type: Schema.Types.ObjectId, ref: "Game", required: true },
     captain: { type: Schema.Types.ObjectId, ref: "User", required: true },
     members: [{ type: Schema.Types.ObjectId, ref: "User" }],
     maxMembers: { type: Number, required: true },

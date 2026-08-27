@@ -10,7 +10,7 @@ const errorMiddleware = (
   err: unknown,
   req: Request,
   res: Response,
-  next: NextFunction,
+  _next: NextFunction,
 ) => {
   logger.error(err);
 

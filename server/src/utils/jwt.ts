@@ -18,6 +18,6 @@ export const generaterefreshToken = (data: JWTPayload) => {
   const { userId, role } = data;
 
   return jwt.sign({ userId, role }, env.REFRESH_TOKEN_SECRET, {
-    expiresIn: "15m",
+    expiresIn: "7d",
   });
 };
