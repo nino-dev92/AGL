@@ -1,14 +1,10 @@
 import express from "express";
-
 import authorizeRole from "../middleware/authorizeRole.middleware";
 import verifyJWT from "../middleware/verifyJWT.middleware";
 import ROLES from "../constants/ROLES";
-
 import * as teamController from "../controllers/team.controller";
-
 import teamValidationSchema from "../validators/team.validator";
 import validate from "../middleware/validation.middleware";
-
 import upload from "../middleware/upload.middleware";
 
 const router = express.Router();
@@ -54,6 +50,7 @@ const router = express.Router();
  *       200:
  *         description: All teams retrieved successfully
  */
+
 router.get("/", teamController.findAllTeams);
 
 /**
@@ -134,7 +131,7 @@ router.get("/:id", teamController.findTeambyId);
 router.post(
   "/",
   verifyJWT,
-  authorizeRole(ROLES.ADMIN),
+  authorizeRole(ROLES.ADMIN, ROLES.MANAGER),
   validate(teamValidationSchema),
   teamController.addTeam,
 );
@@ -183,7 +180,7 @@ router.post(
 router.patch(
   "/:teamId/captain",
   verifyJWT,
-  authorizeRole(ROLES.ADMIN),
+  authorizeRole(ROLES.ADMIN, ROLES.MANAGER),
   teamController.changeCaptain,
 );
 
@@ -217,7 +214,7 @@ router.patch(
 router.delete(
   "/:id",
   verifyJWT,
-  authorizeRole(ROLES.ADMIN),
+  authorizeRole(ROLES.ADMIN, ROLES.MANAGER),
   teamController.deleteTeam,
 );
 
@@ -275,7 +272,7 @@ router.delete(
 router.patch(
   "/:id",
   verifyJWT,
-  authorizeRole(ROLES.ADMIN, ROLES.PLAYER),
+  authorizeRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.PLAYER),
   teamController.editTeam,
 );
 
@@ -323,7 +320,7 @@ router.patch(
 router.patch(
   "/:teamId/logo",
   verifyJWT,
-  authorizeRole(ROLES.ADMIN, ROLES.PLAYER),
+  authorizeRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.PLAYER),
   upload.single("logo"),
   teamController.updateTeamLogo,
 );
@@ -358,7 +355,7 @@ router.patch(
 router.delete(
   "/:teamId/logo",
   verifyJWT,
-  authorizeRole(ROLES.ADMIN, ROLES.PLAYER),
+  authorizeRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.PLAYER),
   teamController.deleteTeamLogo,
 );
 
@@ -408,9 +405,9 @@ router.delete(
  *         description: User or team not found
  */
 router.patch(
-  "/:teamId/members",
+  "/:id/members",
   verifyJWT,
-  authorizeRole(ROLES.ADMIN, ROLES.PLAYER),
+  authorizeRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.PLAYER),
   teamController.addTeamMember,
 );
 
@@ -452,7 +449,7 @@ router.patch(
 router.delete(
   "/:teamId/members/:memberId",
   verifyJWT,
-  authorizeRole(ROLES.ADMIN, ROLES.PLAYER),
+  authorizeRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.PLAYER),
   teamController.removeTeamMember,
 );
 

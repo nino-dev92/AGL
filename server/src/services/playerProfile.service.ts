@@ -72,6 +72,7 @@ export const uploadAvatar = async (
   userId: string,
   file: Express.Multer.File,
 ) => {
+  // check if user exists
   const user = await Users.findById(userId);
 
   if (!user) {
@@ -95,9 +96,7 @@ export const uploadAvatar = async (
 
     await user.save();
   } catch (error) {
-    // MongoDB failed.
-    // Delete the newly uploaded image from Cloudinary
-    // so we don't leave an orphaned file.
+    // MongoDB failed sp we delete the newly uploaded image from Cloudinary so we don't leave an orphaned file.
     try {
       await cloudinary.uploader.destroy(uploadResult.public_id);
     } catch (cleanupError) {

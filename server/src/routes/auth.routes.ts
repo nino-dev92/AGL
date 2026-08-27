@@ -1,6 +1,9 @@
 import express from "express";
 import validate from "../middleware/validation.middleware";
-import { userValidationSchema } from "../validators/user.validator";
+import {
+  userValidationSchema,
+  loginValidationSchema,
+} from "../validators/user.validator";
 import * as authController from "../controllers/auth.controller";
 import { authLimiter } from "../middleware/rateLimit.middleware";
 
@@ -86,7 +89,12 @@ router.post("/signup", validate(userValidationSchema), authController.signUp);
  *         description: Invalid credentials
  */
 
-router.post("/login", authLimiter, authController.login);
+router.post(
+  "/login",
+  authLimiter,
+  validate(loginValidationSchema),
+  authController.login,
+);
 
 /**
  * @swagger
