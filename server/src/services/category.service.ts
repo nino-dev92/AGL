@@ -145,6 +145,8 @@ export const editCategoryStatus = async (
 
   if (!isAdminOrManager) throw new ApiError("Forbidden", 403);
 
+  console.log(update);
+
   category.isActive = update;
 
   await category.save();

@@ -1,0 +1,184 @@
+import { Request, Response } from "express";
+import asyncHandler from "../utils/asyncHandler";
+import * as tournamentService from "../services/tournament.service";
+import ApiError from "../utils/apiError";
+
+/**
+ * Create Tournament
+ */
+export const createTournament = asyncHandler(
+  async (req: Request, res: Response) => {
+    const userId = req.user?.userId as string;
+
+    const tournament = await tournamentService.createNewTournament(
+      userId,
+      req.body,
+    );
+
+    res.status(201).json({
+      success: true,
+      message: "Tournament created successfully",
+      data: tournament,
+    });
+  },
+);
+
+/**
+ * Get All Tournaments
+ */
+export const findAllTournaments = asyncHandler(
+  async (req: Request, res: Response) => {
+    const search = String(req.query.search ?? "");
+    const game = String(req.query.game ?? "");
+
+    const page = Math.max(Number(req.query.page) || 1, 1);
+
+    const limit = Math.min(Math.max(Number(req.query.limit) || 10, 1), 50);
+
+    const tournaments = await tournamentService.getAllTournaments(
+      search,
+      game,
+      page,
+      limit,
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Tournaments retrieved successfully",
+      data: tournaments.allTournaments,
+      pagination: {
+        page,
+        limit,
+        total: tournaments.total,
+        totalPages: Math.ceil(tournaments.total / limit),
+      },
+    });
+  },
+);
+
+/**
+ * Get Tournament By ID
+ */
+export const findTournamentById = asyncHandler(
+  async (req: Request, res: Response) => {
+    const tournamentId = req.params.id as string;
+
+    const tournament = await tournamentService.getTournamentById(tournamentId);
+
+    res.status(200).json({
+      success: true,
+      message: "Tournament retrieved successfully",
+      data: tournament,
+    });
+  },
+);
+
+/**
+ * Update Tournament
+ */
+export const updateTournament = asyncHandler(
+  async (req: Request, res: Response) => {
+    const userId = req.user?.userId as string;
+    const tournamentId = req.params.id as string;
+
+    const tournament = await tournamentService.editTournament(
+      userId,
+      tournamentId,
+      req.body,
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Tournament updated successfully",
+      data: tournament,
+    });
+  },
+);
+
+/**
+ * Upload / Update Tournament Banner
+ */
+export const updateTournamentBanner = asyncHandler(
+  async (req: Request, res: Response) => {
+    const userId = req.user?.userId as string;
+    const tournamentId = req.params.id as string;
+
+    if (!req.file) {
+      throw new ApiError("Please upload a banner image", 400);
+    }
+
+    const update = await tournamentService.updateTournamentBanner(
+      userId,
+      tournamentId,
+      req.file,
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Tournament banner uploaded successfully",
+      data: update,
+    });
+  },
+);
+
+/**
+ * Delete Tournament Banner
+ */
+export const removeTournamentBanner = asyncHandler(
+  async (req: Request, res: Response) => {
+    const userId = req.user?.userId as string;
+    const tournamentId = req.params.id as string;
+
+    await tournamentService.deleteTournamentBanner(userId, tournamentId);
+
+    res.status(200).json({
+      success: true,
+      message: "Tournament banner deleted successfully",
+    });
+  },
+);
+
+/**
+ * Change Tournament Status
+ */
+export const updateTournamentStatus = asyncHandler(
+  async (req: Request, res: Response) => {
+    const userId = req.user?.userId as string;
+    const tournamentId = req.params.id as string;
+
+    const status = req.body.status;
+
+    if (!status) {
+      throw new ApiError("Tournament status is required", 400);
+    }
+
+    const tournament = await tournamentService.changeTournamentStatus(
+      userId,
+      tournamentId,
+      status,
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Tournament status updated successfully",
+      data: tournament,
+    });
+  },
+);
+
+/**
+ * Delete Tournament
+ */
+export const removeTournament = asyncHandler(
+  async (req: Request, res: Response) => {
+    const userId = req.user?.userId as string;
+    const tournamentId = req.params.id as string;
+
+    await tournamentService.deleteTournament(userId, tournamentId);
+
+    res.status(200).json({
+      success: true,
+      message: "Tournament deleted successfully",
+    });
+  },
+);

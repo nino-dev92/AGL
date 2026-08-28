@@ -12,5 +12,5 @@ export const updateCategoryValidationSchema = Joi.object({
 }).min(1);
 
 export const categoryStatusValidationSchema = Joi.object({
-  isActive: Joi.boolean().required(),
+  update: Joi.boolean().required(),
 });
