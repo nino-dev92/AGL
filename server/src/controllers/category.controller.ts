@@ -81,7 +81,7 @@ export const updateCategoryStatus = asyncHandler(
 
     const categoryId = req.params.id as string;
 
-    const update = req.body.update;
+    const update: boolean = req.body.update;
 
     const updateStatus = await categoryService.editCategoryStatus(
       userId,

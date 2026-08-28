@@ -42,7 +42,12 @@ export const createTeam = async (data: CreateTeamDTO) => {
   }
 
   // Generate slug
-  const slug = teamName.toLowerCase().trim().replace(/\s+/g, "-");
+  const slug = teamName
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
 
   // Check if slug already exists
   const existingSlug = await Teams.findOne({ slug });
@@ -275,6 +280,7 @@ export const deleteTeamLogo = async (userId: string, teamId: string) => {
   if (!Types.ObjectId.isValid(teamId))
     throw new ApiError("Invalid team ID", 400);
 
+  // check if user and team exist
   const user = await Users.findById(userId);
 
   if (!user) throw new ApiError("User not found", 404);
@@ -283,15 +289,12 @@ export const deleteTeamLogo = async (userId: string, teamId: string) => {
 
   if (!team) throw new ApiError("Team not found", 404);
 
+  // verify user role
   const isAdminOrManager = user.role === "admin" || user.role === "manager";
 
   const isCaptain = team.captain.toString() === user._id.toString();
 
-  if (!isAdminOrManager && !isCaptain)
-    throw new ApiError(
-      "You do not have permission to delete this team's logo",
-      403,
-    );
+  if (!isAdminOrManager && !isCaptain) throw new ApiError("Forbidden", 403);
 
   if (!team.logo?.publicId) throw new ApiError("No team logo found", 404);
 
