@@ -14,7 +14,7 @@ export interface LoginDTO {
 
 export interface JWTPayload {
   userId: string;
-  role: "player" | "admin" | "manager";
+  role: "player" | "admin" | "manager" | "organizer";
 }
 
 export interface Avatar {

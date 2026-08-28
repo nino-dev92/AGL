@@ -149,9 +149,9 @@ export const updateTeam = async (
   // Only admin or the captain of this team can update it
   const isAdminOrManager = user.role === "admin" || user.role !== "manager";
 
-  const isCaptain = team.captain.toString() === user._id.toString();
+  const isManager = team.manager.toString() === user._id.toString();
 
-  if (!isAdminOrManager && !isCaptain)
+  if (!isAdminOrManager && !isManager)
     throw new ApiError("You do not have permission to update this team", 403);
 
   // Prevent maxMembers from becoming smaller
@@ -221,9 +221,9 @@ export const updateTeamLogo = async (
 
   const isAdminOrManager = user.role === "admin" || user.role === "manager";
 
-  const isCaptain = team.captain.toString() === user._id.toString();
+  const isManager = team.manager.toString() === user._id.toString();
 
-  if (!isAdminOrManager && !isCaptain)
+  if (!isAdminOrManager && !isManager)
     throw new ApiError(
       "You do not have permission to update this team's logo",
       403,
@@ -292,9 +292,9 @@ export const deleteTeamLogo = async (userId: string, teamId: string) => {
   // verify user role
   const isAdminOrManager = user.role === "admin" || user.role === "manager";
 
-  const isCaptain = team.captain.toString() === user._id.toString();
+  const isManager = team.manager.toString() === user._id.toString();
 
-  if (!isAdminOrManager && !isCaptain) throw new ApiError("Forbidden", 403);
+  if (!isAdminOrManager && !isManager) throw new ApiError("Forbidden", 403);
 
   if (!team.logo?.publicId) throw new ApiError("No team logo found", 404);
 
@@ -342,7 +342,7 @@ export const changeTeamCaptain = async (
   if (user.role !== "admin") throw new ApiError("Forbidden", 403);
 
   // Cannot assign the current captain again
-  if (team.captain.toString() === newCaptainId)
+  if (team.manager.toString() === newCaptainId)
     throw new ApiError("Selected player is already the team captain", 400);
 
   // New captain must already be a member
@@ -353,7 +353,7 @@ export const changeTeamCaptain = async (
   if (!existingMember)
     throw new ApiError("Selected player must already be a team member", 400);
 
-  team.captain = new Types.ObjectId(newCaptainId);
+  team.manager = new Types.ObjectId(newCaptainId);
 
   await team.save();
 
@@ -389,9 +389,9 @@ export const addTeamMember = async (
   // Admin OR this team's captain can add members
   const isAdminOrManager = user.role === "admin" || user.role === "manager";
 
-  const isCaptain = dbTeam.captain.toString() === user._id.toString();
+  const isManager = dbTeam.manager.toString() === user._id.toString();
 
-  if (!isAdminOrManager && !isCaptain) {
+  if (!isAdminOrManager && !isManager) {
     throw new ApiError(
       "You do not have permission to add members to this team",
       403,
@@ -497,12 +497,12 @@ export const deleteTeamMember = async (
     throw new ApiError("Team not found", 404);
   }
 
-  const isCaptain = user._id.toString() === team.captain.toString();
+  const isManager = user._id.toString() === team.manager.toString();
 
   const isAdminOrManager = user.role === "admin" || user.role === "manager";
 
   // Only admin or captain can remove members
-  if (!isAdminOrManager && !isCaptain) {
+  if (!isAdminOrManager && !isManager) {
     throw new ApiError("Forbidden", 403);
   }
 
@@ -516,7 +516,7 @@ export const deleteTeamMember = async (
   }
 
   // Captain cannot be removed without transferring captaincy first
-  if (team.captain.toString() === memberId) {
+  if (team.manager.toString() === memberId) {
     throw new ApiError(
       "Transfer captaincy before removing the current captain",
       400,
@@ -554,7 +554,7 @@ export const leaveTeam = async (userId: string, teamId: string) => {
   if (!isMember) throw new ApiError("You are not a member of this team", 400);
 
   // Captain must transfer captaincy first
-  if (team.captain.toString() === userId)
+  if (team.manager.toString() === userId)
     throw new ApiError(
       "You must transfer captaincy before leaving the team",
       400,

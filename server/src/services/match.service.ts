@@ -14,9 +14,9 @@ export const createMatch = async (userId: string, data: MatchDTO) => {
   if (!user) throw new ApiError("User not found", 404);
 
   // verify user role
-  const isAdminOrManager = user.role === "admin" || user.role === "manager";
+  const isAdminOrOrganizer = user.role === "admin" || user.role === "organizer";
 
-  if (!isAdminOrManager) throw new ApiError("Forbidden", 403);
+  if (!isAdminOrOrganizer) throw new ApiError("Forbidden", 403);
 
   // check if match exists
   const matchExists = await Match.findOne(data);
@@ -35,19 +35,26 @@ export const createMatch = async (userId: string, data: MatchDTO) => {
 };
 
 export const getAllMatches = async (
-  search: string,
+  tournament: string,
   page: number,
   limit: number,
+  status: string,
+  team: string,
 ) => {
   const filter: any = {};
 
   const skip = (page - 1) * limit;
 
-  if (search) {
-    filter.name = {
-      $regex: search,
-      $options: "i",
-    };
+  if (tournament) {
+    filter.tournament = tournament;
+  }
+
+  if (status) {
+    filter.status = status;
+  }
+
+  if (team) {
+    filter.$or = [{ teamA: team }, { teamB: team }];
   }
 
   const matches = await Match.find(filter)
@@ -97,9 +104,9 @@ export const updateMatch = async (
 
   // verify user role
 
-  const isAdminOrManager = user.role === "admin" || user.role === "manager";
+  const isAdminOrOrganizer = user.role === "admin" || user.role === "organizer";
 
-  if (!isAdminOrManager) throw new ApiError("Forbidden", 403);
+  if (!isAdminOrOrganizer) throw new ApiError("Forbidden", 403);
 
   // update match
   const updateMatch = await Match.findByIdAndUpdate(matchId, update, {
@@ -127,9 +134,9 @@ export const deleteMatch = async (userId: string, matchId: string) => {
 
   // verify user role
 
-  const isAdminOrManager = user.role === "admin" || user.role === "manager";
+  const isAdminOrOrganizer = user.role === "admin" || user.role === "organizer";
 
-  if (!isAdminOrManager) throw new ApiError("Forbidden", 403);
+  if (!isAdminOrOrganizer) throw new ApiError("Forbidden", 403);
 
   // delete match
   await Match.findByIdAndDelete(matchId);

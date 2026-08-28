@@ -160,7 +160,7 @@ router.get("/:id", tournamentController.findTournamentById);
 router.post(
   "/",
   verifyJWT,
-  authorizeRole(ROLES.ADMIN, ROLES.MANAGER),
+  authorizeRole(ROLES.ADMIN, ROLES.ORGANIZER),
   validate(tournamentValidationSchema),
   tournamentController.createTournament,
 );
@@ -230,7 +230,7 @@ router.post(
 router.patch(
   "/:id",
   verifyJWT,
-  authorizeRole(ROLES.ADMIN, ROLES.MANAGER),
+  authorizeRole(ROLES.ADMIN, ROLES.ORGANIZER),
   tournamentController.updateTournament,
 );
 
@@ -280,7 +280,7 @@ router.patch(
 router.patch(
   "/:id/banner",
   verifyJWT,
-  authorizeRole(ROLES.ADMIN, ROLES.MANAGER),
+  authorizeRole(ROLES.ADMIN, ROLES.ORGANIZER),
   upload.single("banner"),
   tournamentController.updateTournamentBanner,
 );
@@ -315,7 +315,7 @@ router.patch(
 router.delete(
   "/:id/banner",
   verifyJWT,
-  authorizeRole(ROLES.ADMIN, ROLES.MANAGER),
+  authorizeRole(ROLES.ADMIN, ROLES.ORGANIZER),
   tournamentController.removeTournamentBanner,
 );
 
@@ -372,7 +372,7 @@ router.delete(
 router.patch(
   "/:id/status",
   verifyJWT,
-  authorizeRole(ROLES.ADMIN, ROLES.MANAGER),
+  authorizeRole(ROLES.ADMIN, ROLES.ORGANIZER),
   tournamentController.updateTournamentStatus,
 );
 
@@ -406,7 +406,7 @@ router.patch(
 router.delete(
   "/:id",
   verifyJWT,
-  authorizeRole(ROLES.ADMIN, ROLES.MANAGER),
+  authorizeRole(ROLES.ADMIN, ROLES.ORGANIZER),
   tournamentController.removeTournament,
 );
 

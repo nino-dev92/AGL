@@ -128,7 +128,7 @@ router.get("/:id", matchController.findMatchById);
 router.post(
   "/",
   verifyJWT,
-  authorizeRole(ROLES.ADMIN, ROLES.MANAGER),
+  authorizeRole(ROLES.ADMIN, ROLES.ORGANIZER),
   validate(matchValidatorSchema),
   matchController.addMatch,
 );
@@ -192,7 +192,7 @@ router.post(
 router.patch(
   "/:id",
   verifyJWT,
-  authorizeRole(ROLES.ADMIN, ROLES.MANAGER),
+  authorizeRole(ROLES.ADMIN, ROLES.ORGANIZER),
   matchController.editMatch,
 );
 
@@ -227,7 +227,7 @@ router.patch(
 router.delete(
   "/:id",
   verifyJWT,
-  authorizeRole(ROLES.ADMIN, ROLES.MANAGER),
+  authorizeRole(ROLES.ADMIN, ROLES.ORGANIZER),
   matchController.removeMatch,
 );
 

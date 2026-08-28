@@ -92,7 +92,7 @@ export const editGame = async (
   }
 
   if (data.category) {
-    game.category = data.category.trim();
+    game.category = new Types.ObjectId(data.category.trim());
   }
 
   await game.save();
@@ -117,7 +117,11 @@ export const findAllGames = async (
   }
 
   const [games, total] = await Promise.all([
-    Games.find(filter).limit(limit).skip(skip).sort({ name: 1 }),
+    Games.find(filter)
+      .limit(limit)
+      .skip(skip)
+      .sort({ name: 1 })
+      .populate("category", "name description"),
 
     Games.countDocuments(filter),
   ]);
@@ -133,7 +137,10 @@ export const findGameById = async (gameId: string) => {
     throw new ApiError("Invalid game ID", 400);
   }
 
-  const game = await Games.findById(gameId);
+  const game = await Games.findById(gameId).populate(
+    "category",
+    "name description",
+  );
 
   if (!game) {
     throw new ApiError("Game not found", 404);

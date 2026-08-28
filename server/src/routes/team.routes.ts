@@ -77,7 +77,7 @@ router.get("/", teamController.findAllTeams);
 
 router.get("/:id", teamController.findTeambyId);
 
-// ADMIN ROUTES
+// MANAGER ROUTES
 
 /**
  * @swagger
@@ -131,7 +131,7 @@ router.get("/:id", teamController.findTeambyId);
 router.post(
   "/",
   verifyJWT,
-  authorizeRole(ROLES.ADMIN, ROLES.MANAGER),
+  authorizeRole(ROLES.MANAGER),
   validate(teamValidationSchema),
   teamController.addTeam,
 );
@@ -180,7 +180,7 @@ router.post(
 router.patch(
   "/:teamId/captain",
   verifyJWT,
-  authorizeRole(ROLES.ADMIN, ROLES.MANAGER),
+  authorizeRole(ROLES.MANAGER),
   teamController.changeCaptain,
 );
 
@@ -214,11 +214,11 @@ router.patch(
 router.delete(
   "/:id",
   verifyJWT,
-  authorizeRole(ROLES.ADMIN, ROLES.MANAGER),
+  authorizeRole(ROLES.MANAGER),
   teamController.deleteTeam,
 );
 
-// ADMIN OR TEAM CAPTAIN ROUTES
+// MANAGER OR TEAM CAPTAIN ROUTES
 
 /**
  * @swagger
@@ -272,7 +272,7 @@ router.delete(
 router.patch(
   "/:id",
   verifyJWT,
-  authorizeRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.PLAYER),
+  authorizeRole(ROLES.MANAGER, ROLES.PLAYER),
   teamController.editTeam,
 );
 
@@ -320,7 +320,7 @@ router.patch(
 router.patch(
   "/:teamId/logo",
   verifyJWT,
-  authorizeRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.PLAYER),
+  authorizeRole(ROLES.MANAGER, ROLES.PLAYER),
   upload.single("logo"),
   teamController.updateTeamLogo,
 );
@@ -355,7 +355,7 @@ router.patch(
 router.delete(
   "/:teamId/logo",
   verifyJWT,
-  authorizeRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.PLAYER),
+  authorizeRole(ROLES.MANAGER, ROLES.PLAYER),
   teamController.deleteTeamLogo,
 );
 

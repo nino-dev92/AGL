@@ -9,7 +9,7 @@ export interface Avatar {
   publicId: string;
 }
 
-export type UserRole = "player" | "admin" | "manager";
+export type UserRole = "player" | "admin" | "manager" | "organizer";
 
 export interface IUser extends Document {
   firstName: string;
@@ -118,7 +118,7 @@ const userSchema = new Schema<IUser>(
 
     role: {
       type: String,
-      enum: ["player", "admin", "manager"],
+      enum: ["player", "admin", "manager", "organizer"],
       default: "player",
     },
 

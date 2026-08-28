@@ -16,13 +16,23 @@ export const addMatch = asyncHandler(async (req: Request, res: Response) => {
 
 export const findAllMatches = asyncHandler(
   async (req: Request, res: Response) => {
-    const search = String(req.query.search ?? "");
+    const tournament = String(req.query.tournament ?? "");
+
+    const team = String(req.query.team ?? "");
+
+    const status = String(req.query.status ?? "");
 
     const page = Math.max(Number(req.query.page) || 1, 1);
 
     const limit = Math.min(Math.max(Number(req.query.limit) || 10, 1), 50);
 
-    const result = await matchService.getAllMatches(search, page, limit);
+    const result = await matchService.getAllMatches(
+      tournament,
+      page,
+      limit,
+      status,
+      team,
+    );
 
     res.status(200).json({
       success: true,

@@ -25,9 +25,9 @@ export const createNewTournament = async (
   if (!user) throw new ApiError("User not found", 404);
 
   // verify user role
-  const isAdminOrManager = user.role === "admin" || user.role === "manager";
+  const isAdminOrOrganizer = user.role === "admin" || user.role === "organizer";
 
-  if (!isAdminOrManager) throw new ApiError("Forbidden", 403);
+  if (!isAdminOrOrganizer) throw new ApiError("Forbidden", 403);
 
   // check if game exists
   const game = await Games.findById(data.game);
@@ -146,9 +146,9 @@ export const editTournament = async (
   if (!tournament) throw new ApiError("Tournament not found", 404);
 
   // verify user role
-  const isAdminOrManager = user.role === "admin" || user.role === "manager";
+  const isAdminOrOrganizer = user.role === "admin" || user.role === "organizer";
 
-  if (!isAdminOrManager) throw new ApiError("Forbidden", 403);
+  if (!isAdminOrOrganizer) throw new ApiError("Forbidden", 403);
 
   // check if game exists
   if (data.game) {
@@ -256,9 +256,9 @@ export const updateTournamentBanner = async (
   if (!tournament) throw new ApiError("Tournament not found", 404);
 
   // verify user role
-  const isAdminOrManager = user.role === "admin" || user.role === "manager";
+  const isAdminOrOrganizer = user.role === "admin" || user.role === "organizer";
 
-  if (!isAdminOrManager) throw new ApiError("Forbidden", 403);
+  if (!isAdminOrOrganizer) throw new ApiError("Forbidden", 403);
 
   // Validate the actual image contents
   await validateImageBuffer(file.buffer);
@@ -325,9 +325,9 @@ export const deleteTournamentBanner = async (
   if (!tournament) throw new ApiError("Tournament not found", 404);
 
   // verify user role
-  const isAdminOrManager = user.role === "admin" || user.role === "manager";
+  const isAdminOrOrganizer = user.role === "admin" || user.role === "organizer";
 
-  if (!isAdminOrManager) throw new ApiError("Forbidden", 403);
+  if (!isAdminOrOrganizer) throw new ApiError("Forbidden", 403);
 
   // check if tournament banner exists
   if (!tournament.banner?.publicId)
@@ -383,9 +383,9 @@ export const changeTournamentStatus = async (
   if (!tournament) throw new ApiError("Tournament not found", 404);
 
   // verify user role
-  const isAdminOrManager = user.role === "admin" || user.role === "manager";
+  const isAdminOrOrganizer = user.role === "admin" || user.role === "organizer";
 
-  if (!isAdminOrManager) throw new ApiError("Forbidden", 403);
+  if (!isAdminOrOrganizer) throw new ApiError("Forbidden", 403);
 
   // update status
   tournament.status = status;
@@ -416,9 +416,9 @@ export const deleteTournament = async (
   if (!tournament) throw new ApiError("Tournament not found", 404);
 
   // verify user role
-  const isAdminOrManager = user.role === "admin" || user.role === "manager";
+  const isAdminOrOrganizer = user.role === "admin" || user.role === "organizer";
 
-  if (!isAdminOrManager) throw new ApiError("Forbidden", 403);
+  if (!isAdminOrOrganizer) throw new ApiError("Forbidden", 403);
 
   // delete tournament banner from Cloudinary
   if (tournament.banner?.publicId) {
