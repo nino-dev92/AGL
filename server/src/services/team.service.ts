@@ -8,22 +8,22 @@ import cloudinary from "../config/cloudinary";
 import { validateImageBuffer } from "../utils/validateImage";
 import logger from "../logger/logger";
 
-export const createTeam = async (data: CreateTeamDTO) => {
-  // Validate captain ID
-  if (!Types.ObjectId.isValid(data.captain)) {
-    throw new ApiError("Invalid captain ID", 400);
+export const createTeam = async (userId: string, data: CreateTeamDTO) => {
+  // Validate manager ID
+  if (!Types.ObjectId.isValid(userId)) {
+    throw new ApiError("Invalid user ID", 400);
   }
 
-  // Check if captain exists
-  const checkCaptain = await Users.findById(data.captain);
+  // Check if manager exists
+  const checkManager = await Users.findById(userId);
 
-  if (!checkCaptain) {
-    throw new ApiError("Captain not found", 404);
+  if (!checkManager) {
+    throw new ApiError("User not found", 404);
   }
 
-  // Captain must be a player
-  if (checkCaptain.role !== "player") {
-    throw new ApiError("Captain must be a player", 400);
+  // Verify user role
+  if (checkManager.role !== "manager") {
+    throw new ApiError("Team creator must be a manager", 400);
   }
 
   // Normalize team name
@@ -60,8 +60,9 @@ export const createTeam = async (data: CreateTeamDTO) => {
   const newTeam = await Teams.create({
     name: teamName,
     slug,
-    captain: checkCaptain._id,
-    members: [checkCaptain._id],
+    manager: data.manager,
+    captain: data.captain || "",
+    members: data.captain ? [data.captain] : [],
     game: new Types.ObjectId(data.game.trim()),
     description: data.description?.trim() || "",
     maxMembers: data.maxMembers,

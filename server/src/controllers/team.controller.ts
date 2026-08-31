@@ -5,7 +5,8 @@ import { Types } from "mongoose";
 import ApiError from "../utils/apiError";
 
 export const addTeam = asyncHandler(async (req: Request, res: Response) => {
-  const newTeam = await teamService.createTeam(req.body);
+  const userId = req.user?.userId as string;
+  const newTeam = await teamService.createTeam(userId, req.body);
 
   res.status(201).json({
     success: true,

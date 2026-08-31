@@ -8,7 +8,8 @@ import upload from "../middleware/upload.middleware";
 import ROLES from "../constants/ROLES";
 
 import * as tournamentController from "../controllers/tournament.controller";
-
+import * as tournamentRegistrationController from "../controllers/tournamentRegistration.controller";
+import { tournamentRegistrationSchema } from "../validators/tournamentRegistration.validator";
 import { tournamentValidationSchema } from "../validators/tournament.validator";
 
 const router = express.Router();
@@ -57,32 +58,6 @@ const router = express.Router();
  *         description: Tournaments retrieved successfully
  */
 router.get("/", tournamentController.findAllTournaments);
-
-/**
- * @swagger
- * /v1/tournaments/{id}:
- *   get:
- *     summary: Get a tournament by ID
- *     tags:
- *       - Tournaments
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *
- *     responses:
- *       200:
- *         description: Tournament retrieved successfully
- *
- *       400:
- *         description: Invalid tournament ID
- *
- *       404:
- *         description: Tournament not found
- */
-router.get("/:id", tournamentController.findTournamentById);
 
 /**
  * @swagger
@@ -163,75 +138,6 @@ router.post(
   authorizeRole(ROLES.ADMIN, ROLES.ORGANIZER),
   validate(tournamentValidationSchema),
   tournamentController.createTournament,
-);
-
-/**
- * @swagger
- * /v1/tournaments/{id}:
- *   patch:
- *     summary: Update a tournament
- *     tags:
- *       - Tournaments
- *     security:
- *       - bearerAuth: []
- *
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               name:
- *                 type: string
- *
- *               description:
- *                 type: string
- *
- *               game:
- *                 type: string
- *
- *               maxTeams:
- *                 type: integer
- *
- *               startDate:
- *                 type: string
- *                 format: date-time
- *
- *               endDate:
- *                 type: string
- *                 format: date-time
- *
- *               rules:
- *                 type: array
- *                 items:
- *                   type: string
- *
- *     responses:
- *       200:
- *         description: Tournament updated successfully
- *
- *       400:
- *         description: Invalid tournament ID
- *
- *       403:
- *         description: Forbidden
- *
- *       404:
- *         description: Tournament not found
- */
-router.patch(
-  "/:id",
-  verifyJWT,
-  authorizeRole(ROLES.ADMIN, ROLES.ORGANIZER),
-  tournamentController.updateTournament,
 );
 
 /**
@@ -374,6 +280,234 @@ router.patch(
   verifyJWT,
   authorizeRole(ROLES.ADMIN, ROLES.ORGANIZER),
   tournamentController.updateTournamentStatus,
+);
+
+/**
+ * @swagger
+ * /v1/tournaments/{id}/register:
+ *   post:
+ *     summary: Register a team for a tournament
+ *     tags:
+ *       - Tournament Registration
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Tournament ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - teamId
+ *             properties:
+ *               teamId:
+ *                 type: string
+ *                 example: 65f123456789abcdef123456
+ *     responses:
+ *       200:
+ *         description: Team registered successfully
+ *       400:
+ *         description: Invalid request, registration closed, or tournament is full
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Only the team captain can register the team
+ *       404:
+ *         description: Tournament, team, or user not found
+ *       409:
+ *         description: Team already registered
+ */
+router.post(
+  "/:id/register",
+  verifyJWT,
+  validate(tournamentRegistrationSchema),
+  tournamentRegistrationController.registerTeam,
+);
+
+/**
+ * @swagger
+ * /v1/tournaments/{id}/register:
+ *   delete:
+ *     summary: Withdraw a team from a tournament
+ *     tags:
+ *       - Tournament Registration
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Tournament ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - teamId
+ *             properties:
+ *               teamId:
+ *                 type: string
+ *                 example: 65f123456789abcdef123456
+ *     responses:
+ *       200:
+ *         description: Team withdrawn successfully
+ *       400:
+ *         description: Registration is closed or invalid request
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Only the team captain can withdraw the team
+ *       404:
+ *         description: Tournament, team, user, or registration not found
+ */
+router.delete(
+  "/:id/register",
+  verifyJWT,
+  authorizeRole(ROLES.MANAGER, ROLES.ADMIN),
+  validate(tournamentRegistrationSchema),
+  tournamentRegistrationController.withdrawTeam,
+);
+
+/**
+ * @swagger
+ * /v1/tournaments/{id}/teams:
+ *   get:
+ *     summary: Get all teams registered for a tournament
+ *     tags:
+ *       - Tournament Registration
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Tournament ID
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Number of teams per page
+ *     responses:
+ *       200:
+ *         description: Registered teams retrieved successfully
+ *       400:
+ *         description: Invalid tournament ID
+ *       404:
+ *         description: Tournament not found
+ */
+router.get("/:id/teams", tournamentRegistrationController.getRegisteredTeams);
+
+/**
+ * @swagger
+ * /v1/tournaments/{id}:
+ *   get:
+ *     summary: Get a tournament by ID
+ *     tags:
+ *       - Tournaments
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *
+ *     responses:
+ *       200:
+ *         description: Tournament retrieved successfully
+ *
+ *       400:
+ *         description: Invalid tournament ID
+ *
+ *       404:
+ *         description: Tournament not found
+ */
+router.get("/:id", tournamentController.findTournamentById);
+
+/**
+ * @swagger
+ * /v1/tournaments/{id}:
+ *   patch:
+ *     summary: Update a tournament
+ *     tags:
+ *       - Tournaments
+ *     security:
+ *       - bearerAuth: []
+ *
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *
+ *               description:
+ *                 type: string
+ *
+ *               game:
+ *                 type: string
+ *
+ *               maxTeams:
+ *                 type: integer
+ *
+ *               startDate:
+ *                 type: string
+ *                 format: date-time
+ *
+ *               endDate:
+ *                 type: string
+ *                 format: date-time
+ *
+ *               rules:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *
+ *     responses:
+ *       200:
+ *         description: Tournament updated successfully
+ *
+ *       400:
+ *         description: Invalid tournament ID
+ *
+ *       403:
+ *         description: Forbidden
+ *
+ *       404:
+ *         description: Tournament not found
+ */
+router.patch(
+  "/:id",
+  verifyJWT,
+  authorizeRole(ROLES.ADMIN, ROLES.ORGANIZER),
+  tournamentController.updateTournament,
 );
 
 /**
