@@ -3,6 +3,11 @@ import Tournaments from "../models/Tournaments";
 import Teams from "../models/Teams";
 import Users from "../models/Users";
 import ApiError from "../utils/apiError";
+import TournamentRegistration from "../models/TournamentRegistration";
+import {
+  TournamentRegistrationDTO,
+  ReviewTournamentRegistrationDTO,
+} from "../types/tournamentRegistration.types";
 
 export const registerTeamForTournament = async (
   userId: string,
@@ -47,14 +52,14 @@ export const registerTeamForTournament = async (
     throw new ApiError("Team not found", 404);
   }
 
-  // Only the team captain can register the team
-  const isCaptain = team.captain!.toString() === user._id.toString();
-
-  // Admin or manager can also register a team
+  // Admin or manager can register a team
   const isAdminOrManager = user.role === "admin" || user.role === "manager";
 
-  if (!isCaptain && !isAdminOrManager) {
-    throw new ApiError("Only the team captain can register this team", 403);
+  if (!isAdminOrManager) {
+    throw new ApiError(
+      "Only the team manager or admin can register this team",
+      403,
+    );
   }
 
   // Check if the team is already registered
@@ -81,11 +86,7 @@ export const registerTeamForTournament = async (
 
   return await tournament.populate({
     path: "registeredTeams",
-    select: "name logo captain members",
-    populate: {
-      path: "captain",
-      select: "userName",
-    },
+    select: "name logo members",
   });
 };
 
@@ -136,12 +137,14 @@ export const withdrawTeamFromTournament = async (
   }
 
   // Check permissions
-  const isCaptain = team.captain!.toString() === user._id.toString();
 
   const isAdminOrManager = user.role === "admin" || user.role === "manager";
 
-  if (!isCaptain && !isAdminOrManager) {
-    throw new ApiError("Only the team captain can withdraw this team", 403);
+  if (!isAdminOrManager) {
+    throw new ApiError(
+      "Only the team manager or admin can withdraw this team",
+      403,
+    );
   }
 
   // Check if the team is registered
@@ -201,4 +204,232 @@ export const getTournamentRegisteredTeams = async (
     teams,
     total,
   };
+};
+
+export const applyToTournament = async (
+  userId: string,
+  data: TournamentRegistrationDTO,
+) => {
+  if (!Types.ObjectId.isValid(userId))
+    throw new ApiError("Invalid user ID", 400);
+
+  if (!Types.ObjectId.isValid(data.tournament))
+    throw new ApiError("Invalid tournament ID", 400);
+
+  if (!Types.ObjectId.isValid(data.team))
+    throw new ApiError("Invalid team ID", 400);
+
+  // check if user exists
+  const user = await Users.findById(userId);
+
+  if (!user) throw new ApiError("User not found", 404);
+
+  // Only managers can apply their teams to tournaments.
+  if (user.role !== "manager")
+    throw new ApiError("Only managers can apply teams to tournaments", 403);
+
+  // check if tournament exists
+  const tournament = await Tournaments.findById(data.tournament);
+
+  if (!tournament) throw new ApiError("Tournament not found", 404);
+
+  // A team should only be able to apply while registration is open.
+  if (tournament.status !== "registration-open")
+    throw new ApiError("Tournament registration is not currently open", 400);
+
+  // check if team exists
+  const team = await Teams.findById(data.team);
+
+  if (!team) throw new ApiError("Team not found", 404);
+
+  // Make sure the team belongs to the manager submitting the application.
+  if (team.manager.toString() !== userId) {
+    throw new ApiError("You are not authorized to apply this team", 403);
+  }
+
+  // Inactive teams cannot register for tournaments.
+  if (!team.isActive) {
+    throw new ApiError(
+      "This team is inactive and cannot register for a tournament",
+      400,
+    );
+  }
+
+  // Make sure the team's game matches the tournament's game.
+  if (team.game.toString() !== tournament.game.toString()) {
+    throw new ApiError(
+      "This team cannot register for a tournament for a different game",
+      400,
+    );
+  }
+
+  // Check if this team has already applied.
+  const existingApplication = await TournamentRegistration.findOne({
+    tournament: data.tournament,
+    team: data.team,
+  });
+
+  if (existingApplication) {
+    if (existingApplication.status === "pending") {
+      throw new ApiError("This team already has a pending application", 409);
+    }
+
+    if (existingApplication.status === "approved") {
+      throw new ApiError(
+        "This team is already registered for this tournament",
+        409,
+      );
+    }
+
+    // If previously rejected, allow the manager to submit again.
+    existingApplication.status = "pending";
+    existingApplication.rejectionReason = undefined;
+    existingApplication.reviewedBy = undefined;
+    existingApplication.reviewedAt = undefined;
+
+    await existingApplication.save();
+
+    return existingApplication;
+  }
+
+  // Create a new tournament application.
+  const application = await TournamentRegistration.create({
+    tournament: data.tournament,
+    team: data.team,
+    manager: userId,
+    status: "pending",
+  });
+
+  return application;
+};
+
+export const getTournamentApplications = async (
+  tournamentId: string,
+  status?: "pending" | "approved" | "rejected",
+) => {
+  if (!Types.ObjectId.isValid(tournamentId))
+    throw new ApiError("Invalid tournament ID", 400);
+
+  // check if tournament exists
+  const tournament = await Tournaments.findById(tournamentId);
+
+  if (!tournament) throw new ApiError("Tournament not found", 404);
+
+  const filter: Record<string, unknown> = {
+    tournament: tournamentId,
+  };
+
+  if (status) {
+    filter.status = status;
+  }
+
+  const applications = await TournamentRegistration.find(filter)
+    .sort({ createdAt: -1 })
+    .populate("team", "name logo")
+    .populate("manager", "userName email")
+    .populate("reviewedBy", "userName email");
+
+  return applications;
+};
+
+export const reviewTournamentApplication = async (
+  userId: string,
+  applicationId: string,
+  data: ReviewTournamentRegistrationDTO,
+) => {
+  if (!Types.ObjectId.isValid(userId))
+    throw new ApiError("Invalid user ID", 400);
+
+  if (!Types.ObjectId.isValid(applicationId))
+    throw new ApiError("Invalid application ID", 400);
+
+  // check if reviewer exists
+  const reviewer = await Users.findById(userId);
+
+  if (!reviewer) throw new ApiError("User not found", 404);
+
+  // Only admin or organizer can approve/reject applications.
+  const isAdminOrOrganizer =
+    reviewer.role === "admin" || reviewer.role === "organizer";
+
+  if (!isAdminOrOrganizer) throw new ApiError("Forbidden", 403);
+
+  // check if application exists
+  const application = await TournamentRegistration.findById(applicationId);
+
+  if (!application) throw new ApiError("Tournament application not found", 404);
+
+  // Prevent an already approved/rejected application from being reviewed again.
+  if (application.status !== "pending") {
+    throw new ApiError(
+      `Application has already been ${application.status}`,
+      400,
+    );
+  }
+
+  // Get tournament
+  const tournament = await Tournaments.findById(application.tournament);
+
+  if (!tournament) throw new ApiError("Tournament not found", 404);
+
+  if (data.status === "approved") {
+    // Make sure the tournament has not reached its maximum capacity.
+    if (tournament.registeredTeams.length >= tournament.maxTeams) {
+      throw new ApiError(
+        "Tournament has reached its maximum number of teams",
+        400,
+      );
+    }
+
+    // Make sure the team hasn't somehow already been registered.
+    const alreadyRegistered = tournament.registeredTeams.some(
+      (teamId) => teamId.toString() === application.team.toString(),
+    );
+
+    if (alreadyRegistered) {
+      throw new ApiError("Team is already registered for this tournament", 409);
+    }
+
+    // Add team to tournament's registered teams.
+    tournament.registeredTeams.push(application.team);
+
+    await tournament.save();
+
+    // Approve the application.
+    application.status = "approved";
+    application.reviewedBy = new Types.ObjectId(userId);
+    application.reviewedAt = new Date();
+    application.rejectionReason = undefined;
+
+    await application.save();
+  }
+
+  if (data.status === "rejected") {
+    application.status = "rejected";
+    application.reviewedBy = new Types.ObjectId(userId);
+    application.reviewedAt = new Date();
+
+    if (data.rejectionReason) {
+      application.rejectionReason = data.rejectionReason;
+    }
+
+    await application.save();
+  }
+
+  return application;
+};
+
+export const getApplicationById = async (applicationId: string) => {
+  if (!Types.ObjectId.isValid(applicationId))
+    throw new ApiError("Invalid application ID", 400);
+
+  const application = await TournamentRegistration.findById(applicationId)
+    .populate("tournament", "name slug status")
+    .populate("team", "name logo")
+    .populate("manager", "userName email")
+    .populate("reviewedBy", "userName email");
+
+  if (!application) throw new ApiError("Tournament application not found", 404);
+
+  return application;
 };

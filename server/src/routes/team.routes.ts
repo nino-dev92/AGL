@@ -138,54 +138,6 @@ router.post(
 
 /**
  * @swagger
- * /v1/teams/{teamId}/captain:
- *   patch:
- *     summary: Change team captain
- *     description: Transfers captaincy to an existing member of the team. Only an admin can perform this action.
- *     tags:
- *       - Teams
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: teamId
- *         required: true
- *         schema:
- *           type: string
- *         description: Team ID
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - newCaptainId
- *             properties:
- *               newCaptainId:
- *                 type: string
- *                 example: 65f123456789abcdef123456
- *     responses:
- *       200:
- *         description: Captain changed successfully
- *       400:
- *         description: Selected user is not a team member or is already the captain
- *       401:
- *         description: Unauthorized
- *       403:
- *         description: Forbidden
- *       404:
- *         description: User or team not found
- */
-router.patch(
-  "/:teamId/captain",
-  verifyJWT,
-  authorizeRole(ROLES.MANAGER),
-  teamController.changeCaptain,
-);
-
-/**
- * @swagger
  * /v1/teams/{id}:
  *   delete:
  *     summary: Delete a team
@@ -218,7 +170,7 @@ router.delete(
   teamController.deleteTeam,
 );
 
-// MANAGER OR TEAM CAPTAIN ROUTES
+// MANAGER ROUTES
 
 /**
  * @swagger

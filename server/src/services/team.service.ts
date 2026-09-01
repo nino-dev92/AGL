@@ -61,8 +61,7 @@ export const createTeam = async (userId: string, data: CreateTeamDTO) => {
     name: teamName,
     slug,
     manager: data.manager,
-    captain: data.captain || "",
-    members: data.captain ? [data.captain] : [],
+    members: [],
     game: new Types.ObjectId(data.game.trim()),
     description: data.description?.trim() || "",
     maxMembers: data.maxMembers,
@@ -100,7 +99,6 @@ export const getAllTeams = async (
       .skip(skip)
       .limit(limit)
       .sort({ createdAt: -1 })
-      .populate("captain", "userName")
       .populate("members", "userName"),
 
     Teams.countDocuments(filter),
@@ -117,9 +115,10 @@ export const getTeamById = async (teamId: string) => {
     throw new ApiError("Invalid team ID", 400);
   }
 
-  const selectedTeam = await Teams.findById(teamId)
-    .populate("captain", "userName")
-    .populate("members", "userName");
+  const selectedTeam = await Teams.findById(teamId).populate(
+    "members",
+    "userName",
+  );
 
   if (!selectedTeam) {
     throw new ApiError("Team not found", 404);
@@ -147,7 +146,7 @@ export const updateTeam = async (
 
   if (!team) throw new ApiError("Team not found", 404);
 
-  // Only admin or the captain of this team can update it
+  // Only admin or the manager of this team can update it
   const isAdminOrManager = user.role === "admin" || user.role !== "manager";
 
   const isManager = team.manager.toString() === user._id.toString();
@@ -188,9 +187,7 @@ export const updateTeam = async (
   const updatedTeam = await Teams.findByIdAndUpdate(teamId, data, {
     new: true,
     runValidators: true,
-  })
-    .populate("captain", "userName")
-    .populate("members", "userName");
+  }).populate("members", "userName");
 
   if (!updatedTeam) {
     throw new ApiError("Team not found", 404);
@@ -316,51 +313,6 @@ export const deleteTeamLogo = async (userId: string, teamId: string) => {
   return null;
 };
 
-export const changeTeamCaptain = async (
-  userId: string,
-  teamId: string,
-  newCaptainId: string,
-) => {
-  if (!Types.ObjectId.isValid(userId))
-    throw new ApiError("Invalid user ID", 400);
-
-  if (!Types.ObjectId.isValid(teamId))
-    throw new ApiError("Invalid team ID", 400);
-
-  if (!Types.ObjectId.isValid(newCaptainId))
-    throw new ApiError("Invalid new captain ID", 400);
-
-  const [user, team] = await Promise.all([
-    Users.findById(userId),
-    Teams.findById(teamId),
-  ]);
-
-  if (!user) throw new ApiError("User not found", 404);
-
-  if (!team) throw new ApiError("Team not found", 404);
-
-  // Only admin can change the captain
-  if (user.role !== "admin") throw new ApiError("Forbidden", 403);
-
-  // Cannot assign the current captain again
-  if (team.manager.toString() === newCaptainId)
-    throw new ApiError("Selected player is already the team captain", 400);
-
-  // New captain must already be a member
-  const existingMember = team.members.some(
-    (member) => member.toString() === newCaptainId,
-  );
-
-  if (!existingMember)
-    throw new ApiError("Selected player must already be a team member", 400);
-
-  team.manager = new Types.ObjectId(newCaptainId);
-
-  await team.save();
-
-  return team;
-};
-
 export const addTeamMember = async (
   userId: string,
   teamId: string,
@@ -387,7 +339,7 @@ export const addTeamMember = async (
     throw new ApiError("Team not found", 404);
   }
 
-  // Admin OR this team's captain can add members
+  // Admin OR this team's manager can add members
   const isAdminOrManager = user.role === "admin" || user.role === "manager";
 
   const isManager = dbTeam.manager.toString() === user._id.toString();
@@ -458,10 +410,6 @@ export const addTeamMember = async (
 
   return await dbTeam.populate([
     {
-      path: "captain",
-      select: "userName",
-    },
-    {
       path: "members",
       select: "userName",
     },
@@ -502,7 +450,7 @@ export const deleteTeamMember = async (
 
   const isAdminOrManager = user.role === "admin" || user.role === "manager";
 
-  // Only admin or captain can remove members
+  // Only admin or manager can remove members
   if (!isAdminOrManager && !isManager) {
     throw new ApiError("Forbidden", 403);
   }
@@ -514,14 +462,6 @@ export const deleteTeamMember = async (
 
   if (!existingMember) {
     throw new ApiError("Team member not found", 404);
-  }
-
-  // Captain cannot be removed without transferring captaincy first
-  if (team.manager.toString() === memberId) {
-    throw new ApiError(
-      "Transfer captaincy before removing the current captain",
-      400,
-    );
   }
 
   team.members = team.members.filter(
@@ -553,13 +493,6 @@ export const leaveTeam = async (userId: string, teamId: string) => {
   const isMember = team.members.some((member) => member.toString() === userId);
 
   if (!isMember) throw new ApiError("You are not a member of this team", 400);
-
-  // Captain must transfer captaincy first
-  if (team.manager.toString() === userId)
-    throw new ApiError(
-      "You must transfer captaincy before leaving the team",
-      400,
-    );
 
   team.members = team.members.filter((member) => member.toString() !== userId);
 

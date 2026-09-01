@@ -138,26 +138,6 @@ export const deleteTeamLogo = asyncHandler(
   },
 );
 
-export const changeCaptain = asyncHandler(
-  async (req: Request, res: Response) => {
-    const userId = req.user?.userId as string;
-    const teamId = req.params.teamId as string;
-    const newCaptainId = req.body.newCaptainId as string;
-
-    const changeCaptain = await teamService.changeTeamCaptain(
-      userId,
-      teamId,
-      newCaptainId,
-    );
-
-    res.status(200).json({
-      success: true,
-      message: "Captain change successful",
-      data: changeCaptain,
-    });
-  },
-);
-
 export const leaveTeam = asyncHandler(async (req: Request, res: Response) => {
   const userId = req.user?.userId as string;
   const teamId = req.params.id as string;

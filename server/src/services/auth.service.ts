@@ -8,7 +8,7 @@ import jwt from "jsonwebtoken";
 import env from "../config/env";
 
 export const registerUser = async (data: UserDTO) => {
-  const { firstName, lastName, userName, password, email } = data;
+  const { firstName, lastName, userName, password, email, role } = data;
 
   const normalizedEmail = email.toLowerCase();
   const normalizedUsername = userName.toLowerCase();
@@ -31,7 +31,6 @@ export const registerUser = async (data: UserDTO) => {
     userName: normalizedUsername,
     email: normalizedEmail,
     password,
-    role: ROLES.PLAYER,
   });
 
   return {

@@ -3,7 +3,12 @@ import verifyJWT from "../middleware/verifyJWT.middleware";
 import authorizeRole from "../middleware/authorizeRole.middleware";
 import ROLES from "../constants/ROLES";
 import validate from "../middleware/validation.middleware";
-import { matchValidatorSchema } from "../validators/match.validator";
+
+import {
+  matchValidatorSchema,
+  updateMatchValidatorSchema,
+} from "../validators/match.validator";
+
 import * as matchController from "../controllers/match.controller";
 
 const router = express.Router();
@@ -20,32 +25,67 @@ const router = express.Router();
  * /v1/matches:
  *   get:
  *     summary: Get all matches
+ *     description: Public endpoint for retrieving tournament matches.
  *     tags:
  *       - Matches
  *     parameters:
  *       - in: query
- *         name: search
+ *         name: tournament
  *         required: false
  *         schema:
  *           type: string
- *         description: Search matches
+ *         description: Filter matches by tournament ID
+ *
+ *       - in: query
+ *         name: team
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: Filter matches involving a specific team
+ *
+ *       - in: query
+ *         name: round
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: Filter matches by tournament round
+ *
+ *       - in: query
+ *         name: status
+ *         required: false
+ *         schema:
+ *           type: string
+ *           enum:
+ *             - pending
+ *             - ongoing
+ *             - completed
+ *             - cancelled
+ *         description: Filter matches by status
+ *
  *       - in: query
  *         name: page
  *         required: false
  *         schema:
  *           type: integer
+ *           minimum: 1
  *           default: 1
  *         description: Page number
+ *
  *       - in: query
  *         name: limit
  *         required: false
  *         schema:
  *           type: integer
+ *           minimum: 1
+ *           maximum: 50
  *           default: 10
  *         description: Number of matches per page
+ *
  *     responses:
  *       200:
  *         description: Matches retrieved successfully
+ *       400:
+ *         description: Invalid query parameter
  */
 router.get("/", matchController.findAllMatches);
 
@@ -54,6 +94,7 @@ router.get("/", matchController.findAllMatches);
  * /v1/matches/{id}:
  *   get:
  *     summary: Get a match by ID
+ *     description: Public endpoint for retrieving a single match.
  *     tags:
  *       - Matches
  *     parameters:
@@ -63,6 +104,7 @@ router.get("/", matchController.findAllMatches);
  *         schema:
  *           type: string
  *         description: Match ID
+ *
  *     responses:
  *       200:
  *         description: Match retrieved successfully
@@ -77,11 +119,13 @@ router.get("/:id", matchController.findMatchById);
  * @swagger
  * /v1/matches:
  *   post:
- *     summary: Create a new match
+ *     summary: Create a single match
+ *     description: Create an individual tournament match manually.
  *     tags:
  *       - Matches
  *     security:
  *       - bearerAuth: []
+ *
  *     requestBody:
  *       required: true
  *       content:
@@ -94,23 +138,34 @@ router.get("/:id", matchController.findMatchById);
  *               - teamB
  *               - scheduledDate
  *               - round
+ *               - matchNumber
  *             properties:
  *               tournament:
  *                 type: string
  *                 example: 65f123456789abcdef123456
+ *
  *               teamA:
  *                 type: string
  *                 example: 65f123456789abcdef123457
+ *
  *               teamB:
  *                 type: string
  *                 example: 65f123456789abcdef123458
+ *
  *               scheduledDate:
  *                 type: string
  *                 format: date-time
  *                 example: 2026-10-20T15:00:00.000Z
+ *
  *               round:
  *                 type: string
  *                 example: Quarter Final
+ *
+ *               matchNumber:
+ *                 type: integer
+ *                 minimum: 1
+ *                 example: 1
+ *
  *     responses:
  *       201:
  *         description: Match created successfully
@@ -121,7 +176,7 @@ router.get("/:id", matchController.findMatchById);
  *       403:
  *         description: Forbidden
  *       404:
- *         description: User not found
+ *         description: Tournament or team not found
  *       409:
  *         description: Match already exists
  */
@@ -138,10 +193,12 @@ router.post(
  * /v1/matches/{id}:
  *   patch:
  *     summary: Update a match
+ *     description: Update the schedule, status, result, or winner of a match.
  *     tags:
  *       - Matches
  *     security:
  *       - bearerAuth: []
+ *
  *     parameters:
  *       - in: path
  *         name: id
@@ -149,6 +206,7 @@ router.post(
  *         schema:
  *           type: string
  *         description: Match ID
+ *
  *     requestBody:
  *       required: true
  *       content:
@@ -160,6 +218,7 @@ router.post(
  *                 type: string
  *                 format: date-time
  *                 example: 2026-10-20T18:00:00.000Z
+ *
  *               status:
  *                 type: string
  *                 enum:
@@ -168,20 +227,20 @@ router.post(
  *                   - completed
  *                   - cancelled
  *                 example: ongoing
+ *
  *               result:
  *                 type: string
  *                 example: 3-1
+ *
  *               winner:
  *                 type: string
  *                 example: 65f123456789abcdef123457
- *               round:
- *                 type: string
- *                 example: Semi Final
+ *
  *     responses:
  *       200:
  *         description: Match updated successfully
  *       400:
- *         description: Invalid match ID
+ *         description: Invalid match or update data
  *       401:
  *         description: Unauthorized
  *       403:
@@ -193,6 +252,7 @@ router.patch(
   "/:id",
   verifyJWT,
   authorizeRole(ROLES.ADMIN, ROLES.ORGANIZER),
+  validate(updateMatchValidatorSchema),
   matchController.editMatch,
 );
 
@@ -205,6 +265,7 @@ router.patch(
  *       - Matches
  *     security:
  *       - bearerAuth: []
+ *
  *     parameters:
  *       - in: path
  *         name: id
@@ -212,6 +273,7 @@ router.patch(
  *         schema:
  *           type: string
  *         description: Match ID
+ *
  *     responses:
  *       200:
  *         description: Match deleted successfully

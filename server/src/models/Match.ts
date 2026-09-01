@@ -9,6 +9,7 @@ export interface IMatch extends Document {
   result?: string | undefined;
   winner?: Types.ObjectId | undefined;
   round: string;
+  matchNumber: number;
 }
 
 const matchSchema: Schema = new mongoose.Schema(
@@ -18,24 +19,79 @@ const matchSchema: Schema = new mongoose.Schema(
       ref: "Tournament",
       required: true,
     },
-    teamA: { type: mongoose.Types.ObjectId, ref: "Team", required: true },
-    teamB: { type: mongoose.Types.ObjectId, ref: "Team", required: true },
-    scheduledDate: { type: Date, required: true },
+
+    teamA: {
+      type: mongoose.Types.ObjectId,
+      ref: "Team",
+      required: true,
+    },
+
+    teamB: {
+      type: mongoose.Types.ObjectId,
+      ref: "Team",
+      required: true,
+    },
+
+    scheduledDate: {
+      type: Date,
+      required: true,
+    },
+
     status: {
       type: String,
       enum: ["pending", "ongoing", "completed", "cancelled"],
       default: "pending",
     },
-    result: { type: String, required: false },
+
+    result: {
+      type: String,
+      required: false,
+      trim: true,
+    },
+
     winner: {
       type: mongoose.Types.ObjectId,
       ref: "Team",
       required: false,
     },
-    round: { type: String, required: true },
+
+    round: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
+    matchNumber: {
+      type: Number,
+      required: true,
+      min: 1,
+    },
   },
   {
     timestamps: true,
+  },
+);
+
+/**
+ * Prevent duplicate match numbers within the same tournament round.
+ *
+ * Example:
+ *
+ * Tournament A
+ *   Quarter Final - Match 1
+ *   Quarter Final - Match 2
+ *
+ * The same tournament cannot have another
+ * Quarter Final - Match 1.
+ */
+matchSchema.index(
+  {
+    tournament: 1,
+    round: 1,
+    matchNumber: 1,
+  },
+  {
+    unique: true,
   },
 );
 

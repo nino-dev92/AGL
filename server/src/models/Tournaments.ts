@@ -3,7 +3,7 @@ import mongoose, { Document, model, Schema, Types } from "mongoose";
 export interface ITournament extends Document {
   name: string;
   slug: string;
-  description?: string;
+  description: string | undefined;
   game: Types.ObjectId;
 
   banner?:
