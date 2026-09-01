@@ -10,6 +10,7 @@ import {
 } from "../validators/tournamentRegistration.validator";
 
 import * as registrationController from "../controllers/teamRegistration.controller";
+import * as tournamentRegistrationController from "../controllers/tournamentRegistration.controller";
 
 const router = express.Router();
 
@@ -114,34 +115,28 @@ router.get(
 
 /**
  * @swagger
- * /v1/tournament-registrations/{id}:
+ * /v1/tournament-registrations/my-applications:
  *   get:
- *     summary: Get a tournament application by ID
+ *     summary: Get the logged-in manager's tournament applications
  *     tags:
  *       - Tournament Registrations
  *     security:
  *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: Tournament registration application ID
  *     responses:
  *       200:
- *         description: Tournament application retrieved successfully
- *       400:
- *         description: Invalid application ID
+ *         description: Applications retrieved successfully
  *       401:
  *         description: Unauthorized
+ *       403:
+ *         description: Only managers can access this endpoint
  *       404:
- *         description: Tournament application not found
+ *         description: User not found
  */
 router.get(
-  "/:id",
+  "/my-applications",
   verifyJWT,
-  registrationController.findTournamentApplicationById,
+  authorizeRole(ROLES.MANAGER),
+  tournamentRegistrationController.findManagerApplications,
 );
 
 /**
@@ -198,6 +193,38 @@ router.patch(
   authorizeRole(ROLES.ADMIN, ROLES.ORGANIZER),
   validate(reviewTournamentRegistrationValidatorSchema),
   registrationController.reviewTournamentApplication,
+);
+
+/**
+ * @swagger
+ * /v1/tournament-registrations/{id}:
+ *   get:
+ *     summary: Get a tournament application by ID
+ *     tags:
+ *       - Tournament Registrations
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Tournament registration application ID
+ *     responses:
+ *       200:
+ *         description: Tournament application retrieved successfully
+ *       400:
+ *         description: Invalid application ID
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Tournament application not found
+ */
+router.get(
+  "/:id",
+  verifyJWT,
+  registrationController.findTournamentApplicationById,
 );
 
 export default router;

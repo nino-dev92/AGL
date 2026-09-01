@@ -2,9 +2,7 @@ import { Request, Response } from "express";
 import asyncHandler from "../utils/asyncHandler";
 import * as tournamentRegistrationService from "../services/tournamentRegistration.service";
 
-/**
- * Register a team for a tournament
- */
+// Register a team for a tournament
 export const registerTeam = asyncHandler(
   async (req: Request, res: Response) => {
     const userId = req.user?.userId as string;
@@ -28,9 +26,23 @@ export const registerTeam = asyncHandler(
   },
 );
 
-/**
- * Withdraw a team from a tournament
- */
+// Find all manager applications
+export const findManagerApplications = asyncHandler(
+  async (req: Request, res: Response) => {
+    const userId = req.user?.userId as string;
+
+    const applications =
+      await tournamentRegistrationService.getManagerApplications(userId);
+
+    res.status(200).json({
+      success: true,
+      message: "Your tournament applications retrieved successfully",
+      data: applications,
+    });
+  },
+);
+
+// Withdraw a team from a tournament
 export const withdrawTeam = asyncHandler(
   async (req: Request, res: Response) => {
     const userId = req.user?.userId as string;
@@ -54,9 +66,7 @@ export const withdrawTeam = asyncHandler(
   },
 );
 
-/**
- * Get registered teams for a tournament
- */
+// Get registered teams for a tournament
 export const getRegisteredTeams = asyncHandler(
   async (req: Request, res: Response) => {
     const tournamentId = req.params.id as string;

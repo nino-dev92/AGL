@@ -303,6 +303,34 @@ export const applyToTournament = async (
   return application;
 };
 
+export const getManagerApplications = async (userId: string) => {
+  if (!Types.ObjectId.isValid(userId)) {
+    throw new ApiError("Invalid user ID", 400);
+  }
+
+  // Check if user exists
+  const user = await Users.findById(userId);
+
+  if (!user) {
+    throw new ApiError("User not found", 404);
+  }
+
+  // Only managers can view their applications
+  if (user.role !== "manager") {
+    throw new ApiError("Forbidden", 403);
+  }
+
+  // Get applications submitted by this manager
+  const applications = await TournamentRegistration.find({
+    manager: userId,
+  })
+    .sort({ createdAt: -1 })
+    .populate("tournament", "name slug status")
+    .populate("team", "name logo game");
+
+  return applications;
+};
+
 export const getTournamentApplications = async (
   tournamentId: string,
   status?: "pending" | "approved" | "rejected",
