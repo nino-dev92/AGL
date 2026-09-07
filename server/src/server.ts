@@ -2,13 +2,30 @@ import app from "./app";
 import connectDB from "./config/db";
 import logger from "./logger/logger";
 import env from "./config/env";
+import http from "http";
+import { Server } from "socket.io";
+import { initializeSocket } from "./socket";
+
+const httpServer = http.createServer(app);
+
+const io = new Server(httpServer, {
+  cors: {
+    origin: process.env.CLIENT_URL,
+    credentials: true,
+  },
+});
+
+initializeSocket(io);
+
+const port = env.PORT || 5000;
 
 const connect = async () => {
-  const port = env.PORT ?? 5000;
   try {
     await connectDB();
 
-    app.listen(port, () => logger.info(`App is listening on ${port}`));
+    httpServer.listen(port, () => {
+      logger.info(`Server running on port ${port}`);
+    });
   } catch (error: any) {
     logger.error(error);
     process.exit(1);

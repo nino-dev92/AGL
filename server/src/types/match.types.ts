@@ -1,21 +1,21 @@
 export type MatchStatus = "pending" | "ongoing" | "completed" | "cancelled";
 
-export type MatchDTO = {
+export interface MatchDTO {
   tournament: string;
   teamA: string;
   teamB: string;
-  scheduledDate: string | Date;
+  scheduledDate: Date;
   round: string;
   matchNumber: number;
-};
+}
 
-export type UpdateMatchDTO = {
-  tournament: string;
-  scheduledDate?: string | Date;
-  status?: MatchStatus;
-  result?: string;
-  winner?: string;
-};
+export interface UpdateMatchDTO {
+  teamA?: string;
+  teamB?: string;
+  scheduledDate?: Date;
+  round?: string;
+  matchNumber?: number;
+}
 
 export type TournamentMatchDTO = {
   teamA: string;

@@ -116,3 +116,58 @@ export const removeMatch = asyncHandler(async (req: Request, res: Response) => {
     message: "Match deleted successfully",
   });
 });
+
+// Start a match.
+
+export const startMatch = asyncHandler(async (req: Request, res: Response) => {
+  const userId = req.user?.userId as string;
+
+  const matchId = req.params.id as string;
+
+  const match = await matchService.startMatch(userId, matchId);
+
+  return res.status(200).json({
+    success: true,
+    message: "Match started successfully",
+    data: match,
+  });
+});
+
+// Submit a match result.
+export const submitMatchResult = asyncHandler(
+  async (req: Request, res: Response) => {
+    const userId = req.user?.userId as string;
+
+    const matchId = req.params.id as string;
+
+    const { result, winner } = req.body;
+
+    const match = await matchService.submitMatchResult(
+      userId,
+      matchId,
+      result,
+      winner,
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Match result submitted successfully",
+      data: match,
+    });
+  },
+);
+
+// Cancel a match.
+export const cancelMatch = asyncHandler(async (req: Request, res: Response) => {
+  const userId = req.user?.userId as string;
+
+  const matchId = req.params.id as string;
+
+  const match = await matchService.cancelMatch(userId, matchId);
+
+  return res.status(200).json({
+    success: true,
+    message: "Match cancelled successfully",
+    data: match,
+  });
+});

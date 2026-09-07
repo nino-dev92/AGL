@@ -10,6 +10,14 @@ import env from "../config/env";
 export const registerUser = async (data: UserDTO) => {
   const { firstName, lastName, userName, password, email, role } = data;
 
+  const allowedRoles = ["player", "organizer", "admin", "manager"] as const;
+
+  if (!allowedRoles.includes(role)) {
+    throw new ApiError("Invalid role", 400);
+  }
+
+  const userRole = role;
+
   const normalizedEmail = email.toLowerCase();
   const normalizedUsername = userName.toLowerCase();
 
@@ -31,6 +39,7 @@ export const registerUser = async (data: UserDTO) => {
     userName: normalizedUsername,
     email: normalizedEmail,
     password,
+    role: userRole,
   });
 
   return {

@@ -1,85 +1,135 @@
 import Match from "../models/Match";
-import ApiError from "../utils/apiError";
-import Users from "../models/Users";
 import Tournaments from "../models/Tournaments";
 import Teams from "../models/Teams";
+import TournamentRegistration from "../models/TournamentRegistration";
+import ApiError from "../utils/apiError";
+import Users from "../models/Users";
 import {
   MatchDTO,
-  TournamentMatchDTO,
   UpdateMatchDTO,
+  TournamentMatchDTO,
 } from "../types/match.types";
 import { Types } from "mongoose";
+import { closeMatchChat } from "../socket/socketManager";
 
+// create single match
 export const createMatch = async (userId: string, data: MatchDTO) => {
-  if (!Types.ObjectId.isValid(userId))
+  if (!Types.ObjectId.isValid(userId)) {
     throw new ApiError("Invalid user ID", 400);
+  }
 
-  if (!Types.ObjectId.isValid(data.tournament))
+  if (!Types.ObjectId.isValid(data.tournament)) {
     throw new ApiError("Invalid tournament ID", 400);
+  }
 
-  if (!Types.ObjectId.isValid(data.teamA))
-    throw new ApiError("Invalid team A ID", 400);
+  if (!Types.ObjectId.isValid(data.teamA)) {
+    throw new ApiError("Invalid Team A ID", 400);
+  }
 
-  if (!Types.ObjectId.isValid(data.teamB))
-    throw new ApiError("Invalid team B ID", 400);
+  if (!Types.ObjectId.isValid(data.teamB)) {
+    throw new ApiError("Invalid Team B ID", 400);
+  }
 
-  // A team cannot play against itself
-  if (data.teamA === data.teamB)
-    throw new ApiError("A team cannot play against itself", 400);
+  // A team cannot play against itself.
+  if (data.teamA === data.teamB) {
+    throw new ApiError("Team A and Team B cannot be the same team", 400);
+  }
 
-  // check if user exists
+  // Check if the user exists.
   const user = await Users.findById(userId);
 
-  if (!user) throw new ApiError("User not found", 404);
+  if (!user) {
+    throw new ApiError("User not found", 404);
+  }
 
-  // verify user role
+  // Only admin or organizer can create matches.
   const isAdminOrOrganizer = user.role === "admin" || user.role === "organizer";
 
-  if (!isAdminOrOrganizer) throw new ApiError("Forbidden", 403);
+  if (!isAdminOrOrganizer) {
+    throw new ApiError("Forbidden", 403);
+  }
 
-  // check if tournament exists
+  // Check if the tournament exists.
   const tournament = await Tournaments.findById(data.tournament);
 
-  if (!tournament) throw new ApiError("Tournament not found", 404);
+  if (!tournament) {
+    throw new ApiError("Tournament not found", 404);
+  }
 
-  // check if teams exist
+  // Prevent matches from being created for completed or cancelled tournaments.
+  if (tournament.status === "completed" || tournament.status === "cancelled") {
+    throw new ApiError(
+      "Cannot create matches for a completed or cancelled tournament",
+      400,
+    );
+  }
+
+  // Check if both teams exist.
   const [teamA, teamB] = await Promise.all([
     Teams.findById(data.teamA),
     Teams.findById(data.teamB),
   ]);
 
-  if (!teamA) throw new ApiError("Team A not found", 404);
-
-  if (!teamB) throw new ApiError("Team B not found", 404);
-
-  // Check that both teams are registered for this tournament
-  const registeredTeamIds = tournament.registeredTeams.map((team) =>
-    team.toString(),
-  );
-
-  if (!registeredTeamIds.includes(data.teamA)) {
-    throw new ApiError("Team A is not registered for this tournament", 400);
+  if (!teamA) {
+    throw new ApiError("Team A not found", 404);
   }
 
-  if (!registeredTeamIds.includes(data.teamB)) {
-    throw new ApiError("Team B is not registered for this tournament", 400);
+  if (!teamB) {
+    throw new ApiError("Team B not found", 404);
   }
 
-  // check if match already exists
-  const matchExists = await Match.findOne({
+  // Make sure both teams play the same game as the tournament.
+  if (
+    teamA.game.toString() !== tournament.game.toString() ||
+    teamB.game.toString() !== tournament.game.toString()
+  ) {
+    throw new ApiError(
+      "Both teams must belong to the same game as the tournament",
+      400,
+    );
+  }
+
+  // Check if Team A has been approved for the tournament.
+  const teamARegistration = await TournamentRegistration.findOne({
+    tournament: data.tournament,
+    team: data.teamA,
+    status: "approved",
+  });
+
+  if (!teamARegistration) {
+    throw new ApiError("Team A is not approved for this tournament", 400);
+  }
+
+  // Check if Team B has been approved for the tournament.
+  const teamBRegistration = await TournamentRegistration.findOne({
+    tournament: data.tournament,
+    team: data.teamB,
+    status: "approved",
+  });
+
+  if (!teamBRegistration) {
+    throw new ApiError("Team B is not approved for this tournament", 400);
+  }
+
+  // Check if this match number already exists in the same round.
+  const existingMatch = await Match.findOne({
     tournament: data.tournament,
     round: data.round,
     matchNumber: data.matchNumber,
   });
 
-  if (matchExists)
-    throw new ApiError("Match already exists for this round", 409);
+  if (existingMatch) {
+    throw new ApiError(
+      "A match with this match number already exists in this round",
+      409,
+    );
+  }
 
-  // create match
+  // Create the match.
   const match = await Match.create({
-    tournament: new Types.ObjectId(data.tournament),
-    teamA: new Types.ObjectId(data.teamA),
-    teamB: new Types.ObjectId(data.teamB),
+    tournament: data.tournament,
+    teamA: data.teamA,
+    teamB: data.teamB,
     scheduledDate: new Date(data.scheduledDate),
     round: data.round,
     matchNumber: data.matchNumber,
@@ -88,12 +138,7 @@ export const createMatch = async (userId: string, data: MatchDTO) => {
   return match;
 };
 
-/**
- * Create multiple matches generated by the frontend.
- *
- * The frontend is responsible for generating the tournament bracket.
- * The backend is responsible for validating and persisting it.
- */
+// Create multiple matches generated by the frontend.
 export const createTournamentMatches = async (
   userId: string,
   tournamentId: string,
@@ -226,6 +271,7 @@ export const createTournamentMatches = async (
   }
 };
 
+// get all matches
 export const getAllMatches = async (
   tournament: string,
   page: number,
@@ -282,6 +328,7 @@ export const getAllMatches = async (
   };
 };
 
+// get match by id
 export const getMatchById = async (matchId: string) => {
   if (!Types.ObjectId.isValid(matchId))
     throw new ApiError("Invalid match ID", 400);
@@ -297,6 +344,7 @@ export const getMatchById = async (matchId: string) => {
   return match;
 };
 
+// update an exisiting match
 export const updateMatch = async (
   userId: string,
   matchId: string,
@@ -322,36 +370,181 @@ export const updateMatch = async (
 
   if (!isAdminOrOrganizer) throw new ApiError("Forbidden", 403);
 
-  // If a winner is supplied, make sure the winner is one of the two teams
-  if (update.winner) {
-    if (!Types.ObjectId.isValid(update.winner))
-      throw new ApiError("Invalid winner ID", 400);
+  // Only these fields can be modified through the generic update endpoint
+  const allowedUpdates: UpdateMatchDTO = {};
 
-    const isParticipant =
-      matchExists.teamA.toString() === update.winner ||
-      matchExists.teamB.toString() === update.winner;
+  if (update.scheduledDate !== undefined) {
+    allowedUpdates.scheduledDate = update.scheduledDate;
+  }
 
-    if (!isParticipant) {
-      throw new ApiError(
-        "Winner must be one of the teams participating in the match",
-        400,
-      );
+  if (update.round !== undefined) {
+    allowedUpdates.round = update.round;
+  }
+
+  if (update.matchNumber !== undefined) {
+    allowedUpdates.matchNumber = update.matchNumber;
+  }
+
+  if (update.teamA && update.teamB) {
+    if (update.teamA === update.teamB) {
+      throw new ApiError("Team A and Team B cannot be the same team", 400);
     }
   }
 
   // update match
-  const updatedMatch = await Match.findByIdAndUpdate(matchId, update, {
+  const updatedMatch = await Match.findByIdAndUpdate(matchId, allowedUpdates, {
     new: true,
     runValidators: true,
-  })
-    .populate("tournament", "name game banner")
-    .populate("teamA", "name logo")
-    .populate("teamB", "name logo")
-    .populate("winner", "name logo");
+  });
 
   return updatedMatch;
 };
 
+// Start a match
+export const startMatch = async (userId: string, matchId: string) => {
+  if (!Types.ObjectId.isValid(userId))
+    throw new ApiError("Invalid user ID", 400);
+
+  if (!Types.ObjectId.isValid(matchId))
+    throw new ApiError("Invalid match ID", 400);
+
+  // check if user exists
+  const user = await Users.findById(userId);
+
+  if (!user) throw new ApiError("User not found", 404);
+
+  // verify user role
+  const isAdminOrOrganizer = user.role === "admin" || user.role === "organizer";
+
+  if (!isAdminOrOrganizer) throw new ApiError("Forbidden", 403);
+
+  // check if match exists
+  const match = await Match.findById(matchId);
+
+  if (!match) throw new ApiError("Match not found", 404);
+
+  // A match can only start when it is pending
+  if (match.status !== "pending") {
+    throw new ApiError(
+      `Match cannot be started because it is currently ${match.status}`,
+      400,
+    );
+  }
+
+  // update match status
+  match.status = "ongoing";
+
+  await match.save();
+
+  return match;
+};
+
+// Submit the result of a match. The winner must be either teamA or teamB. The match must currently be ongoing.
+export const submitMatchResult = async (
+  userId: string,
+  matchId: string,
+  result: string,
+  winner: string,
+) => {
+  if (!Types.ObjectId.isValid(userId))
+    throw new ApiError("Invalid user ID", 400);
+
+  if (!Types.ObjectId.isValid(matchId))
+    throw new ApiError("Invalid match ID", 400);
+
+  if (!Types.ObjectId.isValid(winner))
+    throw new ApiError("Invalid winner team ID", 400);
+
+  // check if user exists
+  const user = await Users.findById(userId);
+
+  if (!user) throw new ApiError("User not found", 404);
+
+  // verify user role
+  const isAdminOrOrganizer = user.role === "admin" || user.role === "organizer";
+
+  if (!isAdminOrOrganizer) throw new ApiError("Forbidden", 403);
+
+  // check if match exists
+  const match = await Match.findById(matchId);
+
+  if (!match) throw new ApiError("Match not found", 404);
+
+  // A match must be ongoing before a result can be submitted
+  if (match.status !== "ongoing") {
+    throw new ApiError(
+      `Match result cannot be submitted because the match is currently ${match.status}`,
+      400,
+    );
+  }
+
+  //Make sure the selected winner actually participated in this match.
+
+  const isParticipant =
+    match.teamA.toString() === winner || match.teamB.toString() === winner;
+
+  if (!isParticipant) {
+    throw new ApiError(
+      "Winner must be one of the teams participating in this match",
+      400,
+    );
+  }
+
+  // Save match result
+  match.result = result;
+  match.winner = new Types.ObjectId(winner);
+  match.status = "completed";
+
+  await match.save();
+
+  // Close the match chat AFTER the match has successfully been marked as completed in MongoDB.
+  closeMatchChat(match._id.toString());
+
+  return match;
+};
+
+// Cancel a match, completed or already cancelled match cannot be cancelled.
+export const cancelMatch = async (userId: string, matchId: string) => {
+  if (!Types.ObjectId.isValid(userId))
+    throw new ApiError("Invalid user ID", 400);
+
+  if (!Types.ObjectId.isValid(matchId))
+    throw new ApiError("Invalid match ID", 400);
+
+  // check if user exists
+  const user = await Users.findById(userId);
+
+  if (!user) throw new ApiError("User not found", 404);
+
+  // verify user role
+  const isAdminOrOrganizer = user.role === "admin" || user.role === "organizer";
+
+  if (!isAdminOrOrganizer) throw new ApiError("Forbidden", 403);
+
+  // check if match exists
+  const match = await Match.findById(matchId);
+
+  if (!match) throw new ApiError("Match not found", 404);
+
+  // A completed match cannot be cancelled
+  if (match.status === "completed") {
+    throw new ApiError("A completed match cannot be cancelled", 400);
+  }
+
+  // A cancelled match cannot be cancelled again
+  if (match.status === "cancelled") {
+    throw new ApiError("Match is already cancelled", 400);
+  }
+
+  // update match status
+  match.status = "cancelled";
+
+  await match.save();
+
+  return match;
+};
+
+// delete an existing match
 export const deleteMatch = async (userId: string, matchId: string) => {
   if (!Types.ObjectId.isValid(userId))
     throw new ApiError("Invalid user ID", 400);
