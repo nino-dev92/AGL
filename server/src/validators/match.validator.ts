@@ -54,4 +54,8 @@ export const matchResultValidatorSchema = Joi.object({
   result: Joi.string().trim().required(),
 
   winner: Joi.string().required(),
+
+  teamAScore: Joi.number().integer().min(0).required(),
+
+  teamBScore: Joi.number().integer().min(0).required(),
 });

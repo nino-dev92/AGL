@@ -19,6 +19,7 @@ import categoryRoutes from "./routes/category.routes";
 import tournamentRoutes from "./routes/tournament.routes";
 import tournamentRegistrationRoutes from "./routes/tournamentRegistration.routes";
 import matchRoutes from "./routes/match.routes";
+import standingsRoutes from "./routes/standings.route";
 
 const app = express();
 
@@ -40,6 +41,7 @@ app.use("/api/v1/category", categoryRoutes);
 app.use("/api/v1/tournaments", tournamentRoutes);
 app.use("/api/v1/tournament-registration", tournamentRegistrationRoutes);
 app.use("/api/v1/match", matchRoutes);
+app.use("/api/v1/standings", standingsRoutes);
 
 app.use(errorMiddleware);
 

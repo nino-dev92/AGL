@@ -416,7 +416,12 @@ router.patch(
  *               result:
  *                 type: string
  *                 example: 3-1
- *
+ *               teamAscore:
+ *                 type: string
+ *                 example: 3
+ *               teamBscore:
+ *                 type: string
+ *                 example: 1
  *               winner:
  *                 type: string
  *                 example: 65f123456789abcdef123457
