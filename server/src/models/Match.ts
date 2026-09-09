@@ -6,6 +6,10 @@ export interface IMatch extends Document {
   teamB: Types.ObjectId;
   scheduledDate: Date;
   status: "pending" | "ongoing" | "completed" | "cancelled";
+
+  teamAScore?: number;
+  teamBScore?: number;
+
   result?: string | undefined;
   winner?: Types.ObjectId | undefined;
   round: string;
@@ -41,6 +45,18 @@ const matchSchema: Schema = new mongoose.Schema(
       type: String,
       enum: ["pending", "ongoing", "completed", "cancelled"],
       default: "pending",
+    },
+
+    teamAScore: {
+      type: Number,
+      min: 0,
+      required: false,
+    },
+
+    teamBScore: {
+      type: Number,
+      min: 0,
+      required: false,
     },
 
     result: {

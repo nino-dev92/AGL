@@ -445,6 +445,8 @@ export const submitMatchResult = async (
   matchId: string,
   result: string,
   winner: string,
+  teamAScore: number,
+  teamBScore: number,
 ) => {
   if (!Types.ObjectId.isValid(userId))
     throw new ApiError("Invalid user ID", 400);
@@ -478,8 +480,16 @@ export const submitMatchResult = async (
     );
   }
 
-  //Make sure the selected winner actually participated in this match.
+  // Validate scores
+  if (teamAScore < 0 || teamBScore < 0) {
+    throw new ApiError("Scores cannot be negative", 400);
+  }
 
+  if (teamAScore === teamBScore) {
+    throw new ApiError("A match cannot end in a draw", 400);
+  }
+
+  //Make sure the selected winner actually participated in this match.
   const isParticipant =
     match.teamA.toString() === winner || match.teamB.toString() === winner;
 
@@ -490,14 +500,27 @@ export const submitMatchResult = async (
     );
   }
 
+  // Check winner agrees with the score
+  const teamAWon = teamAScore > teamBScore;
+  const teamBWon = teamBScore > teamAScore;
+
+  if (
+    (teamAWon && match.teamA.toString() !== winner) ||
+    (teamBWon && match.teamB.toString() !== winner)
+  ) {
+    throw new ApiError("Winner does not match the submitted scores", 400);
+  }
+
   // Save match result
-  match.result = result;
+  match.result = result.trim();
   match.winner = new Types.ObjectId(winner);
+  match.teamAScore = teamAScore;
+  match.teamBScore = teamBScore;
   match.status = "completed";
 
   await match.save();
 
-  // Close the match chat AFTER the match has successfully been marked as completed in MongoDB.
+  // Close the match chat after the match has successfully been marked as completed in MongoDB.
   closeMatchChat(match._id.toString());
 
   return match;
