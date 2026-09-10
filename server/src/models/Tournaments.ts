@@ -6,6 +6,8 @@ export interface ITournament extends Document {
   description: string | undefined;
   game: Types.ObjectId;
 
+  organizer: Types.ObjectId;
+
   banner?:
     | {
         url: string;
@@ -77,6 +79,11 @@ const tournamentSchema: Schema = new mongoose.Schema(
     game: {
       type: mongoose.Types.ObjectId,
       ref: "Game",
+      required: true,
+    },
+    organizer: {
+      type: mongoose.Types.ObjectId,
+      ref: "User",
       required: true,
     },
 

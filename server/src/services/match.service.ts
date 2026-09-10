@@ -133,6 +133,7 @@ export const createMatch = async (userId: string, data: MatchDTO) => {
     scheduledDate: new Date(data.scheduledDate),
     round: data.round,
     matchNumber: data.matchNumber,
+    organizer: userId,
   });
 
   return match;
@@ -253,6 +254,7 @@ export const createTournamentMatches = async (
     scheduledDate: new Date(match.scheduledDate),
     round: match.round,
     matchNumber: match.matchNumber,
+    organizer: userId,
   }));
 
   try {

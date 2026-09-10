@@ -9,6 +9,13 @@ import upload from "../middleware/upload.middleware";
 
 const router = express.Router();
 
+/**
+ * @swagger
+ * tags:
+ *   name: Teams
+ *   description: Team management endpoints
+ */
+
 //PUBLIC ROUTES
 
 /**
