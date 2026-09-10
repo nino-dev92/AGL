@@ -25,4 +25,14 @@ export const playerProfileValidator = Joi.object({
   playerRole: Joi.string().trim().max(100).optional(),
 });
 
+export const forgotPasswordValidatorSchema = Joi.object({
+  email: Joi.string().email().required(),
+});
+
+export const resetPasswordValidatorSchema = Joi.object({
+  token: Joi.string().required(),
+
+  password: Joi.string().min(8).required(),
+});
+
 export default playerProfileValidator;

@@ -27,7 +27,10 @@ export interface IUser extends Document {
 
   role: UserRole;
 
-  refreshToken?: string;
+  refreshToken?: string | undefined;
+
+  passwordResetToken?: string | undefined;
+  passwordResetExpires?: Date | undefined;
 
   createdAt: Date;
   updatedAt: Date;
@@ -120,6 +123,16 @@ const userSchema = new Schema<IUser>(
       type: String,
       enum: ["player", "admin", "manager", "organizer"],
       default: "player",
+    },
+
+    passwordResetToken: {
+      type: String,
+      default: undefined,
+    },
+
+    passwordResetExpires: {
+      type: Date,
+      default: undefined,
     },
 
     refreshToken: {

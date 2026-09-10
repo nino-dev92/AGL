@@ -76,3 +76,41 @@ export const refresh = asyncHandler(async (req: Request, res: Response) => {
     },
   });
 });
+
+export const forgotPassword = asyncHandler(
+  async (req: Request, res: Response) => {
+    await authService.forgotPassword(req.body.email);
+
+    res.status(200).json({
+      success: true,
+      message:
+        "If an account exists with that email, a password reset link has been sent.",
+    });
+  },
+);
+
+export const resetPassword = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { token, password } = req.body;
+
+    await authService.resetPassword(token, password);
+
+    res.status(200).json({
+      success: true,
+      message: "Password reset successful.",
+    });
+  },
+);
+
+export const deleteAccount = asyncHandler(
+  async (req: Request, res: Response) => {
+    const userId = req.user?.userId as string;
+
+    await authService.deleteAccount(userId);
+
+    res.status(200).json({
+      success: true,
+      message: "Account deleted successfully.",
+    });
+  },
+);
