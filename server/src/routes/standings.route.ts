@@ -7,6 +7,13 @@ const router = Router();
 
 /**
  * @swagger
+ * tags:
+ *   name: Standings
+ *   description: Tournament standings endpoints
+ */
+
+/**
+ * @swagger
  * /standings/{tournamentId}:
  *   get:
  *     summary: Get tournament standings

@@ -13,6 +13,13 @@ const router = express.Router();
 
 /**
  * @swagger
+ * tags:
+ *   name: Games
+ *   description: Game management endpoints
+ */
+
+/**
+ * @swagger
  * /:
  *   get:
  *     summary: Get all games

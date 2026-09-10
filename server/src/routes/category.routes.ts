@@ -18,6 +18,13 @@ const router = express.Router();
 
 /**
  * @swagger
+ * tags:
+ *   name: Categories
+ *   description: Game category endpoints
+ */
+
+/**
+ * @swagger
  * /v1/categories:
  *   get:
  *     summary: Get all categories

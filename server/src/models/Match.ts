@@ -10,6 +10,8 @@ export interface IMatch extends Document {
   teamAScore?: number;
   teamBScore?: number;
 
+  organizer: Types.ObjectId;
+
   result?: string | undefined;
   winner?: Types.ObjectId | undefined;
   round: string;
@@ -33,6 +35,12 @@ const matchSchema: Schema = new mongoose.Schema(
     teamB: {
       type: mongoose.Types.ObjectId,
       ref: "Team",
+      required: true,
+    },
+
+    organizer: {
+      type: mongoose.Types.ObjectId,
+      ref: "User",
       required: true,
     },
 

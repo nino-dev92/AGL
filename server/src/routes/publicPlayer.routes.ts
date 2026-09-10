@@ -5,6 +5,13 @@ const router = express.Router();
 
 /**
  * @swagger
+ * tags:
+ *   name: Players
+ *   description: Public player endpoints
+ */
+
+/**
+ * @swagger
  * /v1/players:
  *   post:
  *     summary: Get all players
