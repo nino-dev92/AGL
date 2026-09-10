@@ -18,7 +18,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /users/me:
+ * /v1/users/me:
  *   get:
  *     summary: Get my profile
  *     description: Get the profile of the currently authenticated player.
@@ -71,7 +71,7 @@ router.get(
 
 /**
  * @swagger
- * /users/me:
+ * /v1/users/me:
  *   patch:
  *     summary: Update my profile
  *     description: Update the profile of the currently authenticated player.
@@ -130,7 +130,7 @@ router.patch(
 
 /**
  * @swagger
- * /users/me/avatar:
+ * /v1/users/me/avatar:
  *   patch:
  *     summary: Upload my profile avatar
  *     description: Upload a new profile avatar for the currently authenticated player.
@@ -183,7 +183,7 @@ router.patch(
 
 /**
  * @swagger
- * /users/me/avatar:
+ * /v1/users/me/avatar:
  *   delete:
  *     summary: Delete my profile avatar
  *     description: Delete the profile avatar of the currently authenticated player.
@@ -221,7 +221,7 @@ router.delete(
 
 /**
  * @swagger
- * /users/me:
+ * /v1/users/me:
  *   delete:
  *     summary: Delete my profile
  *     description: Delete the profile of the currently authenticated player.

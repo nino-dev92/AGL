@@ -14,7 +14,7 @@ const router = Router();
 
 /**
  * @swagger
- * /standings/{tournamentId}:
+ * /v1/standings/{tournamentId}:
  *   get:
  *     summary: Get tournament standings
  *     description: Returns the standings for all registered teams in a tournament based on completed matches.

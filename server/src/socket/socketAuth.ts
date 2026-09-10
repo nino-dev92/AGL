@@ -2,6 +2,7 @@ import { Socket } from "socket.io";
 import jwt from "jsonwebtoken";
 import { Types } from "mongoose";
 import Users from "../models/Users";
+import logger from "../logger/logger";
 
 interface JwtPayload {
   userId: string;
@@ -45,6 +46,7 @@ export const authenticateSocket = async (
 
     next();
   } catch (error) {
+    logger.error(error);
     next(new Error("Invalid or expired authentication token"));
   }
 };
