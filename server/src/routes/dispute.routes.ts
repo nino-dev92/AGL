@@ -22,7 +22,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /disputes:
+ * /v1/disputes:
  *   get:
  *     summary: Get all disputes
  *     description: Returns a list of all disputes. Only administrators can access this endpoint.
@@ -58,7 +58,7 @@ router.get(
 
 /**
  * @swagger
- * /disputes/{id}:
+ * /v1/disputes/{id}:
  *   get:
  *     summary: Get a dispute by ID
  *     description: Returns the details of a specific dispute. Only administrators can access this endpoint.
@@ -104,7 +104,7 @@ router.get(
 
 /**
  * @swagger
- * /disputes:
+ * /v1/disputes:
  *   post:
  *     summary: Create a dispute
  *     description: Creates a new dispute for a match or related issue. Players, managers, and organizers can create disputes.
@@ -174,7 +174,7 @@ router.post(
 
 /**
  * @swagger
- * /disputes/resolve/{id}:
+ * /v1/disputes/resolve/{id}:
  *   post:
  *     summary: Resolve a dispute
  *     description: Resolves an existing dispute. Only administrators can resolve disputes.

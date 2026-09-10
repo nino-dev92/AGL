@@ -51,7 +51,7 @@ router.get("/", gameController.findGame);
 
 /**
  * @swagger
- * /{id}:
+ * /v1/games/{id}:
  *   get:
  *     summary: Get a game by ID
  *     tags:
@@ -75,7 +75,7 @@ router.get("/:id", gameController.findGameById);
 
 /**
  * @swagger
- * /:
+ * /v1/games/:
  *   post:
  *     summary: Create a new game
  *     tags:
@@ -120,7 +120,7 @@ router.post(
 
 /**
  * @swagger
- * /{id}:
+ * /v1/games/{id}:
  *   patch:
  *     summary: Update a game
  *     tags:
@@ -168,7 +168,7 @@ router.patch(
 
 /**
  * @swagger
- * /{id}/picture:
+ * /v1/games/{id}/picture:
  *   patch:
  *     summary: Upload or update game picture
  *     tags:
@@ -216,7 +216,7 @@ router.patch(
 
 /**
  * @swagger
- * /{id}/picture:
+ * /v1/games/{id}/picture:
  *   delete:
  *     summary: Delete game picture
  *     tags:
@@ -251,7 +251,7 @@ router.delete(
 
 /**
  * @swagger
- * /{id}:
+ * /v1/games/{id}:
  *   delete:
  *     summary: Delete a game
  *     tags:
