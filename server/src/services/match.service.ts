@@ -11,6 +11,13 @@ import {
 } from "../types/match.types";
 import { Types } from "mongoose";
 import { closeMatchChat } from "../socket/socketManager";
+import {
+  notifyMatchCreated,
+  notifyMatchUpdated,
+  notifyMatchStarted,
+  notifyMatchResult,
+  notifyMatchCancelled,
+} from "./notifications/matchNotification.service";
 
 // create single match
 export const createMatch = async (userId: string, data: MatchDTO) => {
@@ -136,6 +143,9 @@ export const createMatch = async (userId: string, data: MatchDTO) => {
     organizer: userId,
   });
 
+  // create notification
+  await notifyMatchCreated(match._id.toString());
+
   return match;
 };
 
@@ -226,9 +236,7 @@ export const createTournamentMatches = async (
 
   /**
    * Prevent duplicate match records that already exist in the database.
-   *
-   * We check before insertMany so the frontend receives a useful
-   * application-level error rather than only a MongoDB duplicate-key error.
+   * We check before insertMany so the frontend receives a useful application-level error rather than only a MongoDB duplicate-key error.
    */
   const existingMatches = await Match.find({
     tournament: tournamentId,
@@ -261,6 +269,11 @@ export const createTournamentMatches = async (
     const createdMatches = await Match.insertMany(matchDocuments, {
       ordered: true,
     });
+
+    // send notification to all participants
+    await Promise.all(
+      createdMatches.map((match) => notifyMatchCreated(match._id.toString())),
+    );
 
     return createdMatches;
   } catch (error: any) {
@@ -399,6 +412,13 @@ export const updateMatch = async (
     runValidators: true,
   });
 
+  if (!updatedMatch) {
+    throw new ApiError("Match not found", 404);
+  }
+
+  // send notification to all participants
+  await notifyMatchUpdated(updatedMatch._id.toString());
+
   return updatedMatch;
 };
 
@@ -437,6 +457,9 @@ export const startMatch = async (userId: string, matchId: string) => {
   match.status = "ongoing";
 
   await match.save();
+
+  //send notification to all participants
+  await notifyMatchStarted(match._id.toString());
 
   return match;
 };
@@ -525,6 +548,9 @@ export const submitMatchResult = async (
   // Close the match chat after the match has successfully been marked as completed in MongoDB.
   closeMatchChat(match._id.toString());
 
+  // send result notification to all participants
+  await notifyMatchResult(match._id.toString());
+
   return match;
 };
 
@@ -565,6 +591,9 @@ export const cancelMatch = async (userId: string, matchId: string) => {
   match.status = "cancelled";
 
   await match.save();
+
+  // Send noticfication to all participants
+  await notifyMatchCancelled(match._id.toString());
 
   return match;
 };

@@ -22,6 +22,7 @@ import matchRoutes from "./routes/match.routes";
 import standingsRoutes from "./routes/standings.route";
 import disputeRoutes from "./routes/dispute.routes";
 import announcementRoutes from "./routes/announcement.routes";
+import notificationRoutes from "./routes/notification.routes";
 
 const app = express();
 
@@ -46,6 +47,7 @@ app.use("/api/v1/match", matchRoutes);
 app.use("/api/v1/standings", standingsRoutes);
 app.use("/api/v1/disputes", disputeRoutes);
 app.use("/api/v1/announcements", announcementRoutes);
+app.use("/api/v1/notifications", notificationRoutes);
 
 app.use(errorMiddleware);
 

@@ -8,6 +8,7 @@ import {
   TournamentRegistrationDTO,
   ReviewTournamentRegistrationDTO,
 } from "../types/tournamentRegistration.types";
+import { createNotification } from "./notification.service";
 
 export const registerTeamForTournament = async (
   userId: string,
@@ -289,6 +290,15 @@ export const applyToTournament = async (
 
     await existingApplication.save();
 
+    // Notify organizer about re-submitted application
+    await createNotification({
+      recipient: tournament.organizer.toString(),
+      type: "tournament-registration",
+      title: "Tournament Registration Resubmitted",
+      message: `${team.name} has resubmitted an application for ${tournament.name}.`,
+      tournament: tournament._id.toString(),
+    });
+
     return existingApplication;
   }
 
@@ -298,6 +308,15 @@ export const applyToTournament = async (
     team: data.team,
     manager: userId,
     status: "pending",
+  });
+
+  // Notify organizer about team application to tournament
+  await createNotification({
+    recipient: tournament.organizer.toString(),
+    type: "tournament-registration",
+    title: "New Tournament Registration",
+    message: `${team.name} has applied to participate in ${tournament.name}.`,
+    tournament: tournament._id.toString(),
   });
 
   return application;
@@ -430,6 +449,15 @@ export const reviewTournamentApplication = async (
     application.rejectionReason = undefined;
 
     await application.save();
+
+    // Notify team manager about application approval
+    await createNotification({
+      recipient: application.manager.toString(),
+      type: "registration-approved",
+      title: "Tournament Registration Approved",
+      message: `Your team has been approved to participate in ${tournament.name}.`,
+      tournament: tournament._id.toString(),
+    });
   }
 
   if (data.status === "rejected") {
@@ -442,6 +470,17 @@ export const reviewTournamentApplication = async (
     }
 
     await application.save();
+
+    // Notify team manager about application rejection
+    await createNotification({
+      recipient: application.manager.toString(),
+      type: "registration-rejected",
+      title: "Tournament Registration Rejected",
+      message: data.rejectionReason
+        ? `Your team application for ${tournament.name} was rejected. Reason: ${data.rejectionReason}`
+        : `Your team application for ${tournament.name} was rejected.`,
+      tournament: tournament._id.toString(),
+    });
   }
 
   return application;
