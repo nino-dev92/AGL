@@ -3,6 +3,7 @@ import Announcements from "../models/Announcement";
 import Tournaments from "../models/Tournaments";
 import Users from "../models/Users";
 import ApiError from "../utils/apiError";
+import { notifyUsersAboutAnnouncement } from "./notifications/announcementNotification.service";
 
 interface CreateAnnouncementDTO {
   title: string;
@@ -65,6 +66,9 @@ export const createAnnouncement = async (
     tournament: data.tournament || undefined,
     createdBy: user._id,
   });
+
+  // Notify users about announcement
+  await notifyUsersAboutAnnouncement(announcement._id.toString());
 
   return announcement;
 };

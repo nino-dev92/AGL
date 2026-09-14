@@ -42,13 +42,13 @@ const announcementSchema = new Schema<IAnnouncement>(
 
     tournament: {
       type: Schema.Types.ObjectId,
-      ref: "Tournaments",
+      ref: "Tournament",
       required: false,
     },
 
     createdBy: {
       type: Schema.Types.ObjectId,
-      ref: "Users",
+      ref: "User",
       required: true,
     },
 

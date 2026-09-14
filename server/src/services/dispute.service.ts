@@ -4,6 +4,10 @@ import Match from "../models/Match";
 import Tournaments from "../models/Tournaments";
 import Users from "../models/Users";
 import ApiError from "../utils/apiError";
+import {
+  notifyDisputeCreated,
+  notifyDisputeResolved,
+} from "./notifications/disputeNotification.service";
 
 interface CreateDisputeDTO {
   match: string;
@@ -137,6 +141,9 @@ export const createDispute = async (userId: string, data: CreateDisputeDTO) => {
     description: data.description.trim(),
   });
 
+  // send notifications to all users involved in the dispute
+  await notifyDisputeCreated(dispute._id.toString());
+
   return dispute;
 };
 
@@ -250,6 +257,9 @@ export const resolveDispute = async (
   dispute.resolvedAt = new Date();
 
   await dispute.save();
+
+  // send notifications all users involved in the dispute
+  await notifyDisputeResolved(dispute._id.toString());
 
   return dispute;
 };

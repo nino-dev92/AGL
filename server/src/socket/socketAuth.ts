@@ -44,6 +44,9 @@ export const authenticateSocket = async (
 
     authenticatedSocket.userId = user._id.toString();
 
+    // join socket notifications room
+    socket.join(`user:${user._id.toString()}:notifications`);
+
     next();
   } catch (error) {
     logger.error(error);

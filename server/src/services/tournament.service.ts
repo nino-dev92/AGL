@@ -63,6 +63,7 @@ export const createNewTournament = async (
   const tournament = await Tournaments.create({
     name: data.name.toLowerCase().trim(),
     description: data.description || undefined,
+    organizer: userId,
     slug,
     game: data.game,
     maxTeams: data.maxTeams,
