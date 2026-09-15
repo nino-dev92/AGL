@@ -9,6 +9,8 @@ import {
   ReviewTournamentRegistrationDTO,
 } from "../types/tournamentRegistration.types";
 import { createNotification } from "./notification.service";
+import { createAuditLog } from "./auditLog.service";
+import logger from "../logger/logger";
 
 export const registerTeamForTournament = async (
   userId: string,
@@ -84,6 +86,22 @@ export const registerTeamForTournament = async (
   tournament.registeredTeams.push(new Types.ObjectId(teamId));
 
   await tournament.save();
+
+  // create audit log
+  try {
+    await createAuditLog({
+      user: userId,
+      action: "create",
+      resource: "registration",
+      description: `Registered team ${teamId} for tournament ${tournamentId}`,
+      metadata: {
+        tournamentId,
+        teamId,
+      },
+    });
+  } catch (error) {
+    logger.error(error);
+  }
 
   return await tournament.populate({
     path: "registeredTeams",
@@ -163,6 +181,22 @@ export const withdrawTeamFromTournament = async (
   );
 
   await tournament.save();
+
+  // create audit log
+  try {
+    await createAuditLog({
+      user: userId,
+      action: "delete",
+      resource: "registration",
+      description: `Withdrew team ${teamId} from tournament ${tournamentId}`,
+      metadata: {
+        tournamentId,
+        teamId,
+      },
+    });
+  } catch (error) {
+    logger.error(error);
+  }
 
   return tournament;
 };
@@ -290,6 +324,24 @@ export const applyToTournament = async (
 
     await existingApplication.save();
 
+    // create audit log
+    try {
+      await createAuditLog({
+        user: userId,
+        action: "update",
+        resource: "registration",
+        resourceId: existingApplication._id.toString(),
+        description: `Resubmitted tournament application ${existingApplication._id.toString}`,
+        metadata: {
+          tournamentId: data.tournament,
+          teamId: data.team,
+          status: "pending",
+        },
+      });
+    } catch (error) {
+      logger.error(error);
+    }
+
     // Notify organizer about re-submitted application
     await createNotification({
       recipient: tournament.organizer.toString(),
@@ -309,6 +361,24 @@ export const applyToTournament = async (
     manager: userId,
     status: "pending",
   });
+
+  // create audit log
+  try {
+    await createAuditLog({
+      user: userId,
+      action: "create",
+      resource: "registration",
+      resourceId: application._id.toString(),
+      description: `Created tournament application ${application._id.toString()}`,
+      metadata: {
+        tournamentId: data.tournament,
+        teamId: data.team,
+        status: "pending",
+      },
+    });
+  } catch (error) {
+    logger.error(error);
+  }
 
   // Notify organizer about team application to tournament
   await createNotification({
@@ -450,6 +520,24 @@ export const reviewTournamentApplication = async (
 
     await application.save();
 
+    // create audit log
+    try {
+      await createAuditLog({
+        user: userId,
+        action: "approve",
+        resource: "registration",
+        resourceId: application._id.toString(),
+        description: `Approved tournament application ${application._id.toString()}`,
+        metadata: {
+          tournamentId: application.tournament.toString(),
+          teamId: application.team.toString(),
+          status: application.status,
+        },
+      });
+    } catch (error) {
+      logger.error(error);
+    }
+
     // Notify team manager about application approval
     await createNotification({
       recipient: application.manager.toString(),
@@ -470,6 +558,25 @@ export const reviewTournamentApplication = async (
     }
 
     await application.save();
+
+    // create audit log
+    try {
+      await createAuditLog({
+        user: userId,
+        action: "reject",
+        resource: "registration",
+        resourceId: application._id.toString(),
+        description: `Rejected tournament application ${application._id.toString()}`,
+        metadata: {
+          tournamentId: application.tournament.toString(),
+          teamId: application.team.toString(),
+          status: application.status,
+          rejectionReason: application.rejectionReason,
+        },
+      });
+    } catch (error) {
+      logger.error(error);
+    }
 
     // Notify team manager about application rejection
     await createNotification({

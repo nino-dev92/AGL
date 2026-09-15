@@ -8,6 +8,7 @@ import { uploadToCloudinary } from "../utils/cloudinaryUpload";
 import cloudinary from "../config/cloudinary";
 import { validateImageBuffer } from "../utils/validateImage";
 import logger from "../logger/logger";
+import { createAuditLog } from "./auditLog.service";
 
 export const createNewTournament = async (
   userId: string,
@@ -71,6 +72,25 @@ export const createNewTournament = async (
     startDate: data.startDate,
     endDate: data.endDate,
   });
+
+  // create audit log
+  try {
+    await createAuditLog({
+      user: userId,
+      action: "create",
+      resource: "tournament",
+      resourceId: tournament._id.toString(),
+      description: `Created tournament ${tournament._id.toString()}`,
+      metadata: {
+        name: tournament.name,
+        game: tournament.game.toString(),
+        startDate: tournament.startDate,
+        endDate: tournament.endDate,
+      },
+    });
+  } catch (error) {
+    logger.error(error);
+  }
 
   return tournament;
 };
@@ -213,6 +233,24 @@ export const editTournament = async (
       },
     );
 
+    // create audit log
+    if (update) {
+      try {
+        await createAuditLog({
+          user: userId,
+          action: "update",
+          resource: "tournament",
+          resourceId: update._id.toString(),
+          description: `Updated tournament ${update._id.toString()}`,
+          metadata: {
+            updates: updateData,
+          },
+        });
+      } catch (error) {
+        logger.error(error);
+      }
+    }
+
     return update;
   }
 
@@ -229,6 +267,24 @@ export const editTournament = async (
     new: true,
     runValidators: true,
   });
+
+  // create audit log
+  if (update) {
+    try {
+      await createAuditLog({
+        user: userId,
+        action: "update",
+        resource: "tournament",
+        resourceId: update._id.toString(),
+        description: `Updated tournament ${update._id.toString()}`,
+        metadata: {
+          updates: data,
+        },
+      });
+    } catch (error) {
+      logger.error(error);
+    }
+  }
 
   return update;
 };
@@ -300,6 +356,22 @@ export const updateTournamentBanner = async (
     }
   }
 
+  // create audit log
+  try {
+    await createAuditLog({
+      user: userId,
+      action: "update",
+      resource: "tournament",
+      resourceId: tournament._id.toString(),
+      description: `Updated banner for tournament ${tournament._id.toString()}`,
+      metadata: {
+        bannerPublicId: tournament.banner?.publicId,
+      },
+    });
+  } catch (error) {
+    logger.error(error);
+  }
+
   return {
     banner: tournament.banner,
   };
@@ -353,6 +425,22 @@ export const deleteTournamentBanner = async (
     },
   );
 
+  // create audit log
+  try {
+    await createAuditLog({
+      user: userId,
+      action: "update",
+      resource: "tournament",
+      resourceId: tournament._id.toString(),
+      description: `Deleted banner from tournament ${tournament._id.toString()}`,
+      metadata: {
+        deletedBannerPublicId: bannerPublicId,
+      },
+    });
+  } catch (error) {
+    logger.error(error);
+  }
+
   return null;
 };
 
@@ -389,9 +477,35 @@ export const changeTournamentStatus = async (
   if (!isAdminOrOrganizer) throw new ApiError("Forbidden", 403);
 
   // update status
+  const previousStatus = tournament.status;
+
   tournament.status = status;
 
   await tournament.save();
+
+  // create audit log
+  try {
+    await createAuditLog({
+      user: userId,
+      action:
+        status === "ongoing"
+          ? "start"
+          : status === "completed"
+            ? "complete"
+            : status === "cancelled"
+              ? "cancel"
+              : "update",
+      resource: "tournament",
+      resourceId: tournament._id.toString(),
+      description: `Changed tournament ${tournament._id.toString()} status from ${previousStatus} to ${status}`,
+      metadata: {
+        previousStatus,
+        newStatus: status,
+      },
+    });
+  } catch (error) {
+    logger.error(error);
+  }
 
   return tournament;
 };
@@ -435,6 +549,23 @@ export const deleteTournament = async (
 
   // delete tournament
   await Tournaments.findByIdAndDelete(tournamentId);
+
+  // create audit log
+  try {
+    await createAuditLog({
+      user: userId,
+      action: "delete",
+      resource: "tournament",
+      resourceId: tournament._id.toString(),
+      description: `Deleted tournament ${tournament._id.toString()}`,
+      metadata: {
+        name: tournament.name,
+        slug: tournament.slug,
+      },
+    });
+  } catch (error) {
+    logger.error(error);
+  }
 
   return null;
 };

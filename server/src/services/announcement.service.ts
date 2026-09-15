@@ -4,6 +4,8 @@ import Tournaments from "../models/Tournaments";
 import Users from "../models/Users";
 import ApiError from "../utils/apiError";
 import { notifyUsersAboutAnnouncement } from "./notifications/announcementNotification.service";
+import { createAuditLog } from "./auditLog.service";
+import logger from "../logger/logger";
 
 interface CreateAnnouncementDTO {
   title: string;
@@ -66,6 +68,24 @@ export const createAnnouncement = async (
     tournament: data.tournament || undefined,
     createdBy: user._id,
   });
+
+  // create audit log
+  try {
+    await createAuditLog({
+      user: userId,
+      action: "create",
+      resource: "announcement",
+      resourceId: announcement._id.toString(),
+      description: `Created announcement ${announcement._id.toString()}`,
+      metadata: {
+        title: announcement.title,
+        type: announcement.type,
+        tournamentId: announcement.tournament?.toString(),
+      },
+    });
+  } catch (error) {
+    logger.error(error);
+  }
 
   // Notify users about announcement
   await notifyUsersAboutAnnouncement(announcement._id.toString());
@@ -207,6 +227,22 @@ export const updateAnnouncement = async (
 
   await announcement.save();
 
+  // create audit log
+  try {
+    await createAuditLog({
+      user: userId,
+      action: "update",
+      resource: "announcement",
+      resourceId: announcement._id.toString(),
+      description: `Updated announcement ${announcement._id.toString()}`,
+      metadata: {
+        updates: data,
+      },
+    });
+  } catch (error) {
+    logger.error(error);
+  }
+
   return announcement;
 };
 
@@ -253,6 +289,23 @@ export const publishAnnouncement = async (
   announcement.publishedAt = new Date();
 
   await announcement.save();
+
+  // create audit log
+  try {
+    await createAuditLog({
+      user: userId,
+      action: "update",
+      resource: "announcement",
+      resourceId: announcement._id.toString(),
+      description: `Published announcement ${announcement._id.toString()}`,
+      metadata: {
+        isPublished: true,
+        publishedAt: announcement.publishedAt,
+      },
+    });
+  } catch (error) {
+    logger.error(error);
+  }
 
   return announcement;
 };
@@ -304,6 +357,22 @@ export const unpublishAnnouncement = async (
 
   await announcement.save();
 
+  // create audit log
+  try {
+    await createAuditLog({
+      user: userId,
+      action: "update",
+      resource: "announcement",
+      resourceId: announcement._id.toString(),
+      description: `Unpublished announcement ${announcement._id.toString()}`,
+      metadata: {
+        isPublished: false,
+      },
+    });
+  } catch (error) {
+    logger.error(error);
+  }
+
   return announcement;
 };
 
@@ -343,6 +412,23 @@ export const deleteAnnouncement = async (
   }
 
   await announcement.deleteOne();
+
+  // create audit log
+  try {
+    await createAuditLog({
+      user: userId,
+      action: "delete",
+      resource: "announcement",
+      resourceId: announcement._id.toString(),
+      description: `Deleted announcement ${announcement._id.toString()}`,
+      metadata: {
+        title: announcement.title,
+        type: announcement.type,
+      },
+    });
+  } catch (error) {
+    logger.error(error);
+  }
 
   return true;
 };
