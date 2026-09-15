@@ -18,24 +18,22 @@ import {
   notifyMatchResult,
   notifyMatchCancelled,
 } from "./notifications/matchNotification.service";
+import { createAuditLog } from "./auditLog.service";
+import logger from "../logger/logger";
 
 // create single match
 export const createMatch = async (userId: string, data: MatchDTO) => {
-  if (!Types.ObjectId.isValid(userId)) {
+  if (!Types.ObjectId.isValid(userId))
     throw new ApiError("Invalid user ID", 400);
-  }
 
-  if (!Types.ObjectId.isValid(data.tournament)) {
+  if (!Types.ObjectId.isValid(data.tournament))
     throw new ApiError("Invalid tournament ID", 400);
-  }
 
-  if (!Types.ObjectId.isValid(data.teamA)) {
+  if (!Types.ObjectId.isValid(data.teamA))
     throw new ApiError("Invalid Team A ID", 400);
-  }
 
-  if (!Types.ObjectId.isValid(data.teamB)) {
+  if (!Types.ObjectId.isValid(data.teamB))
     throw new ApiError("Invalid Team B ID", 400);
-  }
 
   // A team cannot play against itself.
   if (data.teamA === data.teamB) {
@@ -142,6 +140,19 @@ export const createMatch = async (userId: string, data: MatchDTO) => {
     matchNumber: data.matchNumber,
     organizer: userId,
   });
+
+  // create audit log
+  try {
+    await createAuditLog({
+      user: userId,
+      action: "create",
+      resource: "match",
+      resourceId: match._id.toString(),
+      description: `Created match ${match._id.toString()}`,
+    });
+  } catch (error) {
+    logger.error(error);
+  }
 
   // create notification
   await notifyMatchCreated(match._id.toString());
@@ -269,6 +280,23 @@ export const createTournamentMatches = async (
     const createdMatches = await Match.insertMany(matchDocuments, {
       ordered: true,
     });
+
+    // create audit log
+    try {
+      await createAuditLog({
+        user: userId,
+        action: "create",
+        resource: "match",
+        description: `Generated ${createdMatches.length} matches for tournament ${tournamentId}`,
+        metadata: {
+          tournamentId,
+          matchCount: createdMatches.length,
+          matchIds: createdMatches.map((match) => match._id.toString()),
+        },
+      });
+    } catch (error) {
+      logger.error(error);
+    }
 
     // send notification to all participants
     await Promise.all(
@@ -416,6 +444,22 @@ export const updateMatch = async (
     throw new ApiError("Match not found", 404);
   }
 
+  // create audit log
+  try {
+    await createAuditLog({
+      user: userId,
+      action: "update",
+      resource: "match",
+      resourceId: updatedMatch._id.toString(),
+      description: `Updated match ${updatedMatch._id.toString()}`,
+      metadata: {
+        updates: allowedUpdates,
+      },
+    });
+  } catch (error) {
+    logger.error(error);
+  }
+
   // send notification to all participants
   await notifyMatchUpdated(updatedMatch._id.toString());
 
@@ -457,6 +501,19 @@ export const startMatch = async (userId: string, matchId: string) => {
   match.status = "ongoing";
 
   await match.save();
+
+  // create audit log
+  try {
+    await createAuditLog({
+      user: userId,
+      action: "start",
+      resource: "match",
+      resourceId: match._id.toString(),
+      description: `Started match ${match._id.toString()}`,
+    });
+  } catch (error) {
+    logger.error(error);
+  }
 
   //send notification to all participants
   await notifyMatchStarted(match._id.toString());
@@ -548,6 +605,24 @@ export const submitMatchResult = async (
   // Close the match chat after the match has successfully been marked as completed in MongoDB.
   closeMatchChat(match._id.toString());
 
+  // create audit tlog
+  try {
+    await createAuditLog({
+      user: userId,
+      action: "complete",
+      resource: "match",
+      resourceId: match._id.toString(),
+      description: `Submitted result for match ${match._id.toString()}`,
+      metadata: {
+        winner: winner,
+        teamAScore,
+        teamBScore,
+      },
+    });
+  } catch (error) {
+    logger.error(error);
+  }
+
   // send result notification to all participants
   await notifyMatchResult(match._id.toString());
 
@@ -572,7 +647,6 @@ export const cancelMatch = async (userId: string, matchId: string) => {
 
   if (!isAdminOrOrganizer) throw new ApiError("Forbidden", 403);
 
-  // check if match exists
   const match = await Match.findById(matchId);
 
   if (!match) throw new ApiError("Match not found", 404);
@@ -592,6 +666,19 @@ export const cancelMatch = async (userId: string, matchId: string) => {
 
   await match.save();
 
+  // create audit log
+  try {
+    await createAuditLog({
+      user: userId,
+      action: "cancel",
+      resource: "match",
+      resourceId: match._id.toString(),
+      description: `Cancelled match ${match._id.toString()}`,
+    });
+  } catch (error) {
+    logger.error(error);
+  }
+
   // Send noticfication to all participants
   await notifyMatchCancelled(match._id.toString());
 
@@ -602,6 +689,9 @@ export const cancelMatch = async (userId: string, matchId: string) => {
 export const deleteMatch = async (userId: string, matchId: string) => {
   if (!Types.ObjectId.isValid(userId))
     throw new ApiError("Invalid user ID", 400);
+
+  if (!Types.ObjectId.isValid(matchId))
+    throw new ApiError("Invalid match ID", 400);
 
   if (!Types.ObjectId.isValid(matchId))
     throw new ApiError("Invalid match ID", 400);
@@ -622,6 +712,19 @@ export const deleteMatch = async (userId: string, matchId: string) => {
 
   // delete match
   await Match.findByIdAndDelete(matchId);
+
+  // create audit log
+  try {
+    await createAuditLog({
+      user: userId,
+      action: "delete",
+      resource: "match",
+      resourceId: matchExists._id.toString(),
+      description: `Deleted match ${matchExists._id.toString()}`,
+    });
+  } catch (error) {
+    logger.error(error);
+  }
 
   return null;
 };

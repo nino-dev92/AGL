@@ -8,6 +8,8 @@ import {
   notifyDisputeCreated,
   notifyDisputeResolved,
 } from "./notifications/disputeNotification.service";
+import { createAuditLog } from "./auditLog.service";
+import logger from "../logger/logger";
 
 interface CreateDisputeDTO {
   match: string;
@@ -141,6 +143,24 @@ export const createDispute = async (userId: string, data: CreateDisputeDTO) => {
     description: data.description.trim(),
   });
 
+  // create audit log
+  try {
+    await createAuditLog({
+      user: userId,
+      action: "create",
+      resource: "dispute",
+      resourceId: dispute._id.toString(),
+      description: `Created dispute ${dispute._id.toString()}`,
+      metadata: {
+        matchId: match._id.toString(),
+        tournamentId: tournament._id.toString(),
+        reason: data.reason,
+      },
+    });
+  } catch (error) {
+    logger.error(error);
+  }
+
   // send notifications to all users involved in the dispute
   await notifyDisputeCreated(dispute._id.toString());
 
@@ -257,6 +277,25 @@ export const resolveDispute = async (
   dispute.resolvedAt = new Date();
 
   await dispute.save();
+
+  // create audit log
+  try {
+    await createAuditLog({
+      user: userId,
+      action: data.status === "resolved" ? "resolve" : "reject",
+      resource: "dispute",
+      resourceId: dispute._id.toString(),
+      description: `${
+        data.status === "resolved" ? "Resolved" : "Rejected"
+      } dispute ${dispute._id.toString()}`,
+      metadata: {
+        status: data.status,
+        resolution: data.resolution.trim(),
+      },
+    });
+  } catch (error) {
+    logger.error(error);
+  }
 
   // send notifications all users involved in the dispute
   await notifyDisputeResolved(dispute._id.toString());

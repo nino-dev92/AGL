@@ -23,6 +23,7 @@ import standingsRoutes from "./routes/standings.route";
 import disputeRoutes from "./routes/dispute.routes";
 import announcementRoutes from "./routes/announcement.routes";
 import notificationRoutes from "./routes/notification.routes";
+import auditLogRoutes from "./routes/auditLog.route";
 
 const app = express();
 
@@ -48,6 +49,7 @@ app.use("/api/v1/standings", standingsRoutes);
 app.use("/api/v1/disputes", disputeRoutes);
 app.use("/api/v1/announcements", announcementRoutes);
 app.use("/api/v1/notifications", notificationRoutes);
+app.use("/api/v1/audit-log", auditLogRoutes);
 
 app.use(errorMiddleware);
 
