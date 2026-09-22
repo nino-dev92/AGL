@@ -4,11 +4,14 @@ import helmet from "helmet";
 import morgan from "morgan";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./config/swagger";
-dotenv.config({ debug: true });
-
+import corsOptions from "./config/corsOptions";
+import credentials from "./middleware/credentials";
 import errorMiddleware from "./middleware/errorHandler.middleware";
+
+dotenv.config({ debug: true });
 
 import authRoutes from "./routes/auth.routes";
 import userRoutes from "./routes/playerProfile.routes";
@@ -25,9 +28,12 @@ import announcementRoutes from "./routes/announcement.routes";
 import notificationRoutes from "./routes/notification.routes";
 import auditLogRoutes from "./routes/auditLog.route";
 
+import healthRoutes from "./routes/healthCheck.routes";
+
 const app = express();
 
-app.use(cors());
+app.use(cors(corsOptions));
+app.use(credentials);
 app.use(helmet());
 app.use(morgan("dev"));
 app.use(express.json());
@@ -35,6 +41,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+app.use("/health", healthRoutes);
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/users", userRoutes);

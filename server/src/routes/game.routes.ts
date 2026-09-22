@@ -113,7 +113,7 @@ router.get("/:id", gameController.findGameById);
 router.post(
   "/",
   verifyJWT,
-  authorizeRole(ROLES.ADMIN, ROLES.MANAGER),
+  authorizeRole(ROLES.ADMIN, ROLES.ORGANIZER),
   validate(gameValidationSchema),
   gameController.addNewGame,
 );
@@ -162,7 +162,7 @@ router.post(
 router.patch(
   "/:id",
   verifyJWT,
-  authorizeRole(ROLES.ADMIN, ROLES.MANAGER),
+  authorizeRole(ROLES.ADMIN, ROLES.ORGANIZER),
   gameController.updateGame,
 );
 
@@ -209,7 +209,7 @@ router.patch(
 router.patch(
   "/:id/picture",
   verifyJWT,
-  authorizeRole(ROLES.ADMIN, ROLES.MANAGER),
+  authorizeRole(ROLES.ADMIN, ROLES.ORGANIZER),
   upload.single("picture"),
   gameController.updateGamePicture,
 );
@@ -245,7 +245,7 @@ router.patch(
 router.delete(
   "/:id/picture",
   verifyJWT,
-  authorizeRole(ROLES.ADMIN, ROLES.MANAGER),
+  authorizeRole(ROLES.ADMIN, ROLES.ORGANIZER),
   gameController.deleteGamePicture,
 );
 
@@ -280,7 +280,7 @@ router.delete(
 router.delete(
   "/:id",
   verifyJWT,
-  authorizeRole(ROLES.ADMIN, ROLES.MANAGER),
+  authorizeRole(ROLES.ADMIN, ROLES.ORGANIZER),
   gameController.removeGame,
 );
 

@@ -101,7 +101,6 @@ router.get("/", matchController.findAllMatches);
  *       200:
  *         description: Match chat history retrieved successfully
  */
-
 router.get("/chat-history/:id", verifyJWT, matchChatController.getChatHistory);
 
 /**
@@ -412,15 +411,17 @@ router.patch(
  *             required:
  *               - result
  *               - winner
+ *               - teamAScore
+ *               - teamBScore
  *             properties:
  *               result:
  *                 type: string
  *                 example: 3-1
- *               teamAscore:
- *                 type: string
+ *               teamAScore:
+ *                 type: number
  *                 example: 3
- *               teamBscore:
- *                 type: string
+ *               teamBScore:
+ *                 type: number
  *                 example: 1
  *               winner:
  *                 type: string

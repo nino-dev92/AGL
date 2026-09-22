@@ -121,7 +121,7 @@ router.get("/:id", categoryController.findCategoryById);
 router.post(
   "/",
   verifyJWT,
-  authorizeRole(ROLES.ADMIN, ROLES.MANAGER),
+  authorizeRole(ROLES.ADMIN, ROLES.ORGANIZER),
   validate(categoryValidationSchema),
   categoryController.addCategory,
 );
@@ -172,7 +172,7 @@ router.post(
 router.patch(
   "/:id",
   verifyJWT,
-  authorizeRole(ROLES.ADMIN, ROLES.MANAGER),
+  authorizeRole(ROLES.ADMIN, ROLES.ORGANIZER),
   validate(updateCategoryValidationSchema),
   categoryController.updateCategory,
 );
@@ -220,7 +220,7 @@ router.patch(
 router.patch(
   "/:id/status",
   verifyJWT,
-  authorizeRole(ROLES.ADMIN, ROLES.MANAGER),
+  authorizeRole(ROLES.ADMIN, ROLES.ORGANIZER),
   validate(categoryStatusValidationSchema),
   categoryController.updateCategoryStatus,
 );

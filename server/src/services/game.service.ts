@@ -19,7 +19,7 @@ export const addGame = async (userId: string, data: GameDTO) => {
     throw new ApiError("User not found", 404);
   }
 
-  if (user.role !== "admin" && user.role !== "manager") {
+  if (user.role !== "admin" && user.role !== "organizer") {
     throw new ApiError("Forbidden", 403);
   }
 
@@ -65,7 +65,7 @@ export const editGame = async (
     throw new ApiError("User not found", 404);
   }
 
-  if (user.role !== "admin" && user.role !== "manager") {
+  if (user.role !== "admin" && user.role !== "organizer") {
     throw new ApiError("Forbidden", 403);
   }
 
@@ -171,7 +171,7 @@ export const updateGamePicture = async (
     throw new ApiError("User not found", 404);
   }
 
-  if (user.role !== "admin" && user.role !== "manager") {
+  if (user.role !== "admin" && user.role !== "organizer") {
     throw new ApiError("Forbidden", 403);
   }
 
@@ -242,7 +242,7 @@ export const deleteGamePicture = async (userId: string, gameId: string) => {
     throw new ApiError("User not found", 404);
   }
 
-  if (user.role !== "admin" && user.role !== "manager") {
+  if (user.role !== "admin" && user.role !== "organizer") {
     throw new ApiError("Forbidden", 403);
   }
 
@@ -289,7 +289,7 @@ export const deleteGame = async (userId: string, gameId: string) => {
     throw new ApiError("User not found", 404);
   }
 
-  if (user.role !== "admin" && user.role !== "manager") {
+  if (user.role !== "admin" && user.role !== "organizer") {
     throw new ApiError("Forbidden", 403);
   }
 

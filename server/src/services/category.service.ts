@@ -20,9 +20,10 @@ export const createCategory = async (userId: string, data: CategoryDTO) => {
 
   if (!user) throw new ApiError("User not found", 404);
 
-  const isAdminOrManager = user.role === "manager" || user.role === "admin";
+  const isAdminOrOrganizer =
+    user.role === "manager" || user.role === "organizer";
 
-  if (!isAdminOrManager) throw new ApiError("Forbidden", 403);
+  if (!isAdminOrOrganizer) throw new ApiError("Forbidden", 403);
 
   // check if category exists
   const exists = await Category.findOne({ name: data.name.toLowerCase() });
@@ -69,7 +70,7 @@ export const getCategoryById = async (categoryId: string) => {
   if (!Types.ObjectId.isValid(categoryId))
     throw new ApiError("Invalid category ID", 400);
 
-  const category = await Category.findById(categoryId);
+  const category = await Category.findById(categoryId).sort({ name: 1 });
 
   if (!category) throw new ApiError("Category not found", 404);
 
@@ -93,9 +94,9 @@ export const editCategory = async (
 
   if (!user) throw new ApiError("User not found", 404);
 
-  const isAdminOrManager = user.role === "admin" || user.role === "manager";
+  const isAdminOrOrganizer = user.role === "admin" || user.role === "organizer";
 
-  if (!isAdminOrManager) throw new ApiError("Forbidden", 403);
+  if (!isAdminOrOrganizer) throw new ApiError("Forbidden", 403);
 
   const category = await Category.findById(categoryId);
 
@@ -141,9 +142,9 @@ export const editCategoryStatus = async (
 
   if (!category) throw new ApiError("Category not found", 404);
 
-  const isAdminOrManager = user.role === "admin" || user.role === "manager";
+  const isAdminOrOrganizer = user.role === "admin" || user.role === "organizer";
 
-  if (!isAdminOrManager) throw new ApiError("Forbidden", 403);
+  if (!isAdminOrOrganizer) throw new ApiError("Forbidden", 403);
 
   console.log(update);
 
