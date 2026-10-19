@@ -459,7 +459,7 @@ describe("Team Service", () => {
     });
 
     it("should reject an invalid user ID", async () => {
-      const game = await createGame();
+      // const game = await createGame();
 
       await expect(
         addTeamMember("invalid-user-id", new Types.ObjectId().toString(), []),
