@@ -130,6 +130,66 @@ router.patch(
 
 /**
  * @swagger
+ * /v1/users/player/{id}:
+ *   patch:
+ *     summary: Update user profile total kills, deaths and games
+ *     description: Update the profile of the currently authenticated player.
+ *     tags:
+ *       - Users
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               kills:
+ *                 type: number
+ *                 example: 1
+ *               deaths:
+ *                 type: number
+ *                 example: 2
+ *               games:
+ *                 type: number
+ *                 example: 3
+ *     responses:
+ *       200:
+ *         description: User profile updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *       400:
+ *         description: Validation error
+ *       401:
+ *         description: Unauthorized - JWT token is missing or invalid
+ *       403:
+ *         description: Forbidden
+ *       404:
+ *         description: User profile not found
+ */
+router.patch(
+  "/player/:id",
+  verifyJWT,
+  authorizeRole(ROLES.ORGANIZER),
+  validate(playerProfileValidator),
+  playerProfileController.updateProfile,
+);
+
+/**
+ * @swagger
  * /v1/users/me/avatar:
  *   patch:
  *     summary: Upload my profile avatar

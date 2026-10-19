@@ -42,6 +42,9 @@ export const registerUser = async (data: UserDTO) => {
     email: normalizedEmail,
     password,
     role: userRole,
+    totalDeaths: userRole === "player" ? 0 : undefined,
+    totalKills: userRole === "player" ? 0 : undefined,
+    totalGames: userRole === "player" ? 0 : undefined,
   });
 
   // Send welcome email

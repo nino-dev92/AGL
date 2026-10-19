@@ -78,3 +78,27 @@ export const deleteProfile = asyncHandler(
     });
   },
 );
+
+export const updateKillDeathsGames = asyncHandler(
+  async (req: Request, res: Response) => {
+    const userId = req.user?.userId as string;
+
+    const playerId = req.params.id as string;
+
+    const { kills, deaths, games } = req.body;
+
+    const user = await profileService.editKillsDeathsGames(
+      userId,
+      playerId,
+      Number(kills),
+      Number(deaths),
+      Number(games),
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Player profile updated successfully",
+      data: user,
+    });
+  },
+);

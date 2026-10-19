@@ -5,6 +5,8 @@ import { uploadToCloudinary } from "../utils/cloudinaryUpload";
 import cloudinary from "../config/cloudinary";
 import { validateImageBuffer } from "../utils/validateImage";
 import logger from "../logger/logger";
+import { Types } from "mongoose";
+import { createAuditLog } from "./auditLog.service";
 
 export const getMyProfile = async (userId: string) => {
   const user = await Users.findById(userId);
@@ -162,4 +164,37 @@ export const deleteProfile = async (id: string) => {
   if (!deleteUser) throw new ApiError("User not found", 404);
 
   return;
+};
+
+export const editKillsDeathsGames = async (
+  userId: string,
+  playerId: string,
+  kills?: number,
+  deaths?: number,
+  games?: number,
+) => {
+  if (!Types.ObjectId.isValid(playerId))
+    throw new ApiError("Invalid user ID", 400);
+
+  const user = await Users.findById(playerId);
+
+  if (!user) throw new ApiError("User not found", 404);
+
+  if (user.role !== "organizer") throw new ApiError("Forbidden", 403);
+
+  if (kills) user.totalKills = +kills;
+  if (deaths) user.totalGames = +!games;
+  if (games) user.totalGames = +!deaths;
+
+  await user.save();
+
+  await createAuditLog({
+    user: userId,
+    action: "update",
+    resource: "user",
+    resourceId: playerId,
+    description: "Updated user kills, deaths and games",
+  });
+
+  return user;
 };

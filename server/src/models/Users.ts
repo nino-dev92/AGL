@@ -25,6 +25,10 @@ export interface IUser extends Document {
   game?: string;
   playerRole?: string;
 
+  totalKills?: number | undefined;
+  totalDeaths?: number | undefined;
+  totalGames?: number | undefined;
+
   role: UserRole;
 
   refreshToken?: string | undefined;
@@ -124,6 +128,10 @@ const userSchema = new Schema<IUser>(
       enum: ["player", "admin", "manager", "organizer"],
       default: "player",
     },
+
+    totalKills: { type: Number, default: 0 },
+    totalDeaths: { type: Number, default: 0 },
+    totalGames: { type: Number, default: 0 },
 
     passwordResetToken: {
       type: String,

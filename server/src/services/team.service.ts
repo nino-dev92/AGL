@@ -88,10 +88,11 @@ export const getAllTeams = async (
   }
 
   if (game) {
-    filter.game = {
-      $regex: `^${game}$`,
-      $options: "i",
-    };
+    if (!Types.ObjectId.isValid(game)) {
+      throw new ApiError("Invalid game ID", 400);
+    }
+
+    filter.game = new Types.ObjectId(game);
   }
 
   const [allTeams, total] = await Promise.all([
