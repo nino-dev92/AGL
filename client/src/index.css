@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap");
 @import "tailwindcss";
 
 @theme {
@@ -44,6 +46,7 @@
      ========================================================================== */
   /* Replaces font-sans default fallback */
   --font-sans: "Inter", "ui-sans-serif", "system-ui", sans-serif;
+  --font-orbitron: "Orbitron", "Inter", sans-serif;
   /* Defines font-display */
   --font-display: "Arial Black", "Inter", "ui-sans-serif", sans-serif;
 
@@ -118,4 +121,9 @@
   --background-size-grid: 40px 40px;
   --transition-timing-function-agl: cubic-bezier(0.4, 0, 0.2, 1);
   --transition-duration-400: 400ms;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-agl-black);
 }

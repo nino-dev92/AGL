@@ -4,6 +4,7 @@ import useAuth from "./hooks/useAuth";
 import { useEffect } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import Tournaments from "./pages/Tournaments";
 
 function App() {
   const { auth } = useAuth();
@@ -30,6 +31,8 @@ function App() {
           </div>
         }
       />
+
+      <Route path="/tournaments" element={<Tournaments />} />
     </Routes>
   );
 }
