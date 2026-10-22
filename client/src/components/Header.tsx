@@ -6,7 +6,7 @@ export default function Header() {
   const [show, setShow] = useState<boolean>(false);
 
   return (
-    <header className="text-agl-primary border-b border-agl-border w-full fixed z-10 bg-agl-black">
+    <header className="text-agl-primary border-b border-agl-border w-full sticky top-0 z-10 bg-agl-black">
       <div className="flex justify-between py-3 px-6 sm:px-6 xl:px-50">
         <Link to="/">
           <div className="flex items-center gap-2 cursor-pointer">
