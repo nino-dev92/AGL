@@ -71,6 +71,9 @@ export const createNewTournament = async (
     rules: data.rules ?? [],
     startDate: data.startDate,
     endDate: data.endDate,
+    region: data.region,
+    entryFee: data.entryFee,
+    prizePool: data.prizePool,
   });
 
   // create audit log

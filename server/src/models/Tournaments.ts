@@ -1,4 +1,5 @@
 import mongoose, { Document, model, Schema, Types } from "mongoose";
+import type { TournamentRegion } from "../types/tournament.types";
 
 export interface ITournament extends Document {
   name: string;
@@ -31,6 +32,12 @@ export interface ITournament extends Document {
     | "cancelled";
 
   rules: string[];
+
+  region: TournamentRegion;
+
+  entryFee: string;
+
+  prizePool: string;
 }
 
 const bannerSchema = new mongoose.Schema(
@@ -134,6 +141,16 @@ const tournamentSchema: Schema = new mongoose.Schema(
         trim: true,
       },
     ],
+
+    region: {
+      type: String,
+      enum: ["Africa", "Canada", "USA", "Europe"],
+      required: true,
+    },
+
+    entryFee: { type: String, required: true },
+
+    prizePool: { type: String, required: true },
   },
   {
     timestamps: true,
