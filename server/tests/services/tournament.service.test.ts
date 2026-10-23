@@ -81,6 +81,7 @@ describe("Tournament Service", () => {
       region: "Africa",
       entryFee: 100,
       prizePool: 1000,
+      currency: "NGN",
       ...overrides,
     });
   };
@@ -101,6 +102,7 @@ describe("Tournament Service", () => {
           region: "Africa",
           entryFee: 100,
           prizePool: 1000,
+          currency: "NGN",
         }),
       ).rejects.toThrow("Invalid user ID");
     });
@@ -120,6 +122,7 @@ describe("Tournament Service", () => {
           region: "Africa",
           entryFee: 100,
           prizePool: 1000,
+          currency: "NGN",
         }),
       ).rejects.toThrow("Invalid game ID");
     });
@@ -140,6 +143,7 @@ describe("Tournament Service", () => {
           region: "Africa",
           entryFee: 100,
           prizePool: 1000,
+          currency: "NGN",
         }),
       ).rejects.toThrow("User not found");
     });
@@ -160,6 +164,7 @@ describe("Tournament Service", () => {
           region: "Africa",
           entryFee: 100,
           prizePool: 1000,
+          currency: "NGN",
         }),
       ).rejects.toThrow("Forbidden");
     });
@@ -180,6 +185,7 @@ describe("Tournament Service", () => {
           region: "Africa",
           entryFee: 100,
           prizePool: 1000,
+          currency: "NGN",
         }),
       ).rejects.toThrow("Game not found");
     });
