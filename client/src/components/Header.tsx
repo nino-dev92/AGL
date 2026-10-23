@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { IoMdMenu } from "react-icons/io";
 
 export default function Header() {
@@ -7,15 +7,15 @@ export default function Header() {
 
   return (
     <header className="text-agl-primary border-b border-agl-border w-full sticky top-0 z-10 bg-agl-black">
-      <div className="flex justify-between py-3 px-6 sm:px-6 xl:px-50">
+      <div className="flex justify-between py-3 px-6 xl:px-50">
         <Link to="/">
           <div className="flex items-center gap-2 cursor-pointer">
-            <p className="text-agl-danger text-[22px] font-orbitron font-bold">
+            <p className="text-agl-red text-[22px] font-orbitron font-bold">
               AGL
             </p>
             <div className="flex flex-col">
               <b className="text-[16px] font-bold leading-4">AGL</b>
-              <small className="text-agl-warning text-[9px] font-bold tracking-widest">
+              <small className="text-agl-yellow text-[9px] font-bold tracking-widest">
                 AFRICAN GLOBAL LEAGUE
               </small>
             </div>
@@ -26,30 +26,30 @@ export default function Header() {
         <div className="hidden lg:flex gap-3 items-center">
           <nav className="flex gap-6">
             {" "}
-            <Link
+            <NavLink
               to="/"
-              className="text-agl-gray text-[15px] font-bold hover:text-agl-white transition-all duration-200"
+              className="text-agl-gray text-[15px] font-bold hover:text-agl-white aria-[current=page]:text-agl-white transition-all duration-200"
             >
               Home
-            </Link>
-            <Link
+            </NavLink>
+            <NavLink
               to="/tournaments"
-              className="text-agl-gray text-[15px] font-bold hover:text-agl-white transition-all duration-200"
+              className="text-agl-gray text-[15px] font-bold hover:text-agl-white aria-[current=page]:text-agl-white transition-all duration-200"
             >
               Tournaments
-            </Link>
-            <Link
-              to=""
-              className="text-agl-gray text-[15px] font-bold hover:text-agl-white transition-all duration-200"
+            </NavLink>
+            <NavLink
+              to="/players"
+              className="text-agl-gray text-[15px] font-bold hover:text-agl-white aria-[current=page]:text-agl-white transition-all duration-200"
             >
               Players
-            </Link>
-            <Link
-              to=""
-              className="text-agl-gray text-[15px] font-bold hover:text-agl-white transition-all duration-200"
+            </NavLink>
+            <NavLink
+              to="/profile"
+              className="text-agl-gray text-[15px] font-bold hover:text-agl-white aria-[current=page]:text-agl-white transition-all duration-200"
             >
               Profile
-            </Link>
+            </NavLink>
           </nav>
 
           {/** Action buttons */}
@@ -99,13 +99,13 @@ export default function Header() {
                 Tournaments
               </Link>
               <Link
-                to=""
+                to="/players"
                 className="text-agl-gray text-[15px] font-bold hover:text-agl-white transition-all duration-200"
               >
                 Players
               </Link>
               <Link
-                to=""
+                to="/profile"
                 className="text-agl-gray text-[15px] font-bold hover:text-agl-white transition-all duration-200"
               >
                 Profile

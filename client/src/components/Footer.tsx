@@ -2,16 +2,16 @@ import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
-    <footer className="text-agl-primary flex flex-col px-10 pt-16 lg:px-50 border-t border-agl-gray">
+    <footer className="text-agl-primary flex flex-col px-10 pt-16 lg:px-50 border-t border-agl-border-light">
       <section className="grid grid-cols-2 gap-8 lg:flex lg:justify-between">
         <div className="flex flex-col gap-3">
           <div className="flex items-center gap-2 cursor-pointer">
-            <p className="text-agl-danger text-[22px] font-orbitron font-bold">
+            <p className="text-agl-red text-[22px] font-orbitron font-bold">
               AGL
             </p>
             <div className="flex flex-col">
               <b className="text-[16px] font-bold leading-4">AGL</b>
-              <small className="text-agl-warning text-[9px] font-bold tracking-widest">
+              <small className="text-agl-yellow text-[9px] font-bold tracking-widest">
                 AFRICAN GLOBAL LEAGUE
               </small>
             </div>

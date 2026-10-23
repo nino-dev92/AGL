@@ -1,18 +1,10 @@
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
-import useAuth from "./hooks/useAuth";
-import { useEffect } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Tournaments from "./pages/Tournaments";
 
 function App() {
-  const { auth } = useAuth();
-
-  useEffect(() => {
-    console.log(auth);
-  }, []);
-
   return (
     <Routes>
       <Route
