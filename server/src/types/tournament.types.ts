@@ -18,8 +18,9 @@ export interface TournamentDTO {
   endDate: Date;
   rules: string[];
   region: TournamentRegion;
-  entryFee: string;
-  prizePool: string;
+  entryFee: number;
+  prizePool: number;
+  currency: string;
 }
 
 export interface UpdateTournamentDTO {
@@ -33,6 +34,7 @@ export interface UpdateTournamentDTO {
   endDate?: Date;
   rules?: string[];
   region?: TournamentRegion;
-  entryFee?: string;
-  prizePool?: string;
+  entryFee?: number;
+  prizePool?: number;
+  currency?: string;
 }

@@ -125,6 +125,10 @@ router.get("/", tournamentController.findAllTournaments);
  *                 type: string
  *                 example: $20,000
  *
+ *               currency:
+ *                 type: string
+ *                 example: $
+ *
  *               region:
  *                 type: string
  *                 example: Africa

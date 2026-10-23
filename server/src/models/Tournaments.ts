@@ -35,9 +35,11 @@ export interface ITournament extends Document {
 
   region: TournamentRegion;
 
-  entryFee: string;
+  entryFee: number;
 
-  prizePool: string;
+  prizePool: number;
+
+  currency?: string;
 }
 
 const bannerSchema = new mongoose.Schema(
@@ -148,9 +150,14 @@ const tournamentSchema: Schema = new mongoose.Schema(
       required: true,
     },
 
-    entryFee: { type: String, required: true },
+    entryFee: { type: Number, required: true },
 
-    prizePool: { type: String, required: true },
+    prizePool: { type: Number, required: true },
+
+    currency: {
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true,

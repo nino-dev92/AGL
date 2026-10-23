@@ -20,4 +20,6 @@ export const tournamentValidationSchema = Joi.object({
   prizePool: Joi.number().integer().min(1).required(),
 
   region: Joi.string().valid("Africa", "Canada", "USA", "Europe").required(),
+
+  currency: Joi.string().required(),
 });

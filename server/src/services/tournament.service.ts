@@ -74,6 +74,7 @@ export const createNewTournament = async (
     region: data.region,
     entryFee: data.entryFee,
     prizePool: data.prizePool,
+    currency: data.currency,
   });
 
   // create audit log
