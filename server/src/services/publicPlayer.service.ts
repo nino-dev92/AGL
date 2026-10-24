@@ -9,7 +9,7 @@ export const getPublicPlayerProfile = async (username: string) => {
     .select(
       "firstName lastName userName avatar bio country game playerRole createdAt",
     )
-    .populate("game name");
+    .populate("game", "name");
 
   if (!user) {
     throw new ApiError("Player not found", 404);
@@ -64,6 +64,7 @@ export const getAllPlayers = async (
     .select(
       "firstName lastName userName avatar bio country game playerRole createdAt",
     )
+    .populate("game", "name")
     .sort({ createdAt: -1 })
     .skip(skip)
     .limit(limit);

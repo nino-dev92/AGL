@@ -9,7 +9,7 @@ import { Types } from "mongoose";
 import { createAuditLog } from "./auditLog.service";
 
 export const getMyProfile = async (userId: string) => {
-  const user = await Users.findById(userId);
+  const user = await Users.findById(userId).populate("game", "name");
 
   if (!user) {
     throw new ApiError("User not found", 404);
@@ -54,6 +54,7 @@ export const updateProfile = async (userId: string, data: UpdateProfileDTO) => {
   }
 
   await user.save();
+  await user.populate("game", "name");
 
   return {
     id: user._id.toString(),

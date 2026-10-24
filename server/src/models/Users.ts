@@ -113,6 +113,7 @@ const userSchema = new Schema<IUser>(
 
     game: {
       type: mongoose.Types.ObjectId,
+      ref: "Game",
       required: false,
     },
 
