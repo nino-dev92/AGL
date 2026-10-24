@@ -94,7 +94,7 @@ router.get(
  *                 example: Nigeria
  *               game:
  *                 type: string
- *                 example: C.O.D
+ *                 example: cs2938955nbsskd9
  *               playerRole:
  *                 type: string
  *                 example: leader

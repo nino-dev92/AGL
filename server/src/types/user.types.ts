@@ -5,6 +5,7 @@ export type UserDTO = {
   email: string;
   password: string;
   role: "player" | "organizer" | "admin" | "manager";
+  game?: string;
 };
 
 export interface LoginDTO {

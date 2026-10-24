@@ -46,7 +46,7 @@ export const updateProfile = async (userId: string, data: UpdateProfileDTO) => {
   }
 
   if (data.game !== undefined) {
-    user.game = data.game;
+    user.game = new Types.ObjectId(data.game);
   }
 
   if (data.playerRole !== undefined) {

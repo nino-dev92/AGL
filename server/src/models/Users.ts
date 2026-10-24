@@ -1,4 +1,4 @@
-import { Document, Schema, model } from "mongoose";
+import mongoose, { Document, Schema, model, Types } from "mongoose";
 import bcrypt from "bcrypt";
 import env from "../config/env";
 import ApiError from "../utils/apiError";
@@ -22,7 +22,7 @@ export interface IUser extends Document {
 
   bio?: string;
   country?: string;
-  game?: string;
+  game?: Types.ObjectId;
   playerRole?: string;
 
   totalKills?: number | undefined;
@@ -112,9 +112,8 @@ const userSchema = new Schema<IUser>(
     },
 
     game: {
-      type: String,
-      trim: true,
-      default: "",
+      type: mongoose.Types.ObjectId,
+      required: false,
     },
 
     playerRole: {
