@@ -5,9 +5,11 @@ export const getPublicPlayerProfile = async (username: string) => {
   const user = await Users.findOne({
     userName: username.toLowerCase(),
     role: "player",
-  }).select(
-    "firstName lastName userName avatar bio country game playerRole createdAt",
-  );
+  })
+    .select(
+      "firstName lastName userName avatar bio country game playerRole createdAt",
+    )
+    .populate("game name");
 
   if (!user) {
     throw new ApiError("Player not found", 404);
