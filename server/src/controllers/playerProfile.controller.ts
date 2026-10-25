@@ -90,9 +90,9 @@ export const updateKillDeathsGames = asyncHandler(
     const user = await profileService.editKillsDeathsGames(
       userId,
       playerId,
-      Number(kills),
-      Number(deaths),
-      Number(games),
+      kills === undefined ? undefined : Number(kills),
+      deaths === undefined ? undefined : Number(deaths),
+      games === undefined ? undefined : Number(games),
     );
 
     return res.status(200).json({

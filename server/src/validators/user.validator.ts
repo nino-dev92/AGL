@@ -25,6 +25,12 @@ export const playerProfileValidator = Joi.object({
   playerRole: Joi.string().trim().max(100).optional(),
 });
 
+export const playerStatsValidator = Joi.object({
+  kills: Joi.number().integer().min(0).optional(),
+  deaths: Joi.number().integer().min(0).optional(),
+  games: Joi.number().integer().min(0).optional(),
+}).min(1);
+
 export const forgotPasswordValidatorSchema = Joi.object({
   email: Joi.string().email().required(),
 });

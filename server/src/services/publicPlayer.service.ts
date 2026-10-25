@@ -7,7 +7,7 @@ export const getPublicPlayerProfile = async (username: string) => {
     role: "player",
   })
     .select(
-      "firstName lastName userName avatar bio country game playerRole createdAt",
+    "firstName lastName userName avatar bio country game playerRole totalKills totalDeaths totalGames createdAt",
     )
     .populate("game", "name");
 
@@ -29,6 +29,9 @@ export const getPublicPlayerProfile = async (username: string) => {
     country: user.country,
     game: user.game,
     playerRole: user.playerRole,
+    totalKills: user.totalKills,
+    totalDeaths: user.totalDeaths,
+    totalGames: user.totalGames,
     createdAt: user.createdAt,
   };
 };
@@ -62,7 +65,7 @@ export const getAllPlayers = async (
 
   const players = await Users.find(filter)
     .select(
-      "firstName lastName userName avatar bio country game playerRole createdAt",
+      "firstName lastName userName avatar bio country game playerRole totalKills totalDeaths totalGames createdAt",
     )
     .populate("game", "name")
     .sort({ createdAt: -1 })
@@ -86,6 +89,9 @@ export const getAllPlayers = async (
       country: player.country,
       game: player.game,
       playerRole: player.playerRole,
+      totalKills: player.totalKills,
+      totalDeaths: player.totalDeaths,
+      totalGames: player.totalGames,
       createdAt: player.createdAt,
     })),
     total,

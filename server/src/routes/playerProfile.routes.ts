@@ -4,7 +4,10 @@ import verifyJWT from "../middleware/verifyJWT.middleware";
 import ROLES from "../constants/ROLES";
 import * as playerProfileController from "../controllers/playerProfile.controller";
 import validate from "../middleware/validation.middleware";
-import { playerProfileValidator } from "../validators/user.validator";
+import {
+  playerProfileValidator,
+  playerStatsValidator,
+} from "../validators/user.validator";
 import upload from "../middleware/upload.middleware";
 
 const router = express.Router();
@@ -74,7 +77,7 @@ router.get(
  * /v1/users/me:
  *   patch:
  *     summary: Update my profile
- *     description: Update the profile of the currently authenticated player.
+ *     description: Update a player's kill, death, and game totals. Organizer access is required.
  *     tags:
  *       - Users
  *     security:
@@ -184,8 +187,8 @@ router.patch(
   "/player/:id",
   verifyJWT,
   authorizeRole(ROLES.ORGANIZER),
-  validate(playerProfileValidator),
-  playerProfileController.updateProfile,
+  validate(playerStatsValidator),
+  playerProfileController.updateKillDeathsGames,
 );
 
 /**

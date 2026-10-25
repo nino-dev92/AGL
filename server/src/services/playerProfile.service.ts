@@ -181,11 +181,13 @@ export const editKillsDeathsGames = async (
 
   if (!user) throw new ApiError("User not found", 404);
 
-  if (user.role !== "organizer") throw new ApiError("Forbidden", 403);
+  if (user.role !== "player") {
+    throw new ApiError("Stats can only be updated for a player", 400);
+  }
 
-  if (kills) user.totalKills = +kills;
-  if (deaths) user.totalGames = +!games;
-  if (games) user.totalGames = +!deaths;
+  if (kills !== undefined) user.totalKills = kills;
+  if (deaths !== undefined) user.totalDeaths = deaths;
+  if (games !== undefined) user.totalGames = games;
 
   await user.save();
 
