@@ -7,7 +7,7 @@ export const getPublicPlayerProfile = async (username: string) => {
     role: "player",
   })
     .select(
-    "firstName lastName userName avatar bio country game playerRole totalKills totalDeaths totalGames createdAt",
+      "firstName lastName userName avatar bio country game playerRole totalKills totalDeaths totalGames createdAt",
     )
     .populate("game", "name");
 
@@ -26,12 +26,13 @@ export const getPublicPlayerProfile = async (username: string) => {
         }
       : undefined,
     bio: user.bio,
-    country: user.country,
+    region: user.region,
     game: user.game,
-    playerRole: user.playerRole,
     totalKills: user.totalKills,
     totalDeaths: user.totalDeaths,
     totalGames: user.totalGames,
+    tourneysPlayed: user.tourneysPlayed,
+    tourneysWon: user.tourneysWon,
     createdAt: user.createdAt,
   };
 };
@@ -86,12 +87,13 @@ export const getAllPlayers = async (
           }
         : undefined,
       bio: player.bio,
-      country: player.country,
+      region: player.region,
       game: player.game,
-      playerRole: player.playerRole,
       totalKills: player.totalKills,
       totalDeaths: player.totalDeaths,
       totalGames: player.totalGames,
+      tourneysPlayed: player.tourneysPlayed,
+      tourneysWon: player.tourneysWon,
       createdAt: player.createdAt,
     })),
     total,

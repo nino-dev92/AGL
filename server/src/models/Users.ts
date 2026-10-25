@@ -21,13 +21,14 @@ export interface IUser extends Document {
   avatar?: Avatar;
 
   bio?: string;
-  country?: string;
+  region?: string;
   game?: Types.ObjectId;
-  playerRole?: string;
 
   totalKills?: number | undefined;
   totalDeaths?: number | undefined;
   totalGames?: number | undefined;
+  tourneysPlayed?: number | undefined;
+  tourneysWon?: number | undefined;
 
   role: UserRole;
 
@@ -104,7 +105,7 @@ const userSchema = new Schema<IUser>(
       default: "",
     },
 
-    country: {
+    region: {
       type: String,
       trim: true,
       lowercase: true,
@@ -117,12 +118,6 @@ const userSchema = new Schema<IUser>(
       required: false,
     },
 
-    playerRole: {
-      type: String,
-      trim: true,
-      default: "",
-    },
-
     role: {
       type: String,
       enum: ["player", "admin", "manager", "organizer"],
@@ -132,6 +127,8 @@ const userSchema = new Schema<IUser>(
     totalKills: { type: Number, default: 0 },
     totalDeaths: { type: Number, default: 0 },
     totalGames: { type: Number, default: 0 },
+    tourneysPlayed: { type: Number, default: 0 },
+    tourneysWon: { type: Number, default: 0 },
 
     passwordResetToken: {
       type: String,

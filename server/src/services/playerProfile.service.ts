@@ -24,9 +24,8 @@ export const getMyProfile = async (userId: string) => {
     role: user.role,
     avatar: user.avatar,
     bio: user.bio,
-    country: user.country,
+    region: user.region,
     game: user.game,
-    playerRole: user.playerRole,
   };
 };
 
@@ -41,16 +40,12 @@ export const updateProfile = async (userId: string, data: UpdateProfileDTO) => {
     user.bio = data.bio;
   }
 
-  if (data.country !== undefined) {
-    user.country = data.country;
+  if (data.region !== undefined) {
+    user.region = data.region;
   }
 
   if (data.game !== undefined) {
     user.game = new Types.ObjectId(data.game);
-  }
-
-  if (data.playerRole !== undefined) {
-    user.playerRole = data.playerRole;
   }
 
   await user.save();
@@ -64,9 +59,8 @@ export const updateProfile = async (userId: string, data: UpdateProfileDTO) => {
     email: user.email,
     avatar: user.avatar,
     bio: user.bio,
-    country: user.country,
+    region: user.region,
     game: user.game,
-    playerRole: user.playerRole,
     role: user.role,
   };
 };
@@ -173,6 +167,8 @@ export const editKillsDeathsGames = async (
   kills?: number,
   deaths?: number,
   games?: number,
+  tourneysPlayed?: number,
+  tourneysWon?: number,
 ) => {
   if (!Types.ObjectId.isValid(playerId))
     throw new ApiError("Invalid user ID", 400);
@@ -185,9 +181,16 @@ export const editKillsDeathsGames = async (
     throw new ApiError("Stats can only be updated for a player", 400);
   }
 
-  if (kills !== undefined) user.totalKills = kills;
-  if (deaths !== undefined) user.totalDeaths = deaths;
-  if (games !== undefined) user.totalGames = games;
+  if (kills !== undefined) user.totalKills = (user.totalKills ?? 0) + kills;
+  if (deaths !== undefined)
+    user.totalDeaths = (user.totalDeaths ?? 0) + deaths;
+  if (games !== undefined) user.totalGames = (user.totalGames ?? 0) + games;
+  if (tourneysPlayed !== undefined) {
+    user.tourneysPlayed = (user.tourneysPlayed ?? 0) + tourneysPlayed;
+  }
+  if (tourneysWon !== undefined) {
+    user.tourneysWon = (user.tourneysWon ?? 0) + tourneysWon;
+  }
 
   await user.save();
 

@@ -18,7 +18,7 @@ export const loginValidationSchema = Joi.object({
 export const playerProfileValidator = Joi.object({
   bio: Joi.string().trim().max(500).optional(),
 
-  country: Joi.string().trim().max(100).optional(),
+  region: Joi.string().trim().max(100).optional(),
 
   game: Joi.string().trim().max(100).optional(),
 
@@ -29,6 +29,8 @@ export const playerStatsValidator = Joi.object({
   kills: Joi.number().integer().min(0).optional(),
   deaths: Joi.number().integer().min(0).optional(),
   games: Joi.number().integer().min(0).optional(),
+  tourneysPlayed: Joi.number().integer().min(0).optional(),
+  tourneysWon: Joi.number().integer().min(0).optional(),
 }).min(1);
 
 export const forgotPasswordValidatorSchema = Joi.object({

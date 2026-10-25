@@ -1,6 +1,6 @@
 export interface UpdateProfileDTO {
   bio?: string;
-  country?: string;
+  region?: string;
   game?: string;
   playerRole?: string;
 }
@@ -15,8 +15,7 @@ export interface PublicPlayerProfile {
     //publicId: string;
   };
   bio?: string;
-  country?: string;
+  region?: string;
   game?: string;
-  playerRole?: string;
   createdAt: Date;
 }

@@ -46,6 +46,8 @@ export const registerUser = async (data: UserDTO) => {
     totalDeaths: userRole === "player" ? 0 : undefined,
     totalKills: userRole === "player" ? 0 : undefined,
     totalGames: userRole === "player" ? 0 : undefined,
+    tourneysPlayed: userRole === "player" ? 0 : undefined,
+    tourneysWon: userRole === "player" ? 0 : undefined,
   });
 
   // Send welcome email

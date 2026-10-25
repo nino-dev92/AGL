@@ -49,15 +49,12 @@ const router = express.Router();
  *                     bio:
  *                       type: string
  *                       example: COD multiplayer professional
- *                     country:
+ *                     region:
  *                       type: string
  *                       example: Nigeria
  *                     game:
  *                       type: string
  *                       example: C.O.D
- *                     playerRole:
- *                       type: string
- *                       example: leader
  *       401:
  *         description: Unauthorized - JWT token is missing or invalid
  *       403:
@@ -77,7 +74,7 @@ router.get(
  * /v1/users/me:
  *   patch:
  *     summary: Update my profile
- *     description: Update a player's kill, death, and game totals. Organizer access is required.
+ *     description: Update the profile of the currently authenticated player.
  *     tags:
  *       - Users
  *     security:
@@ -92,15 +89,12 @@ router.get(
  *               bio:
  *                 type: string
  *                 example: COD multiplayer professional
- *               country:
+ *               region:
  *                 type: string
  *                 example: Nigeria
  *               game:
  *                 type: string
  *                 example: cs2938955nbsskd9
- *               playerRole:
- *                 type: string
- *                 example: leader
  *     responses:
  *       200:
  *         description: User profile updated successfully
@@ -135,8 +129,8 @@ router.patch(
  * @swagger
  * /v1/users/player/{id}:
  *   patch:
- *     summary: Update user profile total kills, deaths and games
- *     description: Update the profile of the currently authenticated player.
+ *     summary: Update user profile total kills, deaths, tourneys played, tourneys won and games
+ *     description: Update a player's kill, death, and game totals. Organizer access is required.
  *     tags:
  *       - Users
  *     parameters:
@@ -161,6 +155,12 @@ router.patch(
  *               games:
  *                 type: number
  *                 example: 3
+ *               tourneysPlayed:
+ *                 type: number
+ *                 example: 1
+ *               tourneysWon:
+ *                 type: number
+ *                 example: 1
  *     responses:
  *       200:
  *         description: User profile updated successfully
