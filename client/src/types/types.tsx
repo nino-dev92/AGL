@@ -29,3 +29,19 @@ export interface Tournament {
   prizePool: number;
   currency: string;
 }
+
+export type User = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  userName: string;
+  game?: any;
+  bio?: string;
+  region?: string;
+  createdAt: Date;
+  totalKills?: number;
+  totalDeaths?: number;
+  totalGames?: number;
+  tourneysPlayed?: number;
+  tourneysWon?: number;
+};

@@ -36,6 +36,28 @@ export const updateProfile = async (userId: string, data: UpdateProfileDTO) => {
     throw new ApiError("User not found", 404);
   }
 
+  if (data.userName !== undefined) {
+    const userName = data.userName.trim().toLowerCase();
+    if (userName !== user.userName) {
+      const existingUser = await Users.findOne({
+        userName,
+        _id: { $ne: user._id },
+      });
+      if (existingUser) {
+        throw new ApiError("Username already exists", 409);
+      }
+      user.userName = userName;
+    }
+  }
+
+  if (data.firstName !== undefined) {
+    user.firstName = data.firstName;
+  }
+
+  if (data.lastName !== undefined) {
+    user.lastName = data.lastName;
+  }
+
   if (data.bio !== undefined) {
     user.bio = data.bio;
   }

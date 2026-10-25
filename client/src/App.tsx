@@ -3,6 +3,8 @@ import { Route, Routes } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Tournaments from "./pages/Tournaments";
+import Players from "./pages/Players";
+import PlayerProfile from "./pages/PlayerProfile";
 
 function App() {
   return (
@@ -29,6 +31,8 @@ function App() {
       />
 
       <Route path="/tournaments" element={<Tournaments />} />
+      <Route path="/players" element={<Players />} />
+      <Route path="/player/:username" element={<PlayerProfile />} />
     </Routes>
   );
 }

@@ -44,13 +44,10 @@ export default function Tournaments() {
   }, [tournaments, search, selected, status, region]);
 
   useEffect(() => {
-    console.log(region);
-
     const getTournaments = async () => {
       try {
         const res = await apiAxios.get("/tournaments");
         setTournaments(res.data.data);
-        console.log(tournaments);
       } catch (error) {
         console.log(error);
       }

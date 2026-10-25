@@ -1,4 +1,7 @@
 export interface UpdateProfileDTO {
+  firstName?: string;
+  lastName?: string;
+  userName?: string;
   bio?: string;
   region?: string;
   game?: string;

@@ -86,6 +86,15 @@ router.get(
  *           schema:
  *             type: object
  *             properties:
+ *               userName:
+ *                 type: string
+ *                 example: agl_player
+ *               firstName:
+ *                 type: string
+ *                 example: Alex
+ *               lastName:
+ *                 type: string
+ *                 example: Smith
  *               bio:
  *                 type: string
  *                 example: COD multiplayer professional

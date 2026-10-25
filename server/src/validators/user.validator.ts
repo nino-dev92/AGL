@@ -16,6 +16,12 @@ export const loginValidationSchema = Joi.object({
 });
 
 export const playerProfileValidator = Joi.object({
+  firstName: Joi.string().trim().min(1).max(100).optional(),
+
+  lastName: Joi.string().trim().min(1).max(100).optional(),
+
+  userName: Joi.string().trim().min(1).max(100).optional(),
+
   bio: Joi.string().trim().max(500).optional(),
 
   region: Joi.string().trim().max(100).optional(),
