@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { User } from "../types/types";
 import useAuth from "../hooks/useAuth";
 import Header from "../components/Header";
@@ -9,7 +10,6 @@ import { IoMdArrowBack } from "react-icons/io";
 
 export default function PlayerProfile() {
   const { username } = useParams<string>();
-  const [player, setPlayer] = useState<User>();
   const [editing, setEditing] = useState<boolean>(false);
   const [userName, setUserName] = useState<string>("");
   const [firstName, setFirstName] = useState<string>("");
@@ -17,8 +17,19 @@ export default function PlayerProfile() {
   const [region, setRegion] = useState<string>("");
   const [saving, setSaving] = useState<boolean>(false);
   const [formError, setFormError] = useState<string>("");
+  const queryClient = useQueryClient();
   const { auth, setAuth } = useAuth();
   const navigate = useNavigate();
+
+  const playerQuery = useQuery({
+    queryKey: ["player", username],
+    enabled: Boolean(username),
+    queryFn: async () => {
+      const res = await apiAxios.get<{ data: User }>(`/players/${username}`);
+      return res.data.data;
+    },
+  });
+  const player = playerQuery.data;
 
   const openEditor = () => {
     setUserName(player?.userName ?? "");
@@ -33,7 +44,6 @@ export default function PlayerProfile() {
     e.preventDefault();
     setSaving(true);
     setFormError("");
-    console.log(userName, firstName, lastName, region);
 
     try {
       const res = await apiAxios.patch("/users/me", {
@@ -43,15 +53,19 @@ export default function PlayerProfile() {
         region,
       });
       if (res.status == 201) {
-        setPlayer((currentPlayer) =>
+        const updatedPlayer = res.data.data as User;
+        queryClient.setQueryData<User>(["player", username], (currentPlayer) =>
           currentPlayer
-            ? { ...currentPlayer, ...res.data.data }
+            ? { ...currentPlayer, ...updatedPlayer }
             : currentPlayer,
         );
         if (auth) {
-          setAuth({ ...auth, username: res.data.data.userName });
+          setAuth({ ...auth, username: updatedPlayer.userName });
         }
         setEditing(false);
+        if (username !== updatedPlayer.userName) {
+          navigate(`/players/${updatedPlayer.userName}`, { replace: true });
+        }
       }
     } catch (error) {
       console.error("Failed to update player profile", error);
@@ -61,18 +75,13 @@ export default function PlayerProfile() {
     }
   };
 
-  useEffect(() => {
-    const getPlayer = async () => {
-      try {
-        const res = await apiAxios.get(`/players/${username}`);
-        setPlayer(res?.data.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+  if (playerQuery.isLoading) {
+    return <p className="text-white">Loading player...</p>;
+  }
 
-    getPlayer();
-  }, [username]);
+  if (playerQuery.isError || !player) {
+    return <p className="text-white">Unable to load player profile.</p>;
+  }
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -93,17 +102,17 @@ export default function PlayerProfile() {
           {/**Picture */}
           <section className="flex justify-center items-center w-24 aspect-square rounded-full bg-agl-red">
             <p className="font-bold text-3xl">
-              {player?.userName.charAt(0).toUpperCase()}
+              {player.userName.charAt(0).toUpperCase()}
             </p>
           </section>
 
           <section className="flex flex-col items-center">
-            <p className="font-bold">{player?.userName.toUpperCase()}</p>
+            <p className="font-bold">{player.userName.toUpperCase()}</p>
 
             <p className="text-agl-gray-dark text-[14px]">{player?.region}</p>
 
             <p className="text-[12px] border border-agl-border-light rounded-xl text-center py-1 px-2 mt-1.5">
-              {player?.game.name.toUpperCase()}
+              {player.game?.name?.toUpperCase()}
             </p>
           </section>
 

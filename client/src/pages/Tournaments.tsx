@@ -1,16 +1,45 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import type { Tournament } from "../types/types";
 import apiAxios from "../api/apiAxios";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import TournamentCard from "../components/cards/TournamentCard";
 
+interface TournamentQueryResponse {
+  data: Tournament[];
+  pagination: {
+    totalPages: number;
+  };
+}
+
 export default function Tournaments() {
   const [selected, setSelected] = useState<string>("All");
-  const [tournaments, setTournaments] = useState<Tournament[]>([]);
   const [region, setRegion] = useState<string>("");
   const [status, setStatus] = useState<string>("");
   const [search, setSearch] = useState<string>("");
+  const [page, setPage] = useState<number>(1);
+
+  const tournamentQuery = useQuery({
+    queryKey: ["tournaments", { search, region, status, page }],
+    queryFn: async () => {
+      const res = await apiAxios.get<TournamentQueryResponse>("/tournaments", {
+        params: {
+          search: search.trim(),
+          region,
+          status,
+          page,
+        },
+      });
+      return res.data;
+    },
+  });
+
+  const tournaments = tournamentQuery.data?.data ?? [];
+  const totalPages = Math.max(
+    tournamentQuery.data?.pagination.totalPages ?? 1,
+    1,
+  );
 
   const buttons = useMemo(
     () => [
@@ -23,38 +52,23 @@ export default function Tournaments() {
   );
 
   const filteredTournaments = useMemo(() => {
-    const searchTerm = search.trim().toLowerCase();
-
     return tournaments.filter((tournament) => {
       const gameName = tournament.game.name.toLowerCase();
-      const matchesSearch =
-        tournament.name.toLowerCase().includes(searchTerm) ||
-        tournament.description?.toLowerCase().includes(searchTerm) ||
-        gameName.includes(searchTerm);
       const matchesGame =
         selected === "All" || gameName.includes(selected.toLowerCase());
 
-      const matchesStatus = status === "" || status === tournament.status;
-      const matchesRegion =
-        region === "" ||
-        tournament.region.toLowerCase() === region.toLowerCase();
-
-      return matchesSearch && matchesGame && matchesStatus && matchesRegion;
+      return matchesGame;
     });
-  }, [tournaments, search, selected, status, region]);
+  }, [tournaments, selected]);
 
-  useEffect(() => {
-    const getTournaments = async () => {
-      try {
-        const res = await apiAxios.get("/tournaments");
-        setTournaments(res.data.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    getTournaments();
-  }, []);
+  if (tournamentQuery.isLoading)
+    return (
+      <div className="w-full h-screen flex place-items-center">
+        <h2 className="text-white mx-auto">Loading...</h2>
+      </div>
+    );
+  if (tournamentQuery.isError)
+    return <h2 className="text-white">Error loading</h2>;
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -102,7 +116,10 @@ export default function Tournaments() {
                   type="text"
                   placeholder="Search Tournament..."
                   value={search}
-                  onChange={(e) => setSearch(e.target.value)}
+                  onChange={(e) => {
+                    setSearch(e.target.value);
+                    setPage(1);
+                  }}
                   className="w-full rounded border border-agl-border-light bg-agl-white p-2 text-agl-black"
                 />
               </div>
@@ -111,7 +128,10 @@ export default function Tournaments() {
                 <select
                   className="min-w-0 cursor-pointer rounded border border-agl-border-light bg-agl-white p-2 text-agl-black sm:min-w-35"
                   value={status}
-                  onChange={(e) => setStatus(e.target.value)}
+                  onChange={(e) => {
+                    setStatus(e.target.value);
+                    setPage(1);
+                  }}
                 >
                   <option value="">Any Status</option>
                   <option value="upcoming">Upcoming</option>
@@ -127,7 +147,10 @@ export default function Tournaments() {
                 <select
                   className="min-w-0 cursor-pointer rounded border border-agl-border-light bg-agl-white p-2 text-agl-black sm:min-w-35"
                   value={region}
-                  onChange={(e) => setRegion(e.target.value)}
+                  onChange={(e) => {
+                    setRegion(e.target.value);
+                    setPage(1);
+                  }}
                 >
                   <option value="">All Regions</option>
                   <option value="Africa">Africa</option>
@@ -150,6 +173,31 @@ export default function Tournaments() {
               )}
             </div>
           </div>
+        </section>
+
+        {/**Pagination */}
+        <section className="flex gap-4 justify-center mt-20 mb-5">
+          <button
+            disabled={page === 1}
+            className="cursor-pointer hover:underline disabled:cursor-not-allowed disabled:text-agl-gray disabled:hover:no-underline"
+            onClick={() => {
+              if (page > 1) setPage(page - 1);
+            }}
+          >
+            Prev
+          </button>
+          <span className="font-semibold text-xl">
+            {page} / {totalPages}
+          </span>
+          <button
+            disabled={page >= totalPages}
+            className="cursor-pointer hover:underline disabled:cursor-not-allowed disabled:text-agl-gray disabled:hover:no-underline"
+            onClick={() => {
+              if (page < totalPages) setPage(page + 1);
+            }}
+          >
+            Next
+          </button>
         </section>
       </main>
 
