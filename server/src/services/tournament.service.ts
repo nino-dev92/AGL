@@ -104,16 +104,27 @@ export const getAllTournaments = async (
   game: string,
   page: number,
   limit: number,
+  region = "",
+  status = "",
 ) => {
   const filter: Record<string, unknown> = {};
 
   const skip = (page - 1) * limit;
 
   if (search) {
-    filter.name = {
-      $regex: search,
-      $options: "i",
-    };
+    const searchPattern = new RegExp(
+      search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+      "i",
+    );
+    const matchingGames = await Games.find({ name: searchPattern }).select(
+      "_id",
+    );
+
+    filter.$or = [
+      { name: searchPattern },
+      { description: searchPattern },
+      { game: { $in: matchingGames.map(({ _id }) => _id) } },
+    ];
   }
 
   if (game) {
@@ -122,6 +133,9 @@ export const getAllTournaments = async (
 
     filter.game = game;
   }
+
+  if (region) filter.region = region;
+  if (status) filter.status = status;
 
   // get all tournaments
   const allTournaments = await Tournaments.find(filter)

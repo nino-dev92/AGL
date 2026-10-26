@@ -351,6 +351,46 @@ describe("Tournament Service", () => {
       );
     });
 
+    it("should filter tournaments by region and status", async () => {
+      const admin = await createUser("admin");
+      const game = await createGame();
+
+      const completedTournament = await createTournament(
+        admin._id.toString(),
+        game._id.toString(),
+        {
+          name: "Europe Completed Tournament",
+          region: "Europe",
+        },
+      );
+      completedTournament.status = "completed";
+      await completedTournament.save();
+      await createTournament(admin._id.toString(), game._id.toString(), {
+        name: "Europe Upcoming Tournament",
+        region: "Europe",
+        status: "upcoming",
+      });
+      await createTournament(admin._id.toString(), game._id.toString(), {
+        name: "Africa Completed Tournament",
+        region: "Africa",
+        status: "completed",
+      });
+
+      const result = await getAllTournaments(
+        "",
+        "",
+        1,
+        10,
+        "Europe",
+        "completed",
+      );
+
+      expect(result.allTournaments).toHaveLength(1);
+      expect(result.allTournaments[0]?.name).toBe(
+        "europe completed tournament",
+      );
+    });
+
     it("should reject an invalid game ID when filtering", async () => {
       await expect(
         getAllTournaments("", "invalid-game-id", 1, 10),

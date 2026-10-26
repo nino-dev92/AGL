@@ -73,7 +73,7 @@ export const getAllPlayers = async (
     .skip(skip)
     .limit(limit);
 
-  const total = await Users.find({ role: "player" }).countDocuments();
+  const total = await Users.countDocuments(filter);
 
   return {
     players: players.map((player) => ({

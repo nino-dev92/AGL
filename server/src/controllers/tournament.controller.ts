@@ -53,6 +53,8 @@ export const findAllTournaments = asyncHandler(
   async (req: Request, res: Response) => {
     const search = String(req.query.search ?? "");
     const game = String(req.query.game ?? "");
+    const region = String(req.query.region ?? "");
+    const status = String(req.query.status ?? "");
 
     const page = Math.max(Number(req.query.page) || 1, 1);
 
@@ -63,6 +65,8 @@ export const findAllTournaments = asyncHandler(
       game,
       page,
       limit,
+      region,
+      status,
     );
 
     res.status(200).json({

@@ -43,6 +43,20 @@ const router = express.Router();
  *         description: Filter tournaments by game ID
  *
  *       - in: query
+ *         name: region
+ *         schema:
+ *           type: string
+ *           enum: [Africa, Canada, USA, Europe]
+ *         description: Filter tournaments by region
+ *
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *           enum: [upcoming, registration-open, registration-closed, ongoing, completed, cancelled]
+ *         description: Filter tournaments by status
+ *
+ *       - in: query
  *         name: page
  *         schema:
  *           type: integer
