@@ -5,6 +5,7 @@ import Footer from "./components/Footer";
 import Tournaments from "./pages/Tournaments";
 import Players from "./pages/Players";
 import PlayerProfile from "./pages/PlayerProfile";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
       <Route path="/tournaments" element={<Tournaments />} />
       <Route path="/players" element={<Players />} />
       <Route path="/player/:username" element={<PlayerProfile />} />
+      <Route path="/profile" element={<ProfilePage />} />
     </Routes>
   );
 }

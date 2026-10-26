@@ -47,11 +47,6 @@ export default function Players() {
   const totalPlayers = playersQuery.data?.pagination.totalPlayers ?? 0;
   const totalPages = Math.max(playersQuery.data?.pagination.totalPages ?? 1, 1);
 
-  if (playersQuery.isLoading)
-    return <p className="text-white">Loading players...</p>;
-  if (playersQuery.isError)
-    return <p className="text-white">Error loading players.</p>;
-
   return (
     <>
       <Header />
@@ -77,76 +72,89 @@ export default function Players() {
 
         {/**Players section */}
         <section className="border-b border-b-agl-border-light flex flex-col mb-4 pb-10">
+          {playersQuery.isLoading && (
+            <p className="text-white text-center">Loading players...</p>
+          )}
+
+          {playersQuery.isError && (
+            <p className="text-white text-center">Error loading players.</p>
+          )}
           {/**Game Buttons */}
-          <div className="py-3 px-6 xl:px-50">
-            <div className="mb-6 flex gap-2 overflow-x-auto pt-2 pb-2 sm:mb-7 sm:flex-wrap sm:overflow-visible sm:pb-0">
-              {[
-                { id: "", name: "All" },
-                ...(gamesQuery.data ?? []).map((game) => ({
-                  id: game._id,
-                  name: game.name,
-                })),
-              ].map((game) => (
+          {!playersQuery.isLoading && (
+            <>
+              <div className="py-3 px-6 xl:px-50">
+                <div className="mb-6 flex gap-2 overflow-x-auto pt-2 pb-2 sm:mb-7 sm:flex-wrap sm:overflow-visible sm:pb-0">
+                  {[
+                    { id: "", name: "All" },
+                    ...(gamesQuery.data ?? []).map((game) => ({
+                      id: game._id,
+                      name: game.name,
+                    })),
+                  ].map((game) => (
+                    <button
+                      key={game.id || game.name}
+                      className={`shrink-0 rounded-[9px] text-agl-white border border-agl-border-light px-4 py-2 font-inter font-medium ${selectedGame === game.id ? "bg-agl-red" : ""} cursor-pointer`}
+                      onClick={() => {
+                        setSelectedGame(game.id);
+                        setPage(1);
+                      }}
+                    >
+                      {game.name.toUpperCase()}
+                    </button>
+                  ))}
+                </div>
+                {gamesQuery.isError && (
+                  <p className="text-red-400" role="alert">
+                    Game filters could not be loaded.
+                  </p>
+                )}
+
+                <div className="flex flex-col justify-center w-full">
+                  <p className="text-agl-gray text-[12px]">
+                    {totalPlayers} players
+                  </p>
+
+                  {/**Players Card */}
+                  <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                    {players.length < 1 ? (
+                      <p className="text-agl-white text- center">
+                        No player found
+                      </p>
+                    ) : (
+                      players.map((player) => {
+                        return <PlayerCard key={player.id} player={player} />;
+                      })
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/**Pagination */}
+              <section className="flex gap-4 justify-center mt-20">
                 <button
-                  key={game.id || game.name}
-                  className={`shrink-0 rounded-[9px] text-agl-white border border-agl-border-light px-4 py-2 font-inter font-medium ${selectedGame === game.id ? "bg-agl-red" : ""} cursor-pointer`}
+                  disabled={page === 1}
+                  className="cursor-pointer hover:underline disabled:cursor-not-allowed disabled:text-agl-gray disabled:hover:no-underline"
                   onClick={() => {
-                    setSelectedGame(game.id);
-                    setPage(1);
+                    if (page > 1) setPage(page - 1);
                   }}
                 >
-                  {game.name.toUpperCase()}
+                  Prev
                 </button>
-              ))}
-            </div>
-            {gamesQuery.isError && (
-              <p className="text-red-400" role="alert">
-                Game filters could not be loaded.
-              </p>
-            )}
-
-            <div className="flex flex-col justify-center w-full">
-              <p className="text-agl-gray text-[12px]">
-                {playersQuery.data?.pagination.totalPlayers} players
-              </p>
-
-              {/**Players Card */}
-              <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {players.length < 1 ? (
-                  <p className="text-agl-white text- center">No player found</p>
-                ) : (
-                  players.map((player) => {
-                    return <PlayerCard key={player.id} player={player} />;
-                  })
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/**Pagination */}
-          <section className="flex gap-4 justify-center mt-20">
-            <button
-              disabled={page === 1}
-              className="cursor-pointer hover:underline disabled:cursor-not-allowed disabled:text-agl-gray disabled:hover:no-underline"
-              onClick={() => {
-                if (page > 1) setPage(page - 1);
-              }}
-            >
-              Prev
-            </button>
-            <span className="font-semibold text-xl text-white">
-              {page} / {totalPages}
-            </span>
-            <button
-              disabled={page >= totalPages}
-              className="cursor-pointer hover:underline disabled:cursor-not-allowed disabled:text-agl-gray disabled:hover:no-underline"
-              onClick={() => {
-                if (page < totalPages) setPage(page + 1);
-              }}
-            >
-              Next
-            </button>
-          </section>
+                <span className="font-semibold text-xl text-white">
+                  {page} / {totalPages}
+                </span>
+                <button
+                  disabled={page >= totalPages}
+                  className="cursor-pointer hover:underline disabled:cursor-not-allowed disabled:text-agl-gray disabled:hover:no-underline"
+                  onClick={() => {
+                    if (page < totalPages) setPage(page + 1);
+                  }}
+                >
+                  Next
+                </button>
+              </section>
+            </>
+          )}
         </section>
 
         <section className="m-20 flex flex-col gap-3">
