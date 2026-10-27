@@ -5,6 +5,7 @@ import apiAxios from "../api/apiAxios";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import TournamentCard from "../components/cards/TournamentCard";
+import Loading from "../components/Loading";
 
 interface TournamentQueryResponse {
   data: Tournament[];
@@ -88,7 +89,7 @@ export default function Tournaments() {
         {/**Tournaments Section */}
         <section className="px-4 py-10 sm:px-6 sm:py-14 lg:px-10 lg:py-18">
           {tournamentQuery.isLoading && (
-            <p className="text-white text-center">Loading tournaments...</p>
+            <Loading />
           )}
 
           {!tournamentQuery.isLoading && (

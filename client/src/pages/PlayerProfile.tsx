@@ -7,6 +7,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import apiAxios from "../api/apiAxios";
 import { IoMdArrowBack } from "react-icons/io";
+import Loading from "../components/Loading";
 
 export default function PlayerProfile() {
   const { username } = useParams<string>();
@@ -76,7 +77,7 @@ export default function PlayerProfile() {
   };
 
   if (playerQuery.isLoading) {
-    return <p className="text-white">Loading player...</p>;
+    return <Loading fullScreen />;
   }
 
   if (playerQuery.isError || !player) {

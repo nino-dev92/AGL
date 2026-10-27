@@ -6,6 +6,7 @@ import apiAxios from "../api/apiAxios";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import PlayerCard from "../components/cards/PlayerCard";
+import Loading from "../components/Loading";
 
 type PlayerQueryResponse = {
   data: User[];
@@ -72,9 +73,7 @@ export default function Players() {
 
         {/**Players section */}
         <section className="border-b border-b-agl-border-light flex flex-col mb-4 pb-10">
-          {playersQuery.isLoading && (
-            <p className="text-white text-center">Loading players...</p>
-          )}
+          {playersQuery.isLoading && <Loading />}
 
           {playersQuery.isError && (
             <p className="text-white text-center">Error loading players.</p>
