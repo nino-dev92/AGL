@@ -30,6 +30,8 @@
   --color-agl-success: #22c55e;
   --color-agl-warning: #facc15;
   --color-agl-danger: #ef4444;
+  --color-agl-red:#EB2929;
+  --text-agl-yellow:#EBDD21;
 
   /* Explicit Semantic Utilities */
   --color-agl-page: #050505;
@@ -118,4 +120,8 @@
   --background-size-grid: 40px 40px;
   --transition-timing-function-agl: cubic-bezier(0.4, 0, 0.2, 1);
   --transition-duration-400: 400ms;
+}
+
+html {
+  scroll-behavior: smooth;
 }
