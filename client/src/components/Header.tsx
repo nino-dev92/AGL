@@ -28,7 +28,7 @@ export default function Header() {
 
   return (
     <header className="text-agl-primary border-b border-agl-border w-full sticky top-0 z-10 bg-agl-black">
-      <div className="flex justify-between py-3 px- xl:px-main-x-lg">
+      <div className="flex justify-between px-6 py-3 xl:px-main-x-lg">
         <Link to="/">
           <div className="flex items-center gap-2 cursor-pointer">
             <p className="text-agl-red text-[22px] font-orbitron font-bold">

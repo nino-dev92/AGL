@@ -1,8 +1,6 @@
 import "./App.css";
 import { Link, Route, Routes, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import TournamentsPage from "./pages/TournamentsPage";
 import TournamentPage from "./pages/TournamentPage";

@@ -1,5 +1,5 @@
-import type { Tournament } from "../../types/types";
-import { formatDate } from "../../utils/formateDate";
+import type { Tournament } from "../../../types/types";
+import { formatDate } from "../../../utils/formateDate";
 
 type Props = {
   tournament: Tournament;

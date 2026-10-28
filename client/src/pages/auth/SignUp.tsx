@@ -91,17 +91,17 @@ export default function SignUp() {
             "linear-gradient(rgba(3, 12, 32, 0.6), rgba(3, 12, 32, 0.6)), url('/gamebg.jpg')",
         }}
       >
-        <div className="hidden flex-col mt-30 px-8 py-12 md:flex lg:px-14">
-          <p className="mb- 2text-sm font-bold tracking-[4px] text-agl-yellow">
+        <div className="mt-30 hidden flex-col px-8 py-12 md:flex lg:px-14">
+          <p className="mb-4 text-sm font-bold tracking-[4px] text-agl-yellow">
             AFRICAN GLOBAL LEAGUE
           </p>
-          <h1 className="md:text-[3rem] font-extrabold leading-[1.02] tracking-[-2px] lg:text-[6rem]">
+          <h1 className="text-hero font-extrabold leading-[1.02] tracking-[-2px] lg:text-hero-lg">
             JOIN THE {/** */}
             <span className="text-agl-red">LEAGUE.</span>
             <br />
             MAKE YOUR NAME.
           </h1>
-          <p className="text-agl-gray mt-2 text-[18px]">
+          <p className="mt-3 text-agl-gray">
             Create a free account to participate.
           </p>
         </div>
@@ -261,9 +261,7 @@ export default function SignUp() {
                     />
                     <button
                       type="button"
-                      aria-label={
-                        showPassword ? "Hide password" : "Show password"
-                      }
+                      aria-label={showPassword ? "Hide password" : "Show password"}
                       aria-pressed={showPassword}
                       onClick={() => setShowPassword((visible) => !visible)}
                       className="absolute inset-y-0 right-2 cursor-pointer text-sm font-semibold text-agl-yellow"
@@ -282,9 +280,7 @@ export default function SignUp() {
                       type={showConfirmPassword ? "text" : "password"}
                       required
                       value={confirmPassword}
-                      onChange={(event) =>
-                        setConfirmPassword(event.target.value)
-                      }
+                      onChange={(event) => setConfirmPassword(event.target.value)}
                       className={`${fieldClassName} w-full pr-16`}
                     />
                     <button
