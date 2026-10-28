@@ -1,5 +1,5 @@
 export interface Tournament {
-  id: string;
+  _id: string;
   name: string;
   slug: string;
   description: string | undefined;
@@ -31,7 +31,7 @@ export interface Tournament {
 }
 
 export type User = {
-  id: string;
+  _id: string;
   firstName: string;
   lastName: string;
   userName: string;
