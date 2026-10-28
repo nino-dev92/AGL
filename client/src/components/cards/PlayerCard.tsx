@@ -10,11 +10,11 @@ export default function PlayerCard({ player }: Props) {
 
   return (
     <div
-      className="flex min-h-15 min-w-0 w-full items-center gap-2 rounded-xl border border-agl-border-light px-4 py-2 text-agl-white transition-all duration-400 hover:scale-102 hover:shadow-sm hover:shadow-agl-gray cursor-pointer"
+      className="flex min-h-15 min-w-0 w-full items-center gap-2 rounded-xl border border-agl-border-light px-4 py-2 text-agl-primary transition-all duration-400 hover:scale-102 hover:shadow-sm hover:shadow-agl-gray cursor-pointer"
       onClick={() => navigate(`/player/${player.userName}`)}
     >
       {/**Player Image */}
-      <div className="flex w-12 shrink-0 aspect-square justify-center rounded-[50%] border border-agl-red bg-agl-red text-center font-bold text-agl-white">
+      <div className="flex w-12 shrink-0 aspect-square justify-center rounded-[50%] border border-agl-red bg-agl-red text-center font-bold text-agl-primary">
         <p className="m-auto">{player.userName.charAt(0).toUpperCase()}</p>
       </div>
 

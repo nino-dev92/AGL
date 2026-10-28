@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { IoMdMenu } from "react-icons/io";
 
 export default function Header() {
   const [show, setShow] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   return (
     <header className="text-agl-primary border-b border-agl-border w-full sticky top-0 z-10 bg-agl-black">
@@ -28,25 +29,25 @@ export default function Header() {
             {" "}
             <NavLink
               to="/"
-              className="text-agl-gray text-[15px] font-bold hover:text-agl-white aria-[current=page]:text-agl-white transition-all duration-200"
+              className="text-agl-gray text-[14px] font-bold hover:text-agl-primary aria-[current=page]:text-agl-primary transition-all duration-200"
             >
               Home
             </NavLink>
             <NavLink
               to="/tournaments"
-              className="text-agl-gray text-[15px] font-bold hover:text-agl-white aria-[current=page]:text-agl-white transition-all duration-200"
+              className="text-agl-gray text-[14px] font-bold hover:text-agl-primary aria-[current=page]:text-agl-primary transition-all duration-200"
             >
               Tournaments
             </NavLink>
             <NavLink
               to="/players"
-              className="text-agl-gray text-[15px] font-bold hover:text-agl-white aria-[current=page]:text-agl-white transition-all duration-200"
+              className="text-agl-gray text-[14px] font-bold hover:text-agl-primary aria-[current=page]:text-agl-primary transition-all duration-200"
             >
               Players
             </NavLink>
             <NavLink
               to="/profile"
-              className="text-agl-gray text-[15px] font-bold hover:text-agl-white aria-[current=page]:text-agl-white transition-all duration-200"
+              className="text-agl-gray text-[14px] font-bold hover:text-agl-primary aria-[current=page]:text-agl-primary transition-all duration-200"
             >
               Profile
             </NavLink>
@@ -55,12 +56,15 @@ export default function Header() {
           {/** Action buttons */}
           <div className="flex gap-3 ml-5">
             <Link to="">
-              <button className="text-[15px] border border-agl-danger py-1.75 px-3.5 bg-agl-danger hover:bg-red-400 rounded cursor-pointer font-bold transition-all duration-200">
+              <button className="text-[14px] border border-agl-red py-1.75 px-3.5 bg-agl-red hover:bg-red-400 rounded cursor-pointer font-bold transition-all duration-200">
                 Watch Now
               </button>
             </Link>
             <Link to="">
-              <button className="border border-agl-primary text-[15px] py-1.75 px-3.5 rounded cursor-pointer font-bold hover:bg-agl-white hover:text-agl-black transition-all duration-200">
+              <button
+                className="border border-agl-primary text-[14px] py-1.75 px-3.5 rounded cursor-pointer font-bold hover:bg-agl-primary hover:text-agl-black transition-all duration-200"
+                onClick={() => navigate("/signup")}
+              >
                 Sign Up
               </button>
             </Link>
@@ -88,25 +92,25 @@ export default function Header() {
               {" "}
               <Link
                 to="/"
-                className="text-agl-gray text-[15px] font-bold hover:text-agl-white transition-all duration-200"
+                className="text-agl-gray text-[14px] font-bold hover:text-agl-primary transition-all duration-200"
               >
                 Home
               </Link>
               <Link
                 to="/tournaments"
-                className="text-agl-gray text-[15px] font-bold hover:text-agl-white transition-all duration-200"
+                className="text-agl-gray text-[14px] font-bold hover:text-agl-primary transition-all duration-200"
               >
                 Tournaments
               </Link>
               <Link
                 to="/players"
-                className="text-agl-gray text-[15px] font-bold hover:text-agl-white transition-all duration-200"
+                className="text-agl-gray text-[14px] font-bold hover:text-agl-primary transition-all duration-200"
               >
                 Players
               </Link>
               <Link
                 to="/profile"
-                className="text-agl-gray text-[15px] font-bold hover:text-agl-white transition-all duration-200"
+                className="text-agl-gray text-[14px] font-bold hover:text-agl-primary transition-all duration-200"
               >
                 Profile
               </Link>
@@ -115,12 +119,15 @@ export default function Header() {
             {/** Action buttons */}
             <div className="flex flex-col grow gap-3">
               <Link to="">
-                <button className="text-[15px] w-full border border-agl-danger py-1.75 px-3.5 bg-agl-danger hover:bg-red-400 rounded cursor-pointer font-bold transition-all duration-200">
+                <button className="text-[14px] w-full border border-agl-red py-1.75 px-3.5 bg-agl-red hover:bg-red-400 rounded cursor-pointer font-bold transition-all duration-200">
                   Watch Now
                 </button>
               </Link>
               <Link to="">
-                <button className="border border-agl-primary w-full text-[15px] py-1.75 px-3.5 rounded cursor-pointer font-bold hover:bg-agl-white hover:text-agl-black transition-all duration-200">
+                <button
+                  className="border border-agl-primary w-full text-[14px] py-1.75 px-3.5 rounded cursor-pointer font-bold hover:bg-agl-primary hover:text-agl-black transition-all duration-200"
+                  onClick={() => navigate("/signup")}
+                >
                   Sign Up
                 </button>
               </Link>

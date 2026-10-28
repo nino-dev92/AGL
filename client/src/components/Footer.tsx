@@ -29,25 +29,25 @@ export default function Footer() {
           <div className="flex flex-col gap-2 text-agl-gray-dark">
             <Link
               to="/"
-              className="hover:text-white text-[14px] transition-all duration-200"
+              className="hover:text-primary text-[14px] transition-all duration-200"
             >
               Home
             </Link>
             <Link
               to="/tournaments"
-              className="hover:text-white text-[14px] transition-all duration-200"
+              className="hover:text-primary text-[14px] transition-all duration-200"
             >
               Tournaments
             </Link>
             <Link
-              to="/"
-              className="hover:text-white text-[14px] transition-all duration-200"
+              to="/players"
+              className="hover:text-primary text-[14px] transition-all duration-200"
             >
               Players
             </Link>
             <Link
               to="/"
-              className="hover:text-white text-[14px] transition-all duration-200"
+              className="hover:text-primary text-[14px] transition-all duration-200"
             >
               Watch
             </Link>
@@ -58,25 +58,25 @@ export default function Footer() {
           <div className="flex flex-col gap-2 text-agl-gray-dark">
             <Link
               to=""
-              className="hover:text-white text-[14px] transition-all duration-200"
+              className="hover:text-primary text-[14px] transition-all duration-200"
             >
               Call of Duty: Mobile
             </Link>
             <Link
               to=""
-              className="hover:text-white text-[14px] transition-all duration-200"
+              className="hover:text-primary text-[14px] transition-all duration-200"
             >
               Free Fire
             </Link>
             <Link
               to="/"
-              className="hover:text-white text-[14px] transition-all duration-200"
+              className="hover:text-primary text-[14px] transition-all duration-200"
             >
               PUBG Mobile
             </Link>
             <Link
               to="/"
-              className="hover:text-white text-[14px] transition-all duration-200"
+              className="hover:text-primary text-[14px] transition-all duration-200"
             >
               eFootball
             </Link>
@@ -87,19 +87,19 @@ export default function Footer() {
           <div className="flex flex-col gap-2 text-agl-gray-dark">
             <Link
               to="/"
-              className="hover:text-white text-[14px] transition-all duration-200"
+              className="hover:text-primary text-[14px] transition-all duration-200"
             >
               Create Account
             </Link>
             <Link
               to=""
-              className="hover:text-white text-[14px] transition-all duration-200"
+              className="hover:text-primary text-[14px] transition-all duration-200"
             >
               My Profile
             </Link>
             <Link
               to="/"
-              className="hover:text-white text-[14px] transition-all duration-200"
+              className="hover:text-primary text-[14px] transition-all duration-200"
             >
               How It Works
             </Link>
@@ -110,13 +110,13 @@ export default function Footer() {
           <div className="flex flex-col gap-2 text-agl-gray-dark">
             <Link
               to=""
-              className="hover:text-white text-[14px] transition-all duration-200"
+              className="hover:text-primary text-[14px] transition-all duration-200"
             >
               Terms
             </Link>
             <Link
               to=""
-              className="hover:text-white text-[14px] transition-all duration-200"
+              className="hover:text-primary text-[14px] transition-all duration-200"
             >
               Privacy
             </Link>

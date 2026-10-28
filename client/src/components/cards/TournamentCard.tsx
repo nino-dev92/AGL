@@ -1,11 +1,13 @@
 import type { Tournament } from "../../types/types";
 import { formatDate } from "../../utils/formateDate";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   tournament: Tournament;
 };
 
 export default function TournamentCard({ tournament }: Props) {
+  const navigate = useNavigate();
   const slotsFilledPercent =
     tournament.maxTeams > 0
       ? Math.min(
@@ -15,9 +17,9 @@ export default function TournamentCard({ tournament }: Props) {
       : 0;
 
   return (
-    <div className="flex h-full w-full flex-col overflow-hidden rounded-xl border border-agl-border-light">
+    <div className="flex h-full w-full flex-col overflow-hidden rounded-agl-card border border-agl-border-light">
       {/**Card Image */}
-      <section className="flex justify-between w-full relative aspect-video rounded-t-lg bg-[url('/COD.png')] bg-center">
+      <section className="flex justify-between w-full relative aspect-video rounded-t-agl-card bg-[url('/COD.png')] bg-center">
         <button className="text-[11px] absolute top-3 left-3 font-extrabold bg-agl-black border border-agl-border-light p-1 rounded">
           {tournament.game.name.toUpperCase()}
         </button>
@@ -31,10 +33,10 @@ export default function TournamentCard({ tournament }: Props) {
           <p className="text-[12px] mb-3 text-agl-gray-dark font-inter font-extrabold leading-[1.4px]">
             {tournament.game.name}
           </p>
-          <h3 className="line-clamp-2 min-h-14 font-extrabold font-sans text-[19px]">
+          <h3 className="line-clamp-2 min-h-14 font-extrabold font-inter text-[19px]">
             {tournament.description?.toUpperCase()}
           </h3>
-          <p className="mb-3 min-h-12 text-[16px] font-sans font-bold text-agl-gray-dark">
+          <p className="mb-3 min-h-12 text-[16px] font-inter font-bold text-agl-gray-dark">
             {formatDate(new Date(tournament.startDate))} -{" "}
             {formatDate(new Date(tournament.endDate))} . {tournament.region}
           </p>
@@ -88,7 +90,10 @@ export default function TournamentCard({ tournament }: Props) {
 
         {/**Button */}
         <div className="w-full">
-          <button className="mt-6 w-full cursor-pointer rounded-lg bg-red-500 p-2 font-medium transition-all duration-200 hover:bg-red-400">
+          <button
+            className="mt-6 w-full cursor-pointer rounded-agl-button bg-red-500 p-2 font-medium transition-all duration-200 hover:bg-red-400"
+            onClick={() => navigate(`/tournament/${tournament._id}`)}
+          >
             View Tournament
           </button>
         </div>
