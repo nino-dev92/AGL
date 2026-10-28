@@ -2,10 +2,15 @@ import { Link } from "react-router-dom";
 import Reveal from "./Reveal";
 
 const games = [
-  { id: "codm", short: "CODM", name: "Call of Duty: Mobile", image: "/public/Call of Duty_ Mobile.svg" },
-  { id: "ff", short: "FF", name: "Free Fire", image: "/public/Freefire.svg" },
-  { id: "pubgm", short: "PUBG M", name: "PUBG Mobile", image: "/public/PUBG.svg" },
-  { id: "ef", short: "eF", name: "eFootball", image: "/public/eFootball.svg" },
+  {
+    id: "codm",
+    short: "CODM",
+    name: "Call of Duty: Mobile",
+    image: "/Call of Duty_ Mobile.svg",
+  },
+  { id: "ff", short: "FF", name: "Free Fire", image: "/Freefire.svg" },
+  { id: "pubgm", short: "PUBG M", name: "PUBG Mobile", image: "/PUBG.svg" },
+  { id: "ef", short: "eF", name: "eFootball", image: "/eFootball.svg" },
 ];
 
 export default function FeaturedGames() {
@@ -50,7 +55,9 @@ export default function FeaturedGames() {
 
                 {/* Text */}
                 <div className="p-5">
-                  <h3 className="text-base font-bold text-agl-white">{g.name}</h3>
+                  <h3 className="text-base font-bold text-agl-white">
+                    {g.name}
+                  </h3>
                   <p className="mt-1 text-sm font-semibold text-agl-red">
                     View tournaments →
                   </p>

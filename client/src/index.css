@@ -2,10 +2,7 @@
 @import "tailwindcss";
 
 @theme {
-  /* ==========================================================================
-     COLORS
-     Defines classes like bg-agl-black, text-agl-primary, border-agl-border
-     ========================================================================== */
+  /*     COLORS   */
 
   /* Explicit Semantic Utilities */
   --color-agl-card: #0d0d0d;
@@ -25,10 +22,7 @@
   --color-agl-gray-light: #c4c4c4;
   --color-agl-gray-dark: #666666;
 
-  /* ==========================================================================
-     TYPOGRAPHY & FONTS
-     ========================================================================== */
-  /* Replaces font-sans default fallback */
+  /* TYPOGRAPHY & FONTS */
   --font-inter: "Inter", "ui-sans-serif", "system-ui", sans-serif;
   --font-orbitron: "Orbitron", "Inter", sans-serif;
   /* Defines font-display */
@@ -55,10 +49,7 @@
   --text-section-lg--line-height: 0.9;
   --text-section-lg--letter-spacing: -0.05em;
 
-  /* ==========================================================================
-     LAYOUT, BORDERS & SPACING
-     ========================================================================== */
-  /* Spacing utilities (p-section, m-section-lg, gap-section-sm) */
+  /* LAYOUT, BORDERS & SPACING*/
   --padding-main-x: 1.5rem;
   --padding-main-y: 2.5rem;
 
