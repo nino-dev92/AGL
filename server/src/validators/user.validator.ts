@@ -7,7 +7,22 @@ export const userValidationSchema = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().required(),
   confirmPassword: Joi.string().valid(Joi.ref("password")).required(),
-  role: Joi.string().required(),
+  role: Joi.string().valid("player", "manager", "organizer", "admin").required(),
+  region: Joi.string()
+    .valid("Africa", "Canada", "USA", "Europe")
+    .when("role", {
+      is: "player",
+      then: Joi.required(),
+      otherwise: Joi.optional(),
+    }),
+  game: Joi.string()
+    .hex()
+    .length(24)
+    .when("role", {
+      is: "player",
+      then: Joi.required(),
+      otherwise: Joi.optional(),
+    }),
 });
 
 export const loginValidationSchema = Joi.object({

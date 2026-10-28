@@ -74,6 +74,23 @@ describe("Auth Service", () => {
       expect(result.userName).toBe(userName.toLowerCase());
     });
 
+    it("should register a manager without a game or region", async () => {
+      const result = await registerUser({
+        firstName: "Morgan",
+        lastName: "Manager",
+        userName: `manager_${new Types.ObjectId()}`,
+        email: `${new Types.ObjectId()}@example.com`,
+        password: "Password123!",
+        role: "manager",
+      });
+
+      expect(result.role).toBe("manager");
+
+      const user = await Users.findById(result.id);
+      expect(user?.game).toBeUndefined();
+      expect(user?.region).toBe("");
+    });
+
     it("should reject an invalid role", async () => {
       await expect(
         registerUser({
