@@ -1,9 +1,16 @@
+export type GameSummary = {
+  _id?: string;
+  id?: string;
+  name: string;
+  category?: string;
+};
+
 export interface Tournament {
   _id: string;
   name: string;
   slug: string;
   description: string | undefined;
-  game: any;
+  game: GameSummary;
   organizer: string;
   banner?:
     | {
@@ -31,11 +38,11 @@ export interface Tournament {
 }
 
 export type User = {
-  _id: string;
+  id: string;
   firstName: string;
   lastName: string;
   userName: string;
-  game?: any;
+  game?: GameSummary;
   bio?: string;
   region?: string;
   createdAt: Date;
@@ -44,4 +51,10 @@ export type User = {
   totalGames?: number;
   tourneysPlayed?: number;
   tourneysWon?: number;
+};
+
+export type Game = {
+  _id: string;
+  name: string;
+  category: string;
 };

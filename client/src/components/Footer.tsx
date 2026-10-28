@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
-    <footer className="text-agl-primary flex flex-col px-10 pt-16 lg:px-50 border-t border-agl-border-light">
+    <footer className="text-agl-primary flex flex-col px-10 pt-16 lg:px-main-x-lg border-t border-agl-border-light">
       <section className="grid grid-cols-2 gap-8 lg:flex lg:justify-between">
         <div className="flex flex-col gap-3">
           <div className="flex items-center gap-2 cursor-pointer">

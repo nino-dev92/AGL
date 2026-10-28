@@ -1,48 +1,70 @@
 import "./App.css";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Link, Route, Routes, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import TournamentsPage from "./pages/TournamentsPage";
-import Players from "./pages/Players";
-import PlayerProfile from "./pages/PlayerProfile";
-import ProfilePage from "./pages/ProfilePage";
 import TournamentPage from "./pages/TournamentPage";
+import PlayersPage from "./pages/PlayersPage";
+import PlayerProfilePage from "./pages/PlayerProfilePage";
+import ProfilePage from "./pages/ProfilePage";
+import Login from "./pages/auth/Login";
+import SignUp from "./pages/auth/SignUp";
+import ScrollToTop from "./components/ScrollTop";
+import GeneralLayout from "./layouts/GeneralLayout";
+import PageWrapper from "./utils/PageWrapper";
 
 function App() {
   const location = useLocation();
 
   return (
-    <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
-        <Route
-          path="/"
-          element={
-            <>
-              <title>Home</title>
+    <>
+      <ScrollToTop />
+      <AnimatePresence mode="wait">
+        <Routes location={location} key={location.pathname}>
+          <Route
+            path="/"
+            element={
+              <>
+                <title>Home</title>
+                <div className="flex min-h-screen flex-col bg-agl-black">
+                  <Header />
+                  <main className="grow p-4">
+                    <h1 className="text-center font-sans text-hero-lg text-agl-red">
+                      AGL <span className="text-agl-yellow">Landing</span> page
+                    </h1>
+                  </main>
+                  <Footer />
+                </div>
+              </>
+            }
+          />
 
-              <div className="flex flex-col bg-agl-black min-h-screen">
-                <Header />
-
-                <main className="grow p-4">
-                  <h1 className="text-hero-lg font-sans text-agl-red text-center">
-                    AGL <span className="text-agl-yellow">Landing</span> page
-                  </h1>
-                </main>
-
-                <Footer />
-              </div>
-            </>
-          }
-        />
-
-        <Route path="/tournaments" element={<TournamentsPage />} />
-        <Route path="/tournament/:id" element={<TournamentPage />} />
-        <Route path="/players" element={<Players />} />
-        <Route path="/player/:username" element={<PlayerProfile />} />
-        <Route path="/profile" element={<ProfilePage />} />
-      </Routes>
-    </AnimatePresence>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/tournaments" element={<TournamentsPage />} />
+          <Route path="/tournament/:id" element={<TournamentPage />} />
+          <Route path="/players" element={<PlayersPage />} />
+          <Route path="/player/:username" element={<PlayerProfilePage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route
+            path="*"
+            element={
+              <GeneralLayout>
+                <PageWrapper>
+                  <main className="flex min-h-[60vh] flex-col items-center justify-center gap-4 text-agl-primary">
+                    <h1 className="text-4xl font-bold">Page not found</h1>
+                    <Link to="/" className="text-agl-yellow underline">
+                      Return home
+                    </Link>
+                  </main>
+                </PageWrapper>
+              </GeneralLayout>
+            }
+          />
+        </Routes>
+      </AnimatePresence>
+    </>
   );
 }
 

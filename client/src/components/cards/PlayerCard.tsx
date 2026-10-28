@@ -24,7 +24,8 @@ export default function PlayerCard({ player }: Props) {
           {player.userName.toUpperCase()}
         </p>
         <p className="truncate text-[12px] text-agl-gray font-sans">
-          {player.game.name} - {player.region}
+          {player.game?.name ?? "Game not set"} -{" "}
+          {player.region ?? "Region not set"}
         </p>
       </div>
     </div>
