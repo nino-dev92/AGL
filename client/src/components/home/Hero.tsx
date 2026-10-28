@@ -9,34 +9,43 @@ const stats = [
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden border-b border-agl-border">
-      <div className="pointer-events-none absolute inset-0 bg-agl-radial" />
-
+    <section className="relative overflow-hidden border-b border-agl-border bg-agl-black">
+      {/* Photo background: laptop/tablet only, phones stay plain black */}
       <div
-        className="relative mx-auto max-w-[1280px] bg-cover bg-center px-4 py-20 md:px-6 md:py-32"
+        className="absolute inset-0 hidden bg-cover bg-center md:block"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('/Herobg.jpg')",
+            "linear-gradient(90deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.35) 100%), url('/Herobg.jpg')",
         }}
-      >
+      />
+
+      <div className="relative mx-auto max-w-[1280px] px-4 py-16 md:px-6 md:py-28 lg:py-32">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           className="max-w-4xl"
         >
-          <span className="inline-flex items-center gap-2 rounded-full border border-agl-border-yellow bg-agl-surface px-4 py-1.5 text-xs font-semibold tracking-widest text-agl-yellow">
-            MOBILE GAMING TOURNAMENTS
+          <p className="font-orbitron text-7xl font-black leading-none text-agl-red md:text-8xl">
+            AGL
+          </p>
+
+          <span className="mt-6 inline-block rounded-full border border-agl-yellow bg-agl-black/40 px-4 py-1.5 text-xs font-semibold text-agl-yellow">
+            Mobile gaming tournaments
           </span>
 
-          <h1 className="mt-6 font-display text-hero uppercase text-agl-white lg:text-hero-xl">
-            Compete at the <span className="text-agl-yellow text-hero-lg lg:text-hero-xl">next</span><span className="text-agl-red text-hero-lg lg:text-hero-xl">level.</span>
+          <h1 className="mt-6 text-[38px] font-black uppercase leading-[1.05] tracking-tight text-agl-white sm:text-6xl lg:text-7xl xl:text-8xl">
+            <span className="block">Compete at the</span>
+            <span className="block">
+              <span className="text-agl-yellow">next</span>
+              <span className="text-agl-red">level.</span>
+            </span>
           </h1>
 
-          <p className="mt-4 text-2xl font-bold tracking-wide text-agl-white">
+          <p className="mt-6 text-xl font-bold text-agl-white md:text-2xl">
             Play. Watch. Stake. Win.
           </p>
-          <p className="mt-3 max-w-xl text-agl-gray text-[18px]">
+          <p className="mt-3 max-w-xl text-[18px] leading-relaxed text-agl-gray">
             The African Global League — one platform for mobile tournaments,
             gaming communities, live competition and player-powered rewards.
           </p>
@@ -44,7 +53,7 @@ export default function Hero() {
           <div className="mt-8 flex flex-col items-start gap-4 sm:flex-row">
             <Link
               to="/tournaments"
-              className="rounded-agl-sm bg-agl-red w-49 py-3 text-sm text-center font-bold text-agl-white shadow-agl-glow transition hover:bg-agl-red-light hover:shadow-agl-glow-strong"
+              className="w-49 rounded-agl-sm bg-agl-red py-3 text-center text-sm font-bold text-agl-white shadow-agl-glow transition hover:bg-agl-red-light hover:shadow-agl-glow-strong"
             >
               Explore Tournaments
             </Link>
@@ -57,7 +66,7 @@ export default function Hero() {
           </div>
         </motion.div>
 
-        <dl className="mt-16 grid max-w-xl grid-cols-2 gap-x-6 gap-y-8 pt-8 sm:grid-cols-3 sm:gap-3">
+        <dl className="mt-12 grid grid-cols-2 gap-x-6 gap-y-8 sm:flex sm:gap-12">
           {stats.map((s) => (
             <div
               key={s.label}
@@ -66,7 +75,7 @@ export default function Hero() {
               <dt className="mt-1 text-[11px] tracking-widest text-agl-white">
                 {s.label}
               </dt>
-              <dd className="font-display text-[34px] text-agl-white md:text-4xl">
+              <dd className="text-[34px] font-bold text-agl-white md:text-4xl">
                 {s.value}
               </dd>
             </div>
@@ -76,4 +85,3 @@ export default function Hero() {
     </section>
   );
 }
-

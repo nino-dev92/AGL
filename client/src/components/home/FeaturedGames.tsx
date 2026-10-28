@@ -23,7 +23,7 @@ export default function FeaturedGames() {
           </div>
           <Link
             to="/tournaments"
-            className="text-sm font-semibold text-agl-lime hover:text-agl-lime-light"
+            className="text-sm font-semibold text-agl-red hover:text-agl-red"
           >
             All tournaments →
           </Link>
