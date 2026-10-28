@@ -4,7 +4,10 @@ import verifyJWT from "../middleware/verifyJWT.middleware";
 import ROLES from "../constants/ROLES";
 import * as playerProfileController from "../controllers/playerProfile.controller";
 import validate from "../middleware/validation.middleware";
-import { playerProfileValidator } from "../validators/user.validator";
+import {
+  playerProfileValidator,
+  playerStatsValidator,
+} from "../validators/user.validator";
 import upload from "../middleware/upload.middleware";
 
 const router = express.Router();
@@ -46,15 +49,12 @@ const router = express.Router();
  *                     bio:
  *                       type: string
  *                       example: COD multiplayer professional
- *                     country:
+ *                     region:
  *                       type: string
  *                       example: Nigeria
  *                     game:
  *                       type: string
  *                       example: C.O.D
- *                     playerRole:
- *                       type: string
- *                       example: leader
  *       401:
  *         description: Unauthorized - JWT token is missing or invalid
  *       403:
@@ -86,18 +86,24 @@ router.get(
  *           schema:
  *             type: object
  *             properties:
+ *               userName:
+ *                 type: string
+ *                 example: agl_player
+ *               firstName:
+ *                 type: string
+ *                 example: Alex
+ *               lastName:
+ *                 type: string
+ *                 example: Smith
  *               bio:
  *                 type: string
  *                 example: COD multiplayer professional
- *               country:
+ *               region:
  *                 type: string
  *                 example: Nigeria
  *               game:
  *                 type: string
- *                 example: C.O.D
- *               playerRole:
- *                 type: string
- *                 example: leader
+ *                 example: cs2938955nbsskd9
  *     responses:
  *       200:
  *         description: User profile updated successfully
@@ -132,8 +138,8 @@ router.patch(
  * @swagger
  * /v1/users/player/{id}:
  *   patch:
- *     summary: Update user profile total kills, deaths and games
- *     description: Update the profile of the currently authenticated player.
+ *     summary: Update user profile total kills, deaths, tourneys played, tourneys won and games
+ *     description: Update a player's kill, death, and game totals. Organizer access is required.
  *     tags:
  *       - Users
  *     parameters:
@@ -158,6 +164,12 @@ router.patch(
  *               games:
  *                 type: number
  *                 example: 3
+ *               tourneysPlayed:
+ *                 type: number
+ *                 example: 1
+ *               tourneysWon:
+ *                 type: number
+ *                 example: 1
  *     responses:
  *       200:
  *         description: User profile updated successfully
@@ -184,8 +196,8 @@ router.patch(
   "/player/:id",
   verifyJWT,
   authorizeRole(ROLES.ORGANIZER),
-  validate(playerProfileValidator),
-  playerProfileController.updateProfile,
+  validate(playerStatsValidator),
+  playerProfileController.updateKillDeathsGames,
 );
 
 /**

@@ -5,6 +5,8 @@ export type UserDTO = {
   email: string;
   password: string;
   role: "player" | "organizer" | "admin" | "manager";
+  game?: string;
+  region?: string;
 };
 
 export interface LoginDTO {
@@ -24,7 +26,6 @@ export interface Avatar {
 
 export interface PlayerProfile {
   bio?: string;
-  country?: string;
+  region?: string;
   game?: string;
-  playerRole?: string;
 }

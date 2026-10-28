@@ -85,14 +85,16 @@ export const updateKillDeathsGames = asyncHandler(
 
     const playerId = req.params.id as string;
 
-    const { kills, deaths, games } = req.body;
+    const { kills, deaths, games, tourneysPlayed, tourneysWon } = req.body;
 
     const user = await profileService.editKillsDeathsGames(
       userId,
       playerId,
-      Number(kills),
-      Number(deaths),
-      Number(games),
+      kills === undefined ? undefined : Number(kills),
+      deaths === undefined ? undefined : Number(deaths),
+      games === undefined ? undefined : Number(games),
+      tourneysPlayed === undefined ? undefined : Number(tourneysPlayed),
+      tourneysWon === undefined ? undefined : Number(tourneysWon),
     );
 
     return res.status(200).json({

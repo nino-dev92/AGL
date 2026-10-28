@@ -9,7 +9,7 @@ import { Types } from "mongoose";
 import { createAuditLog } from "./auditLog.service";
 
 export const getMyProfile = async (userId: string) => {
-  const user = await Users.findById(userId);
+  const user = await Users.findById(userId).populate("game", "name");
 
   if (!user) {
     throw new ApiError("User not found", 404);
@@ -24,9 +24,8 @@ export const getMyProfile = async (userId: string) => {
     role: user.role,
     avatar: user.avatar,
     bio: user.bio,
-    country: user.country,
+    region: user.region,
     game: user.game,
-    playerRole: user.playerRole,
   };
 };
 
@@ -37,23 +36,42 @@ export const updateProfile = async (userId: string, data: UpdateProfileDTO) => {
     throw new ApiError("User not found", 404);
   }
 
+  if (data.userName !== undefined) {
+    const userName = data.userName.trim().toLowerCase();
+    if (userName !== user.userName) {
+      const existingUser = await Users.findOne({
+        userName,
+        _id: { $ne: user._id },
+      });
+      if (existingUser) {
+        throw new ApiError("Username already exists", 409);
+      }
+      user.userName = userName;
+    }
+  }
+
+  if (data.firstName !== undefined) {
+    user.firstName = data.firstName;
+  }
+
+  if (data.lastName !== undefined) {
+    user.lastName = data.lastName;
+  }
+
   if (data.bio !== undefined) {
     user.bio = data.bio;
   }
 
-  if (data.country !== undefined) {
-    user.country = data.country;
+  if (data.region !== undefined) {
+    user.region = data.region;
   }
 
   if (data.game !== undefined) {
-    user.game = data.game;
-  }
-
-  if (data.playerRole !== undefined) {
-    user.playerRole = data.playerRole;
+    user.game = new Types.ObjectId(data.game);
   }
 
   await user.save();
+  await user.populate("game", "name");
 
   return {
     id: user._id.toString(),
@@ -63,9 +81,8 @@ export const updateProfile = async (userId: string, data: UpdateProfileDTO) => {
     email: user.email,
     avatar: user.avatar,
     bio: user.bio,
-    country: user.country,
+    region: user.region,
     game: user.game,
-    playerRole: user.playerRole,
     role: user.role,
   };
 };
@@ -172,6 +189,8 @@ export const editKillsDeathsGames = async (
   kills?: number,
   deaths?: number,
   games?: number,
+  tourneysPlayed?: number,
+  tourneysWon?: number,
 ) => {
   if (!Types.ObjectId.isValid(playerId))
     throw new ApiError("Invalid user ID", 400);
@@ -180,11 +199,20 @@ export const editKillsDeathsGames = async (
 
   if (!user) throw new ApiError("User not found", 404);
 
-  if (user.role !== "organizer") throw new ApiError("Forbidden", 403);
+  if (user.role !== "player") {
+    throw new ApiError("Stats can only be updated for a player", 400);
+  }
 
-  if (kills) user.totalKills = +kills;
-  if (deaths) user.totalGames = +!games;
-  if (games) user.totalGames = +!deaths;
+  if (kills !== undefined) user.totalKills = (user.totalKills ?? 0) + kills;
+  if (deaths !== undefined)
+    user.totalDeaths = (user.totalDeaths ?? 0) + deaths;
+  if (games !== undefined) user.totalGames = (user.totalGames ?? 0) + games;
+  if (tourneysPlayed !== undefined) {
+    user.tourneysPlayed = (user.tourneysPlayed ?? 0) + tourneysPlayed;
+  }
+  if (tourneysWon !== undefined) {
+    user.tourneysWon = (user.tourneysWon ?? 0) + tourneysWon;
+  }
 
   await user.save();
 

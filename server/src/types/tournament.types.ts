@@ -6,6 +6,8 @@ export type Status =
   | "completed"
   | "cancelled";
 
+export type TournamentRegion = "Africa" | "Canada" | "USA" | "Europe";
+
 export interface TournamentDTO {
   name: string;
   description?: string;
@@ -15,6 +17,10 @@ export interface TournamentDTO {
   startDate: Date;
   endDate: Date;
   rules: string[];
+  region: TournamentRegion;
+  entryFee: number;
+  prizePool: number;
+  currency: string;
 }
 
 export interface UpdateTournamentDTO {
@@ -27,4 +33,8 @@ export interface UpdateTournamentDTO {
   startDate?: Date;
   endDate?: Date;
   rules?: string[];
+  region?: TournamentRegion;
+  entryFee?: number;
+  prizePool?: number;
+  currency?: string;
 }

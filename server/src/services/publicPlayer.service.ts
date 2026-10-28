@@ -5,9 +5,11 @@ export const getPublicPlayerProfile = async (username: string) => {
   const user = await Users.findOne({
     userName: username.toLowerCase(),
     role: "player",
-  }).select(
-    "firstName lastName userName avatar bio country game playerRole createdAt",
-  );
+  })
+    .select(
+      "firstName lastName userName avatar bio region game playerRole totalKills totalDeaths totalGames tourneysPlayed tourneysWon createdAt",
+    )
+    .populate("game", "name");
 
   if (!user) {
     throw new ApiError("Player not found", 404);
@@ -24,9 +26,13 @@ export const getPublicPlayerProfile = async (username: string) => {
         }
       : undefined,
     bio: user.bio,
-    country: user.country,
+    region: user.region,
     game: user.game,
-    playerRole: user.playerRole,
+    totalKills: user.totalKills,
+    totalDeaths: user.totalDeaths,
+    totalGames: user.totalGames,
+    tourneysPlayed: user.tourneysPlayed,
+    tourneysWon: user.tourneysWon,
     createdAt: user.createdAt,
   };
 };
@@ -60,8 +66,9 @@ export const getAllPlayers = async (
 
   const players = await Users.find(filter)
     .select(
-      "firstName lastName userName avatar bio country game playerRole createdAt",
+      "firstName lastName userName avatar bio region game playerRole totalKills totalDeaths totalGames tourneysPlayed tourneysWon createdAt",
     )
+    .populate("game", "name")
     .sort({ createdAt: -1 })
     .skip(skip)
     .limit(limit);
@@ -80,9 +87,13 @@ export const getAllPlayers = async (
           }
         : undefined,
       bio: player.bio,
-      country: player.country,
+      region: player.region,
       game: player.game,
-      playerRole: player.playerRole,
+      totalKills: player.totalKills,
+      totalDeaths: player.totalDeaths,
+      totalGames: player.totalGames,
+      tourneysPlayed: player.tourneysPlayed,
+      tourneysWon: player.tourneysWon,
       createdAt: player.createdAt,
     })),
     total,

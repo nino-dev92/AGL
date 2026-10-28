@@ -117,6 +117,22 @@ router.get("/", tournamentController.findAllTournaments);
  *                   - No cheating
  *                   - Teams must arrive on time
  *
+ *               entryFee:
+ *                 type: string
+ *                 example: $20
+ *
+ *               prizePool:
+ *                 type: string
+ *                 example: $20,000
+ *
+ *               currency:
+ *                 type: string
+ *                 example: $
+ *
+ *               region:
+ *                 type: string
+ *                 example: Africa
+ *
  *     responses:
  *       201:
  *         description: Tournament created successfully

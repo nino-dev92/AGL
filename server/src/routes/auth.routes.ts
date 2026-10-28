@@ -36,6 +36,7 @@ const router = express.Router();
  *               - firstName
  *               - lastName
  *               - userName
+ *               - region
  *               - email
  *               - password
  *               - confirmPassword
@@ -49,6 +50,9 @@ const router = express.Router();
  *               userName:
  *                 type: string
  *                 example: Italian92
+ *               region:
+ *                 type: string
+ *                 example: Africa
  *               email:
  *                 type: string
  *                 example: richard@gmail.com

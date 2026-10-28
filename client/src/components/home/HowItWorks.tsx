@@ -22,31 +22,31 @@ const steps = [
 
 export default function HowItWorks() {
   return (
-    <section
-      id="how"
-      className="scroll-mt-20 border-b border-agl-border bg-agl-black-soft py-section-sm"
-    >
+    <section id="how" className="scroll-mt-20 bg-agl-black py-20 md:py-24">
       <div className="mx-auto max-w-[1280px] px-4 md:px-6">
         <Reveal>
           <SectionHeading eyebrow="GET STARTED IN MINUTES" title="How It Works" />
         </Reveal>
 
-        <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {steps.map((s, i) => (
             <Reveal key={s.title} delay={i * 0.08}>
-              <div className="relative h-full overflow-hidden rounded-agl-lg border border-agl-border bg-agl-card p-6">
-                <span className="absolute -right-2 -top-4 font-display text-7xl text-agl-surface-hover">
-                  0{i + 1}
-                </span>
-                <div className="relative">
-                  <div className="grid h-10 w-10 place-items-center rounded-full bg-agl-lime font-display text-sm text-agl-black">
+              <div className="h-full rounded-agl-lg border border-white/15 bg-white/[0.04] p-6">
+                <div className="flex items-start justify-between">
+                  <div className="grid h-10 w-10 place-items-center rounded-full bg-agl-red text-sm font-bold text-agl-white">
                     {i + 1}
                   </div>
-                  <h3 className="mt-5 text-lg font-bold text-agl-white">
-                    {s.title}
-                  </h3>
-                  <p className="mt-2 text-sm text-agl-gray">{s.text}</p>
+                  <span className="font-display text-5xl leading-none text-white/10">
+                    0{i + 1}
+                  </span>
                 </div>
+
+                <h3 className="mt-6 text-lg font-bold text-agl-white">
+                  {s.title}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-agl-gray">
+                  {s.text}
+                </p>
               </div>
             </Reveal>
           ))}

@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap");
 @import "tailwindcss";
 
 @theme {
@@ -19,6 +20,8 @@
   --color-agl-lime: #b7ff00;
   --color-agl-lime-light: #c8ff33;
   --color-agl-lime-dark: #8fca00;
+  --color-agl-yellow: #ebdd21;
+  --color-agl-red: #eb2929;
 
   --color-agl-white: #ffffff;
   --color-agl-white-soft: #f5f5f5;
@@ -30,8 +33,6 @@
   --color-agl-success: #22c55e;
   --color-agl-warning: #facc15;
   --color-agl-danger: #ef4444;
-  --color-agl-red:#EB2929;
-  --text-agl-yellow:#EBDD21;
 
   /* Explicit Semantic Utilities */
   --color-agl-page: #050505;
@@ -45,22 +46,28 @@
      TYPOGRAPHY & FONTS
      ========================================================================== */
   /* Replaces font-sans default fallback */
+  --font-inter: "Inter", "ui-sans-serif", "system-ui", sans-serif;
   --font-sans: "Inter", "ui-sans-serif", "system-ui", sans-serif;
+  --font-orbitron: "Orbitron", "Inter", sans-serif;
   /* Defines font-display */
   --font-display: "Arial Black", "Inter", "ui-sans-serif", sans-serif;
 
   /* Font Sizes (Format: size / line-height) */
-  --text-hero-sm: 3rem;
+  --text-hero-sm: 14px;
   --text-hero-sm--line-height: 0.95;
   --text-hero-sm--letter-spacing: -0.04em;
 
-  --text-hero: 5rem;
+  --text-hero: 40px;
   --text-hero--line-height: 0.9;
   --text-hero--letter-spacing: -0.05em;
 
-  --text-hero-lg: 7rem;
+  --text-hero-lg: 44px;
   --text-hero-lg--line-height: 0.85;
   --text-hero-lg--letter-spacing: -0.06em;
+
+  --text-hero-xl: 78px;
+  --text-hero-xl--line-height: 0.8;
+  --text-hero-xl--letter-spacing: -0.07em;
 
   --text-section: 3.5rem;
   --text-section--line-height: 0.95;
@@ -97,21 +104,9 @@
   --shadow-agl-glow-strong: 0 0 50px rgba(183, 255, 0, 0.25);
 
   /* Gradients & Background vectors */
-  --background-image-agl-gradient: linear-gradient(
-    135deg,
-    #b7ff00 0%,
-    #8fca00 100%
-  );
-  --background-image-agl-dark-gradient: linear-gradient(
-    180deg,
-    #111111 0%,
-    #050505 100%
-  );
-  --background-image-agl-radial: radial-gradient(
-    circle at center,
-    rgba(183, 255, 0, 0.12),
-    transparent 60%
-  );
+  --background-image-agl-gradient: linear-gradient(135deg, #b7ff00 0%, #8fca00 100%);
+  --background-image-agl-dark-gradient: linear-gradient(180deg, #111111 0%, #050505 100%);
+  --background-image-agl-radial: radial-gradient(circle at center, rgba(183, 255, 0, 0.12), transparent 60%);
   --background-image-agl-grid:
     linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
@@ -122,6 +117,7 @@
   --transition-duration-400: 400ms;
 }
 
-html {
-  scroll-behavior: smooth;
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-agl-black);
 }

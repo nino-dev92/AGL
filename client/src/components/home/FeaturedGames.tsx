@@ -2,10 +2,10 @@ import { Link } from "react-router-dom";
 import Reveal from "./Reveal";
 
 const games = [
-  { id: "codm", short: "CODM", name: "Call of Duty: Mobile" },
-  { id: "ff", short: "FF", name: "Free Fire" },
-  { id: "pubgm", short: "PUBG M", name: "PUBG Mobile" },
-  { id: "ef", short: "eF", name: "eFootball" },
+  { id: "codm", short: "CODM", name: "Call of Duty: Mobile", image: "/public/Call of Duty_ Mobile.svg" },
+  { id: "ff", short: "FF", name: "Free Fire", image: "/public/Freefire.svg" },
+  { id: "pubgm", short: "PUBG M", name: "PUBG Mobile", image: "/public/PUBG.svg" },
+  { id: "ef", short: "eF", name: "eFootball", image: "/public/eFootball.svg" },
 ];
 
 export default function FeaturedGames() {
@@ -14,7 +14,7 @@ export default function FeaturedGames() {
       <div className="mx-auto max-w-[1280px] px-4 md:px-6">
         <Reveal className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="text-xs font-bold tracking-[0.3em] text-agl-lime">
+            <p className="text-xs font-bold tracking-[0.3em] text-agl-white">
               EXPLORE TOURNAMENTS
             </p>
             <h2 className="mt-3 font-display text-3xl uppercase text-agl-white md:text-section">
@@ -34,17 +34,27 @@ export default function FeaturedGames() {
             <Reveal key={g.id} delay={i * 0.08}>
               <Link
                 to={`/tournaments?game=${g.id}`}
-                className="group block h-full rounded-agl-lg border border-agl-border bg-agl-card p-6 transition hover:-translate-y-1 hover:border-agl-lime hover:shadow-agl-glow"
+                className="group block h-full overflow-hidden rounded-agl-lg border border-white/15 bg-white/[0.04] transition hover:-translate-y-1 hover:border-agl-red hover:shadow-agl-glow"
               >
-                <div className="grid h-16 w-16 place-items-center rounded-agl bg-agl-surface-light font-display text-sm text-agl-lime">
-                  {g.short}
+                {/* Picture */}
+                <div className="relative aspect-[4/3] overflow-hidden">
+                  <img
+                    src={g.image}
+                    alt={g.name}
+                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                  <span className="absolute left-3 top-3 rounded bg-agl-black/70 px-2 py-1 text-[10px] font-bold tracking-wide text-agl-white backdrop-blur">
+                    {g.short}
+                  </span>
                 </div>
-                <h3 className="mt-6 text-lg font-bold text-agl-white">
-                  {g.name}
-                </h3>
-                <p className="mt-2 text-sm text-agl-gray transition-colors group-hover:text-agl-lime">
-                  View tournaments →
-                </p>
+
+                {/* Text */}
+                <div className="p-5">
+                  <h3 className="text-base font-bold text-agl-white">{g.name}</h3>
+                  <p className="mt-1 text-sm font-semibold text-agl-red">
+                    View tournaments →
+                  </p>
+                </div>
               </Link>
             </Reveal>
           ))}

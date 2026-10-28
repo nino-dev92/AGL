@@ -78,6 +78,10 @@ describe("Tournament Service", () => {
       startDate: new Date("2030-01-01T10:00:00.000Z"),
       endDate: new Date("2030-01-10T10:00:00.000Z"),
       rules: ["No cheating", "Respect all players"],
+      region: "Africa",
+      entryFee: 100,
+      prizePool: 1000,
+      currency: "NGN",
       ...overrides,
     });
   };
@@ -95,6 +99,10 @@ describe("Tournament Service", () => {
           startDate: new Date("2030-01-01"),
           endDate: new Date("2030-01-10"),
           rules: [],
+          region: "Africa",
+          entryFee: 100,
+          prizePool: 1000,
+          currency: "NGN",
         }),
       ).rejects.toThrow("Invalid user ID");
     });
@@ -111,6 +119,10 @@ describe("Tournament Service", () => {
           startDate: new Date("2030-01-01"),
           endDate: new Date("2030-01-10"),
           rules: [],
+          region: "Africa",
+          entryFee: 100,
+          prizePool: 1000,
+          currency: "NGN",
         }),
       ).rejects.toThrow("Invalid game ID");
     });
@@ -128,6 +140,10 @@ describe("Tournament Service", () => {
           startDate: new Date("2030-01-01"),
           endDate: new Date("2030-01-10"),
           rules: [],
+          region: "Africa",
+          entryFee: 100,
+          prizePool: 1000,
+          currency: "NGN",
         }),
       ).rejects.toThrow("User not found");
     });
@@ -145,6 +161,10 @@ describe("Tournament Service", () => {
           startDate: new Date("2030-01-01"),
           endDate: new Date("2030-01-10"),
           rules: [],
+          region: "Africa",
+          entryFee: 100,
+          prizePool: 1000,
+          currency: "NGN",
         }),
       ).rejects.toThrow("Forbidden");
     });
@@ -162,6 +182,10 @@ describe("Tournament Service", () => {
           startDate: new Date("2030-01-01"),
           endDate: new Date("2030-01-10"),
           rules: [],
+          region: "Africa",
+          entryFee: 100,
+          prizePool: 1000,
+          currency: "NGN",
         }),
       ).rejects.toThrow("Game not found");
     });

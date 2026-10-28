@@ -7,10 +7,10 @@ export default function SectionHeading({
 }) {
   return (
     <div>
-      <p className="text-xs font-bold tracking-[0.3em] text-agl-lime">
+      <p className="text-xs font-bold tracking-[0.3em] text-agl-gray">
         {eyebrow}
       </p>
-      <h2 className="mt-3 font-display text-3xl uppercase text-agl-white md:text-section">
+      <h2 className="mt-3 text-3xl font-bold tracking-tight text-agl-white md:text-5xl">
         {title}
       </h2>
     </div>

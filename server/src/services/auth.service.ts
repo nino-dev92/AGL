@@ -10,7 +10,7 @@ import crypto from "crypto";
 import { Types } from "mongoose";
 
 export const registerUser = async (data: UserDTO) => {
-  const { firstName, lastName, userName, password, email, role } = data;
+  const { firstName, lastName, userName, password, email, role, game } = data;
 
   const allowedRoles = ["player", "organizer", "admin", "manager"] as const;
 
@@ -41,10 +41,13 @@ export const registerUser = async (data: UserDTO) => {
     userName: normalizedUsername,
     email: normalizedEmail,
     password,
+    game: new Types.ObjectId(game),
     role: userRole,
     totalDeaths: userRole === "player" ? 0 : undefined,
     totalKills: userRole === "player" ? 0 : undefined,
     totalGames: userRole === "player" ? 0 : undefined,
+    tourneysPlayed: userRole === "player" ? 0 : undefined,
+    tourneysWon: userRole === "player" ? 0 : undefined,
   });
 
   // Send welcome email

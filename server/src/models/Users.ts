@@ -1,4 +1,4 @@
-import { Document, Schema, model } from "mongoose";
+import mongoose, { Document, Schema, model, Types } from "mongoose";
 import bcrypt from "bcrypt";
 import env from "../config/env";
 import ApiError from "../utils/apiError";
@@ -21,13 +21,14 @@ export interface IUser extends Document {
   avatar?: Avatar;
 
   bio?: string;
-  country?: string;
-  game?: string;
-  playerRole?: string;
+  region?: string;
+  game?: Types.ObjectId;
 
   totalKills?: number | undefined;
   totalDeaths?: number | undefined;
   totalGames?: number | undefined;
+  tourneysPlayed?: number | undefined;
+  tourneysWon?: number | undefined;
 
   role: UserRole;
 
@@ -104,7 +105,7 @@ const userSchema = new Schema<IUser>(
       default: "",
     },
 
-    country: {
+    region: {
       type: String,
       trim: true,
       lowercase: true,
@@ -112,15 +113,9 @@ const userSchema = new Schema<IUser>(
     },
 
     game: {
-      type: String,
-      trim: true,
-      default: "",
-    },
-
-    playerRole: {
-      type: String,
-      trim: true,
-      default: "",
+      type: mongoose.Types.ObjectId,
+      ref: "Game",
+      required: false,
     },
 
     role: {
@@ -132,6 +127,8 @@ const userSchema = new Schema<IUser>(
     totalKills: { type: Number, default: 0 },
     totalDeaths: { type: Number, default: 0 },
     totalGames: { type: Number, default: 0 },
+    tourneysPlayed: { type: Number, default: 0 },
+    tourneysWon: { type: Number, default: 0 },
 
     passwordResetToken: {
       type: String,
