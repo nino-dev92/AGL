@@ -10,7 +10,7 @@ const games = [
   },
   { id: "ff", short: "FF", name: "Free Fire", image: "/Freefire.svg" },
   { id: "pubgm", short: "PUBG M", name: "PUBG Mobile", image: "/PUBG.svg" },
-  { id: "ef", short: "eF", name: "eFootball", image: "/eFootball.svg" },
+  { id: "ef", short: "eF", name: "eFootball", image: "/Efootball.svg" },
 ];
 
 export default function FeaturedGames() {

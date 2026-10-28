@@ -74,7 +74,7 @@ export default function TournamentsPage() {
               <p className="text-agl-gray-dark text-[14px] font-800 mb-2.5 tracking-[4px] font-extrabold">
                 EXPLORE TOURNAMENTS
               </p>
-              <h1 className="mb-4 text-hero-sm font-extrabold leading-[1.02] tracking-[-2px] sm:text-hero lg:text-[6rem]">
+              <h1 className="mb-4 text-4xl font-extrabold leading-[1.02] tracking-[-2px] sm:text-5xl lg:text-[6rem]">
                 FIND YOUR <span className="text-agl-red">NEXT</span>{" "}
                 <span className="text-agl-yellow">BATTLE.</span>
               </h1>

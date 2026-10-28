@@ -16,13 +16,13 @@ export default function CTA() {
         <div className="mt-8 flex flex-wrap justify-center gap-4">
           <Link
             to="/signup"
-            className="rounded-agl-sm bg-agl-red px-6 py-3 text-sm font-bold text-agl-white shadow-agl-glow transition hover:bg-agl-lime-red"
+            className="w-56 rounded-agl-sm bg-agl-red py-3 text-center text-sm font-bold text-agl-white shadow-agl-glow transition hover:bg-agl-lime-red"
           >
             Create Your Free Account
           </Link>
           <Link
             to="/tournaments"
-            className="rounded-agl-sm border border-agl-border-white px-6 py-3 text-sm font-semibold text-agl-white transition hover:border-agl-red hover:text-agl-red"
+            className="w-56 rounded-agl-sm border border-agl-border-white py-3 text-center text-sm font-semibold text-agl-white transition hover:border-agl-red hover:text-agl-red"
           >
             Browse Tournaments
           </Link>

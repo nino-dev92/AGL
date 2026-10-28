@@ -111,30 +111,30 @@ export default function Header() {
           <div className="flex flex-col gap-3 w-full">
             <nav className="flex flex-col gap-6 justify-start">
               {" "}
-              <Link
+              <NavLink
                 to="/"
-                className="text-agl-gray text-[14px] font-bold hover:text-agl-primary transition-all duration-200"
+                className="text-agl-gray text-[14px] font-bold hover:text-agl-primary aria-[current=page]:text-agl-primary transition-all duration-200"
               >
                 Home
-              </Link>
-              <Link
+              </NavLink>
+              <NavLink
                 to="/tournaments"
-                className="text-agl-gray text-[14px] font-bold hover:text-agl-primary transition-all duration-200"
+                className="text-agl-gray text-[14px] font-bold hover:text-agl-primary aria-[current=page]:text-agl-primary transition-all duration-200"
               >
                 Tournaments
-              </Link>
-              <Link
+              </NavLink>
+              <NavLink
                 to="/players"
-                className="text-agl-gray text-[14px] font-bold hover:text-agl-primary transition-all duration-200"
+                className="text-agl-gray text-[14px] font-bold hover:text-agl-primary aria-[current=page]:text-agl-primary transition-all duration-200"
               >
                 Players
-              </Link>
-              <Link
+              </NavLink>
+              <NavLink
                 to="/profile"
-                className="text-agl-gray text-[14px] font-bold hover:text-agl-primary transition-all duration-200"
+                className="text-agl-gray text-[14px] font-bold hover:text-agl-primary aria-[current=page]:text-agl-primary transition-all duration-200"
               >
                 Profile
-              </Link>
+              </NavLink>
             </nav>
 
             {/** Action buttons */}

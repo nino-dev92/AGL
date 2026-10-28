@@ -10,9 +10,9 @@ const stats = [
 export default function Hero() {
   return (
     <section className="relative overflow-hidden border-b border-agl-border bg-agl-black">
-      {/* Photo background: laptop/tablet only, phones stay plain black */}
+      {/* Photo background */}
       <div
-        className="absolute inset-0 hidden bg-cover bg-center md:block"
+        className="absolute inset-0 bg-cover bg-center"
         style={{
           backgroundImage:
             "linear-gradient(90deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.35) 100%), url('/Herobg.jpg')",
@@ -53,13 +53,13 @@ export default function Hero() {
           <div className="mt-8 flex flex-col items-start gap-4 sm:flex-row">
             <Link
               to="/tournaments"
-              className="w-49 rounded-agl-sm bg-agl-red py-3 text-center text-sm font-bold text-agl-white shadow-agl-glow transition hover:bg-agl-red-light hover:shadow-agl-glow-strong"
+              className="w-56 rounded-agl-sm bg-agl-red py-3 text-center text-sm font-bold text-agl-white shadow-agl-glow transition hover:bg-agl-red-light hover:shadow-agl-glow-strong"
             >
               Explore Tournaments
             </Link>
             <a
               href="#watch"
-              className="rounded-agl-sm border border-agl-border-white px-6 py-3 text-sm font-semibold text-agl-white transition hover:border-agl-red hover:text-agl-red"
+              className="w-56 rounded-agl-sm border border-agl-border-white py-3 text-center text-sm font-semibold text-agl-white transition hover:border-agl-red hover:text-agl-red"
             >
               Watch Now
             </a>
