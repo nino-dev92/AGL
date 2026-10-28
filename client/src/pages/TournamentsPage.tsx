@@ -64,9 +64,6 @@ export default function TournamentsPage() {
     });
   }, [tournaments, selected]);
 
-  if (tournamentQuery.isError)
-    return <h2 className="text-agl-primary">Error loading</h2>;
-
   return (
     <GeneralLayout>
       <PageWrapper>
