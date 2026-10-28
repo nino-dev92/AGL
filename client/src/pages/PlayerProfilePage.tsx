@@ -6,10 +6,11 @@ import useAuth from "../hooks/useAuth";
 import GeneralLayout from "../layouts/GeneralLayout";
 import PageWrapper from "../utils/PageWrapper";
 import apiAxios from "../api/apiAxios";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import { IoMdArrowBack } from "react-icons/io";
 import Loading from "../components/Loading";
 
-export default function PlayerProfile() {
+export default function PlayerProfilePage() {
   const { username } = useParams<string>();
   const [editing, setEditing] = useState<boolean>(false);
   const [userName, setUserName] = useState<string>("");
@@ -21,6 +22,7 @@ export default function PlayerProfile() {
   const queryClient = useQueryClient();
   const { auth, setAuth } = useAuth();
   const navigate = useNavigate();
+  const axiosPrivate = useAxiosPrivate();
 
   const playerQuery = useQuery({
     queryKey: ["player", username],
@@ -33,9 +35,12 @@ export default function PlayerProfile() {
   const player = playerQuery.data;
 
   const openEditor = () => {
+    const firstName = player?.firstName ?? "";
+    const lastName = player?.lastName ?? "";
     setUserName(player?.userName ?? "");
-    setFirstName(player?.firstName ?? "");
-    setLastName(player?.lastName ?? "");
+
+    setFirstName(firstName.charAt(0).toUpperCase() + firstName.slice(1));
+    setLastName(lastName.charAt(0).toUpperCase() + lastName.slice(1));
     setRegion(player?.region ?? "");
     setFormError("");
     setEditing(true);
@@ -47,26 +52,28 @@ export default function PlayerProfile() {
     setFormError("");
 
     try {
-      const res = await apiAxios.patch("/users/me", {
+      const res = await axiosPrivate.patch<{ data: User }>("/users/me", {
         userName,
         firstName,
         lastName,
         region,
       });
-      if (res.status == 201) {
-        const updatedPlayer = res.data.data as User;
-        queryClient.setQueryData<User>(["player", username], (currentPlayer) =>
-          currentPlayer
-            ? { ...currentPlayer, ...updatedPlayer }
-            : currentPlayer,
-        );
-        if (auth) {
-          setAuth({ ...auth, username: updatedPlayer.userName });
-        }
-        setEditing(false);
-        if (username !== updatedPlayer.userName) {
-          navigate(`/players/${updatedPlayer.userName}`, { replace: true });
-        }
+      const updatedPlayer = res.data.data;
+      queryClient.setQueryData<User>(["player", username], (currentPlayer) =>
+        currentPlayer ? { ...currentPlayer, ...updatedPlayer } : updatedPlayer,
+      );
+      queryClient.setQueryData<User>(
+        ["player", updatedPlayer.userName],
+        updatedPlayer,
+      );
+      if (auth) {
+        setAuth({ ...auth, username: updatedPlayer.userName });
+      }
+      setEditing(false);
+      if (username !== updatedPlayer.userName) {
+        navigate(`/player/${encodeURIComponent(updatedPlayer.userName)}`, {
+          replace: true,
+        });
       }
     } catch (error) {
       console.error("Failed to update player profile", error);
@@ -109,7 +116,10 @@ export default function PlayerProfile() {
             <section className="flex flex-col items-center text-agl-primary">
               <p className="font-bold">{player.userName.toUpperCase()}</p>
 
-              <p className="text-agl-gray-dark text-[14px]">{player?.region}</p>
+              <p className="text-agl-gray-dark text-[14px]">
+                {player?.region!.charAt(0).toUpperCase() +
+                  player?.region!.slice(1)}
+              </p>
 
               <p className="text-[12px] border border-agl-border-light rounded-xl text-center py-1 px-2 mt-1.5">
                 {player.game?.name?.toUpperCase()}
@@ -158,10 +168,10 @@ export default function PlayerProfile() {
 
               {/**Button */}
 
-              {auth?.username === player?.userName && (
+              {auth?.id === player?.id && (
                 <button
                   type="button"
-                  className="border-2 border-agl-agl-primary p-2 font-bold hover:bg-agl-agl-primary hover:text-agl-black rounded-xl w-full cursor-pointer transition-all duration-200 ease"
+                  className="border-2 border-agl-primary text-agl-primary p-2 font-bold hover:bg-agl-primary hover:text-agl-black rounded-xl w-full cursor-pointer transition-all duration-200 ease"
                   onClick={openEditor}
                 >
                   Edit Profile
@@ -177,7 +187,7 @@ export default function PlayerProfile() {
                 aria-modal="true"
                 aria-labelledby="edit-profile-title"
               >
-                <div className="flex max-h-full w-full max-w-lg overflow-y-auto rounded-xl border border-agl-gray-light bg-agl-black p-4 sm:p-6">
+                <div className="flex max-h-full w-full text-agl-primary max-w-lg overflow-y-auto rounded-xl border border-agl-gray-light bg-agl-black p-4 sm:p-6">
                   <form
                     className="flex w-full flex-col gap-4"
                     onSubmit={submit}
@@ -234,10 +244,18 @@ export default function PlayerProfile() {
                           onChange={(e) => setRegion(e.target.value)}
                         >
                           <option disabled>Select Region</option>
-                          <option value="USA">USA</option>
-                          <option value="Europe">Europe</option>
-                          <option value="Canada">Canada</option>
-                          <option value="Africa">Africa</option>
+                          <option className="text-agl-black" value="USA">
+                            USA
+                          </option>
+                          <option className="text-agl-black" value="Europe">
+                            Europe
+                          </option>
+                          <option className="text-agl-black" value="Canada">
+                            Canada
+                          </option>
+                          <option className="text-agl-black" value="Africa">
+                            Africa
+                          </option>
                         </select>
                       </div>
                     </div>

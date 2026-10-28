@@ -14,6 +14,8 @@ interface TournamentQueryResponse {
   };
 }
 
+const EMPTY_TOURNAMENTS: Tournament[] = [];
+
 export default function TournamentsPage() {
   const [selected, setSelected] = useState<string>("All");
   const [region, setRegion] = useState<string>("");
@@ -36,7 +38,7 @@ export default function TournamentsPage() {
     },
   });
 
-  const tournaments = tournamentQuery.data?.data ?? [];
+  const tournaments = tournamentQuery.data?.data ?? EMPTY_TOURNAMENTS;
   const totalPages = Math.max(
     tournamentQuery.data?.pagination.totalPages ?? 1,
     1,

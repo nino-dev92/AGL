@@ -20,7 +20,7 @@ type GameQueryResponse = {
   data: Array<{ _id: string; name: string }>;
 };
 
-export default function Players() {
+export default function PlayersPage() {
   const [selectedGame, setSelectedGame] = useState<string>("");
   const [page, setPage] = useState<number>(1);
 
@@ -122,9 +122,7 @@ export default function Players() {
                         </p>
                       ) : (
                         players.map((player) => {
-                          return (
-                            <PlayerCard key={player._id} player={player} />
-                          );
+                          return <PlayerCard key={player.id} player={player} />;
                         })
                       )}
                     </div>
