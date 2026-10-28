@@ -32,8 +32,9 @@ import healthRoutes from "./routes/healthCheck.routes";
 
 const app = express();
 
-app.use(cors(corsOptions));
 app.use(credentials);
+app.use(cors(corsOptions));
+
 app.use(helmet());
 app.use(morgan("dev"));
 app.use(express.json());
