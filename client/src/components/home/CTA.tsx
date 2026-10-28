@@ -4,10 +4,10 @@ import Reveal from "./Reveal";
 export default function CTA() {
   return (
     <section className="relative overflow-hidden py-section-sm">
-      <div className="pointer-events-none absolute inset-0 bg-agl-radial" />
+      <div className="pointer-events-none absolute inset-0 " />
       <Reveal className="relative mx-auto max-w-3xl px-4 text-center md:px-6">
         <h2 className="font-display text-3xl uppercase text-agl-white md:text-section">
-          Your next match starts <span className="text-agl-lime">here.</span>
+          Your next match <span className="text-agl-red">startshere.</span>
         </h2>
         <p className="mt-4 text-agl-gray">
           Join thousands of players competing, watching and building
@@ -16,13 +16,13 @@ export default function CTA() {
         <div className="mt-8 flex flex-wrap justify-center gap-4">
           <Link
             to="/signup"
-            className="rounded-agl-sm bg-agl-lime px-6 py-3 text-sm font-bold text-agl-black shadow-agl-glow transition hover:bg-agl-lime-light"
+            className="rounded-agl-sm bg-agl-red px-6 py-3 text-sm font-bold text-agl-white shadow-agl-glow transition hover:bg-agl-lime-red"
           >
             Create Your Free Account
           </Link>
           <Link
             to="/tournaments"
-            className="rounded-agl-sm border border-agl-border-light px-6 py-3 text-sm font-semibold text-agl-white transition hover:border-agl-lime hover:text-agl-lime"
+            className="rounded-agl-sm border border-agl-border-white px-6 py-3 text-sm font-semibold text-agl-white transition hover:border-agl-red hover:text-agl-red"
           >
             Browse Tournaments
           </Link>

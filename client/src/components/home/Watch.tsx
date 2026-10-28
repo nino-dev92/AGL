@@ -16,7 +16,7 @@ export default function Watch() {
           <article className="overflow-hidden rounded-agl-xl border border-agl-border bg-agl-card">
             {/* Swap this gradient for a real thumbnail: <img src="/images/stream-1.jpg" /> */}
             <div className="relative aspect-video bg-agl-dark-gradient">
-              <div className="absolute inset-0 bg-agl-radial" />
+              <div className="absolute inset-0 " />
               <span className="absolute left-4 top-4 flex items-center gap-2 rounded bg-agl-danger px-3 py-1 text-xs font-bold text-agl-white">
                 <span className="h-2 w-2 animate-pulse rounded-full bg-agl-white" />
                 LIVE
@@ -25,7 +25,7 @@ export default function Watch() {
                 12,480 watching
               </span>
               <div className="absolute inset-0 grid place-items-center">
-                <span className="grid h-16 w-16 place-items-center rounded-full bg-agl-lime pl-1 text-2xl text-agl-black shadow-agl-glow-strong">
+                <span className="grid h-16 w-16 place-items-center rounded-full pl-1 text-2xl text-agl-black shadow-agl-glow-strong">
                   ▶
                 </span>
               </div>
@@ -42,7 +42,7 @@ export default function Watch() {
               </div>
               <a
                 href="#watch"
-                className="text-sm font-semibold text-agl-lime hover:text-agl-lime-light"
+                className="text-sm font-semibold text-agl-red hover:text-agl-lime-red"
               >
                 Watch Now →
               </a>
