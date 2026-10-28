@@ -65,16 +65,18 @@ export default function Login() {
         }}
       >
         <div className="hidden flex-col mt-30 px-8 py-12 md:flex lg:px-14">
-          <p className="mb-4 text-sm font-bold tracking-[4px] text-agl-yellow">
+          <p className="mb-2 text-sm font-bold tracking-[4px] text-agl-yellow">
             AFRICAN GLOBAL LEAGUE
           </p>
-          <h1 className="text-hero-sm font-extrabold leading-[1.02] tracking-[-2px] lg:text-hero-lg">
+          <h1 className="text-[3rem] font-extrabold leading-[1.02] tracking-[-2px] lg:text-[6rem]">
             YOUR NEXT {}
             <span className="text-agl-red">BATTLE</span>
             <br />
             STARTS HERE.
           </h1>
-          <p className="text-agl-gray mt-3">Login to access your account.</p>
+          <p className="text-agl-gray mt-2 text-[18px]">
+            Login to access your account.
+          </p>
         </div>
 
         <div className="flex min-h-screen items-start justify-center md:mt-0 px-4 py-8 sm:px-8 md:pt-[10vh]">
@@ -108,7 +110,9 @@ export default function Login() {
                     />
                     <button
                       type="button"
-                      aria-label={showPassword ? "Hide password" : "Show password"}
+                      aria-label={
+                        showPassword ? "Hide password" : "Show password"
+                      }
                       aria-pressed={showPassword}
                       onClick={() => setShowPassword((visible) => !visible)}
                       className="absolute inset-y-0 right-2 cursor-pointer text-sm font-semibold text-agl-yellow"

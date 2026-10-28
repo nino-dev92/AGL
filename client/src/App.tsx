@@ -3,6 +3,7 @@ import { Link, Route, Routes, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import Home from "./pages/Home";
 import TournamentsPage from "./pages/TournamentsPage";
 import TournamentPage from "./pages/TournamentPage";
 import PlayersPage from "./pages/PlayersPage";
@@ -22,23 +23,7 @@ function App() {
       <ScrollToTop />
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
-          <Route
-            path="/"
-            element={
-              <>
-                <title>Home</title>
-                <div className="flex min-h-screen flex-col bg-agl-black">
-                  <Header />
-                  <main className="grow p-4">
-                    <h1 className="text-center font-sans text-hero-lg text-agl-red">
-                      AGL <span className="text-agl-yellow">Landing</span> page
-                    </h1>
-                  </main>
-                  <Footer />
-                </div>
-              </>
-            }
-          />
+          <Route path="/" element={<Home />} />
 
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />

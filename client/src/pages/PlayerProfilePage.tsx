@@ -6,7 +6,7 @@ import useAuth from "../hooks/useAuth";
 import GeneralLayout from "../layouts/GeneralLayout";
 import PageWrapper from "../utils/PageWrapper";
 import apiAxios from "../api/apiAxios";
-import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import useAxiosPrivate from "../hooks/useApiAxios";
 import { IoMdArrowBack } from "react-icons/io";
 import Loading from "../components/Loading";
 

@@ -43,7 +43,7 @@
   --text-hero--line-height: 0.9;
   --text-hero--letter-spacing: -0.05em;
 
-  --text-hero-lg: 4rem;
+  --text-hero-lg: 7rem;
   --text-hero-lg--line-height: 0.85;
   --text-hero-lg--letter-spacing: -0.06em;
 
@@ -81,6 +81,128 @@
   --shadow-agl-card: 0 10px 40px rgba(0, 0, 0, 0.35);
   --shadow-agl-glow: 0 0 30px rgba(183, 255, 0, 0.15);
   --shadow-agl-glow-strong: 0 0 50px rgba(183, 255, 0, 0.25);
+
+  --color-agl-black: #050505;
+  --color-agl-black-soft: #090909;
+  --color-agl-black-light: #0d0d0d;
+
+  --color-agl-surface: #111111;
+  --color-agl-surface-light: #161616;
+  --color-agl-surface-hover: #1b1b1b;
+
+  --color-agl-border: #242424;
+  --color-agl-border-light: #303030;
+
+  --color-agl-lime: #b7ff00;
+  --color-agl-lime-light: #c8ff33;
+  --color-agl-lime-dark: #8fca00;
+  --color-agl-yellow: #ebdd21;
+  --color-agl-red: #eb2929;
+
+  --color-agl-white: #ffffff;
+  --color-agl-white-soft: #f5f5f5;
+
+  --color-agl-gray: #a3a3a3;
+  --color-agl-gray-light: #c4c4c4;
+  --color-agl-gray-dark: #666666;
+
+  --color-agl-success: #22c55e;
+  --color-agl-warning: #facc15;
+  --color-agl-danger: #ef4444;
+
+  /* Explicit Semantic Utilities */
+  --color-agl-page: #050505;
+  --color-agl-card: #0d0d0d;
+  --color-agl-primary: #ffffff;
+  --color-agl-secondary: #a3a3a3;
+  --color-agl-muted: #666666;
+  --color-agl-accent: #b7ff00;
+
+  /* ==========================================================================
+     TYPOGRAPHY & FONTS
+     ========================================================================== */
+  /* Replaces font-sans default fallback */
+  --font-inter: "Inter", "ui-sans-serif", "system-ui", sans-serif;
+  --font-sans: "Inter", "ui-sans-serif", "system-ui", sans-serif;
+  --font-orbitron: "Orbitron", "Inter", sans-serif;
+  /* Defines font-display */
+  --font-display: "Arial Black", "Inter", "ui-sans-serif", sans-serif;
+
+  /* Font Sizes (Format: size / line-height) */
+  --text-hero-sm: 14px;
+  --text-hero-sm--line-height: 0.95;
+  --text-hero-sm--letter-spacing: -0.04em;
+
+  --text-hero: 40px;
+  --text-hero--line-height: 0.9;
+  --text-hero--letter-spacing: -0.05em;
+
+  --text-hero-lg: 44px;
+  --text-hero-lg--line-height: 0.85;
+  --text-hero-lg--letter-spacing: -0.06em;
+
+  --text-hero-xl: 78px;
+  --text-hero-xl--line-height: 0.8;
+  --text-hero-xl--letter-spacing: -0.07em;
+
+  --text-section: 3.5rem;
+  --text-section--line-height: 0.95;
+  --text-section--letter-spacing: -0.04em;
+
+  --text-section-lg: 4.5rem;
+  --text-section-lg--line-height: 0.9;
+  --text-section-lg--letter-spacing: -0.05em;
+
+  /* ==========================================================================
+     LAYOUT, BORDERS & SPACING
+     ========================================================================== */
+  /* Spacing utilities (p-section, m-section-lg, gap-section-sm) */
+  --spacing-section-sm: 5rem;
+  --spacing-section: 7rem;
+  --spacing-section-lg: 9rem;
+
+  /* Sizing limits (max-w-agl-content) */
+  --max-width-agl-content: 1280px;
+  --max-width-agl-wide: 1440px;
+
+  /* Radius utilities (rounded-agl, rounded-agl-xl) */
+  --radius-agl-sm: 8px;
+  --radius-agl: 12px;
+  --radius-agl-lg: 16px;
+  --radius-agl-xl: 24px;
+
+  /* ==========================================================================
+     EFFECTS & BACKGROUND EXTRACTION
+     ========================================================================== */
+  /* Shadow utilities (shadow-agl-card, shadow-agl-glow) */
+  --shadow-agl-card: 0 10px 40px rgba(0, 0, 0, 0.35);
+  --shadow-agl-glow: 0 0 30px rgba(183, 255, 0, 0.15);
+  --shadow-agl-glow-strong: 0 0 50px rgba(183, 255, 0, 0.25);
+
+  /* Gradients & Background vectors */
+  --background-image-agl-gradient: linear-gradient(
+    135deg,
+    #b7ff00 0%,
+    #8fca00 100%
+  );
+  --background-image-agl-dark-gradient: linear-gradient(
+    180deg,
+    #111111 0%,
+    #050505 100%
+  );
+  --background-image-agl-radial: radial-gradient(
+    circle at center,
+    rgba(183, 255, 0, 0.12),
+    transparent 60%
+  );
+  --background-image-agl-grid:
+    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+
+  /* Miscellaneous utility styles */
+  --background-size-grid: 40px 40px;
+  --transition-timing-function-agl: cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-duration-400: 400ms;
 }
 
 body {

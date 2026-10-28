@@ -59,7 +59,7 @@ export default function PlayersPage() {
                 {" "}
                 LEADERBOARD
               </p>
-              <h1 className="mt-2 text-agl-primary text-4xl font-extrabold leading-[1.02] tracking-[-2px] sm:text-5xl lg:text-6xl">
+              <h1 className="mt-2 text-agl-primary text-4xl font-extrabold leading-[1.02] tracking-[-2px] sm:text-5xl lg:text-[6rem]">
                 MEET THE PLAYERS{" "}
                 <span className="text-agl-red">DEFINING THE SCENE.</span>
               </h1>
