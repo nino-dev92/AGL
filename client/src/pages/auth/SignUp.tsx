@@ -91,7 +91,7 @@ export default function SignUp() {
             "linear-gradient(rgba(3, 12, 32, 0.6), rgba(3, 12, 32, 0.6)), url('/gamebg.jpg')",
         }}
       >
-        <div className="mt-20 hidden flex-col px-8 py-12 md:flex lg:px-14">
+        <div className="mt-10 hidden flex-col px-8 py-12 md:flex lg:px-14">
           <p className="mb-4 text-sm font-bold tracking-[4px] text-agl-yellow">
             AFRICAN GLOBAL LEAGUE
           </p>
@@ -101,7 +101,7 @@ export default function SignUp() {
             <br />
             MAKE YOUR NAME.
           </h1>
-          <p className="mt-3 text-agl-gray">
+          <p className="mt-3 text-agl-gray text-[18px]">
             Create a free account to participate.
           </p>
         </div>

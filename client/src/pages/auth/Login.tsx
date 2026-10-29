@@ -64,14 +64,13 @@ export default function Login() {
             "linear-gradient(rgba(3, 12, 32, 0.6), rgba(3, 12, 32, 0.6)), url('/gamebg.jpg')",
         }}
       >
-        <div className="hidden flex-col mt-30 px-8 py-12 md:flex lg:px-14">
+        <div className="hidden flex-col lg:mt-10 md:mt-30 px-8 py-12 md:flex lg:px-14">
           <p className="mb-2 text-sm font-bold tracking-[4px] text-agl-yellow">
             AFRICAN GLOBAL LEAGUE
           </p>
           <h1 className="text-[3rem] font-extrabold leading-[1.02] tracking-[-2px] lg:text-[6rem]">
             YOUR NEXT {}
-            <span className="text-agl-red">BATTLE</span>
-            <br />
+            <span className="text-agl-red">BATTLE {}</span>
             STARTS HERE.
           </h1>
           <p className="text-agl-gray mt-2 text-[18px]">

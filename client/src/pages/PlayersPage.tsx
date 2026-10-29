@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import PageWrapper from "../utils/PageWrapper";
 import type { User } from "../types/types";
@@ -21,6 +21,7 @@ type GameQueryResponse = {
 };
 
 export default function PlayersPage() {
+  const navigate = useNavigate();
   const [selectedGame, setSelectedGame] = useState<string>("");
   const [page, setPage] = useState<number>(1);
 
@@ -167,11 +168,17 @@ export default function PlayersPage() {
             </p>
 
             <div className="flex flex-col md:flex-row gap-2 font-bold justify-center text-agl-primary place-items-center mt-4">
-              <button className="w-full max-w-64 bg-agl-red hover:bg-red-400 p-3 rounded-xl cursor-pointer transition-all duration-200">
-                <Link to="/signup">Create Your Free Account</Link>
+              <button
+                className="w-full max-w-64 bg-agl-red hover:bg-red-400 p-3 rounded-xl cursor-pointer transition-all duration-200"
+                onClick={() => navigate("/signup")}
+              >
+                Create Your Free Account
               </button>
-              <button className="w-full max-w-64 border border-agl-primary p-3 hover:bg-agl-primary hover:text-agl-black rounded-xl cursor-pointer transition-all duration-200">
-                <Link to="/tournaments">Browse Tournaments</Link>
+              <button
+                className="w-full max-w-64 border border-agl-primary p-3 hover:bg-agl-primary hover:text-agl-black rounded-xl cursor-pointer transition-all duration-200"
+                onClick={() => navigate("/tournaments")}
+              >
+                Browse Tournaments
               </button>
             </div>
           </section>
