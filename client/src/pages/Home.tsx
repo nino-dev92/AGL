@@ -1,9 +1,9 @@
-import Hero from "../components/components/home/Hero";
-import FeaturedGames from "../components/components/home/FeaturedGames";
-import HowItWorks from "../components/components/home/HowItWorks";
-import Players from "../components/components/home/Players";
-import Watch from "../components/components/home/Watch";
-import CTA from "../components/components/home/CTA";
+import Hero from "../components/home-components/home/Hero";
+import FeaturedGames from "../components/home-components/home/FeaturedGames";
+import HowItWorks from "../components/home-components/home/HowItWorks";
+import Players from "../components/home-components/home/Players";
+import Watch from "../components/home-components/home/Watch";
+import CTA from "../components/home-components/home/CTA";
 import GeneralLayout from "../layouts/GeneralLayout";
 
 export default function Home() {

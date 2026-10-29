@@ -125,7 +125,7 @@ export default function Login() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full cursor-pointer rounded-xl bg-green-500 p-2 hover:bg-green-400 disabled:cursor-not-allowed disabled:opacity-60"
+                className="w-full cursor-pointer rounded-xl bg-agl-red p-2 hover:bg-red-400 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {submitting ? "Logging in..." : "Login"}
               </button>
