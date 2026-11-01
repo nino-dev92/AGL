@@ -17,7 +17,6 @@ export const signUp = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const login = asyncHandler(async (req: Request, res: Response) => {
-  console.log(req.body.email, req.body.password);
   const user = await authService.login({
     email: req.body.email,
     password: req.body.password,

@@ -100,6 +100,10 @@ export const getAllTeams = async (
       .skip(skip)
       .limit(limit)
       .sort({ createdAt: -1 })
+      .populate<{ game: { _id: Types.ObjectId; name: string } }>(
+        "game",
+        "name",
+      )
       .populate("members", "userName"),
 
     Teams.countDocuments(filter),
@@ -116,10 +120,12 @@ export const getTeamById = async (teamId: string) => {
     throw new ApiError("Invalid team ID", 400);
   }
 
-  const selectedTeam = await Teams.findById(teamId).populate(
-    "members",
-    "userName",
-  );
+  const selectedTeam = await Teams.findById(teamId)
+    .populate<{ game: { _id: Types.ObjectId; name: string } }>(
+      "game",
+      "name",
+    )
+    .populate("members", "userName");
 
   if (!selectedTeam) {
     throw new ApiError("Team not found", 404);
@@ -188,7 +194,12 @@ export const updateTeam = async (
   const updatedTeam = await Teams.findByIdAndUpdate(teamId, data, {
     new: true,
     runValidators: true,
-  }).populate("members", "userName");
+  })
+    .populate<{ game: { _id: Types.ObjectId; name: string } }>(
+      "game",
+      "name",
+    )
+    .populate("members", "userName");
 
   if (!updatedTeam) {
     throw new ApiError("Team not found", 404);
