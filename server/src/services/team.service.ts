@@ -8,6 +8,9 @@ import cloudinary from "../config/cloudinary";
 import { validateImageBuffer } from "../utils/validateImage";
 import logger from "../logger/logger";
 
+const TEAM_MEMBER_FIELDS =
+  "userName totalKills totalDeaths tourneysPlayed tourneysWon totalGames";
+
 export const createTeam = async (userId: string, data: CreateTeamDTO) => {
   // Validate manager ID
   if (!Types.ObjectId.isValid(userId)) {
@@ -100,7 +103,7 @@ export const getAllTeams = async (
       .skip(skip)
       .limit(limit)
       .sort({ createdAt: -1 })
-      .populate("members", "userName"),
+      .populate("members", TEAM_MEMBER_FIELDS),
 
     Teams.countDocuments(filter),
   ]);
@@ -118,7 +121,7 @@ export const getTeamById = async (teamId: string) => {
 
   const selectedTeam = await Teams.findById(teamId).populate(
     "members",
-    "userName",
+    TEAM_MEMBER_FIELDS,
   );
 
   if (!selectedTeam) {
@@ -188,7 +191,7 @@ export const updateTeam = async (
   const updatedTeam = await Teams.findByIdAndUpdate(teamId, data, {
     new: true,
     runValidators: true,
-  }).populate("members", "userName");
+  }).populate("members", TEAM_MEMBER_FIELDS);
 
   if (!updatedTeam) {
     throw new ApiError("Team not found", 404);
@@ -412,7 +415,7 @@ export const addTeamMember = async (
   return await dbTeam.populate([
     {
       path: "members",
-      select: "userName",
+      select: TEAM_MEMBER_FIELDS,
     },
   ]);
 };
@@ -471,7 +474,7 @@ export const deleteTeamMember = async (
 
   await team.save();
 
-  return team;
+  return team.populate("members", TEAM_MEMBER_FIELDS);
 };
 
 export const leaveTeam = async (userId: string, teamId: string) => {
@@ -499,7 +502,7 @@ export const leaveTeam = async (userId: string, teamId: string) => {
 
   await team.save();
 
-  return team;
+  return team.populate("members", TEAM_MEMBER_FIELDS);
 };
 
 export const deleteTeam = async (userId: string, teamId: string) => {
