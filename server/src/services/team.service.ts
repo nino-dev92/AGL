@@ -100,11 +100,11 @@ export const getAllTeams = async (
       .skip(skip)
       .limit(limit)
       .sort({ createdAt: -1 })
-      .populate<{ game: { _id: Types.ObjectId; name: string } }>(
-        "game",
-        "name",
-      )
-      .populate("members", "userName"),
+      .populate<{ game: { _id: Types.ObjectId; name: string } }>("game", "name")
+      .populate(
+        "members",
+        "userName totalKills totalDeaths tourneysPlayed tourneysWon totalGames",
+      ),
 
     Teams.countDocuments(filter),
   ]);
@@ -121,10 +121,7 @@ export const getTeamById = async (teamId: string) => {
   }
 
   const selectedTeam = await Teams.findById(teamId)
-    .populate<{ game: { _id: Types.ObjectId; name: string } }>(
-      "game",
-      "name",
-    )
+    .populate<{ game: { _id: Types.ObjectId; name: string } }>("game", "name")
     .populate("members", "userName");
 
   if (!selectedTeam) {
@@ -195,10 +192,7 @@ export const updateTeam = async (
     new: true,
     runValidators: true,
   })
-    .populate<{ game: { _id: Types.ObjectId; name: string } }>(
-      "game",
-      "name",
-    )
+    .populate<{ game: { _id: Types.ObjectId; name: string } }>("game", "name")
     .populate("members", "userName");
 
   if (!updatedTeam) {
