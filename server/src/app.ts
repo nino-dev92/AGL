@@ -52,7 +52,7 @@ app.use("/api/v1/teams", teamRoutes);
 app.use("/api/v1/games", gameRoutes);
 app.use("/api/v1/category", categoryRoutes);
 app.use("/api/v1/tournaments", tournamentRoutes);
-app.use("/api/v1/tournament-registration", tournamentRegistrationRoutes);
+app.use("/api/v1/tournament-registrations", tournamentRegistrationRoutes);
 app.use("/api/v1/match", matchRoutes);
 app.use("/api/v1/standings", standingsRoutes);
 app.use("/api/v1/disputes", disputeRoutes);
