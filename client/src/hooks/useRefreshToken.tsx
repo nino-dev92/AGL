@@ -6,7 +6,9 @@ const useRefreshToken = () => {
   const { setAuth } = useAuth();
 
   return useCallback(async () => {
-    const response = await apiAxios.get("/auth/refresh");
+    const response = await apiAxios.post<{ data?: { accessToken?: string } }>(
+      "/auth/refresh",
+    );
 
     const newAccessToken: string | undefined =
       response.data?.data?.accessToken;

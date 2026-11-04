@@ -88,7 +88,20 @@ export default function PlayerProfilePage() {
   }
 
   if (playerQuery.isError || !player) {
-    return <p className="text-agl-primary">Unable to load player profile.</p>;
+    return (
+      <GeneralLayout>
+        <div className="h-[80vh] flex flex-col gap-3 place-items-center">
+          <p className="text-agl-primary m-4">Unable to load player profile.</p>
+          <button
+            type="button"
+            className="text-agl-white cursor-pointer hover:underline"
+            onClick={() => navigate(-1)}
+          >
+            Go Back
+          </button>
+        </div>
+      </GeneralLayout>
+    );
   }
 
   return (

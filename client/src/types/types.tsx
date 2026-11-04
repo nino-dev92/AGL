@@ -1,16 +1,9 @@
-export type GameSummary = {
-  _id?: string;
-  id?: string;
-  name: string;
-  category?: string;
-};
-
-export interface Tournament {
+export type Tournament = {
   _id: string;
   name: string;
   slug: string;
   description: string | undefined;
-  game: GameSummary;
+  game: Game;
   organizer: string;
   banner?:
     | {
@@ -35,14 +28,14 @@ export interface Tournament {
   entryFee: number;
   prizePool: number;
   currency: string;
-}
+};
 
 export type User = {
   id: string;
   firstName: string;
   lastName: string;
   userName: string;
-  game?: GameSummary;
+  game?: Game;
   bio?: string;
   region?: string;
   createdAt: Date;
@@ -56,5 +49,47 @@ export type User = {
 export type Game = {
   _id: string;
   name: string;
-  category: string;
+  category?: string;
+};
+
+export type TeamMember = {
+  _id?: string;
+  userName: string;
+  totalKills?: number;
+  totalDeaths?: number;
+  tourneysPlayed?: number;
+  tourneysWon?: number;
+  totalGames?: number;
+};
+
+export type Team = {
+  _id: string;
+  name: string;
+  slug: string;
+  description: string;
+  game: Game;
+  manager: string;
+  members: TeamMember[];
+  maxMembers: number;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type AnnounceMent = {
+  _id: string;
+  content: string;
+  title: string;
+  type: string;
+  createdBy: {
+    _id: string;
+    firstName: string;
+    lastName: string;
+    userName: string;
+    role: string;
+  };
+  isPublished: boolean;
+  publishedAt: Date;
+  createdAt: Date;
+  updatedAt: Date;
 };

@@ -19,7 +19,7 @@ function useAxiosPrivate() {
     const requestIntercept = apiAxiosPrivate.interceptors.request.use(
       (config) => {
         const accessToken = authRef.current?.accessToken;
-        if (accessToken) {
+        if (accessToken && !config.headers.has("Authorization")) {
           config.headers.set("Authorization", `Bearer ${accessToken}`);
         }
         return config;
