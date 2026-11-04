@@ -44,7 +44,10 @@ export default function Login() {
         accessToken,
       });
       toast.success("Login successful.");
-      navigate("/", { replace: true });
+
+      navigate(user.role === "manager" ? "/manager/dashboard" : "/", {
+        replace: true,
+      });
     } catch (error) {
       const message = isAxiosError<{ message?: string }>(error)
         ? error.response?.data?.message

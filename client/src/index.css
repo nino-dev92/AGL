@@ -1,5 +1,14 @@
 @import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap");
+@import "@fontsource-variable/inter";
 @import "tailwindcss";
+
+@font-face {
+  font-family: "Bebas Neue";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/BebasNeue-Regular.ttf") format("truetype");
+}
 
 @theme {
   /*     COLORS   */
@@ -19,14 +28,18 @@
   --color-agl-border: #242424;
   --color-agl-border-light: #303030;
 
+  --color-agl-background-light: rgba(18, 18, 22, 0.7);
+  --color-agl-background-dark-gray: #08080b66;
+  --color-agl-background-darker-gray: #121216b3;
   --color-agl-gray-light: #c4c4c4;
   --color-agl-gray-dark: #666666;
 
   /* TYPOGRAPHY & FONTS */
-  --font-inter: "Inter", "ui-sans-serif", "system-ui", sans-serif;
-  --font-orbitron: "Orbitron", "Inter", sans-serif;
+  --font-inter: "Inter Variable", "ui-sans-serif", "system-ui", sans-serif;
+  --font-orbitron: "Orbitron", "Inter Variable", sans-serif;
+  --font-bebas-neue: "Bebas Neue", system-ui, sans-serif;
   /* Defines font-display */
-  --font-display: "Arial Black", "Inter", "ui-sans-serif", sans-serif;
+  --font-display: "Arial Black", "Inter Variable", "ui-sans-serif", sans-serif;
 
   /* Font Sizes (Format: size / line-height) */
   --text-hero-sm: 3rem;
@@ -113,11 +126,11 @@
      TYPOGRAPHY & FONTS
      ========================================================================== */
   /* Replaces font-sans default fallback */
-  --font-inter: "Inter", "ui-sans-serif", "system-ui", sans-serif;
-  --font-sans: "Inter", "ui-sans-serif", "system-ui", sans-serif;
-  --font-orbitron: "Orbitron", "Inter", sans-serif;
+  --font-inter: "Inter Variable", "ui-sans-serif", "system-ui", sans-serif;
+  --font-sans: "Inter Variable", "ui-sans-serif", "system-ui", sans-serif;
+  --font-orbitron: "Orbitron", "Inter Variable", sans-serif;
   /* Defines font-display */
-  --font-display: "Arial Black", "Inter", "ui-sans-serif", sans-serif;
+  --font-display: "Arial Black", "Inter Variable", "ui-sans-serif", sans-serif;
 
   /* Font Sizes (Format: size / line-height) */
   --text-hero-sm: 14px;

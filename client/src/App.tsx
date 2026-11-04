@@ -1,6 +1,6 @@
-import "./App.css";
 import { Link, Route, Routes, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
+import ManagerRoute from "./utils/ManagerRoute";
 import Home from "./pages/Home";
 import TournamentsPage from "./pages/TournamentsPage";
 import TournamentPage from "./pages/TournamentPage";
@@ -12,6 +12,7 @@ import SignUp from "./pages/auth/SignUp";
 import ScrollToTop from "./components/ScrollTop";
 import GeneralLayout from "./layouts/GeneralLayout";
 import PageWrapper from "./utils/PageWrapper";
+import ManagerDashboard from "./pages/dashboard/ManagerDashboard";
 
 function App() {
   const location = useLocation();
@@ -21,8 +22,8 @@ function App() {
       <ScrollToTop />
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
+          {/**General pages */}
           <Route path="/" element={<Home />} />
-
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/tournaments" element={<TournamentsPage />} />
@@ -30,6 +31,13 @@ function App() {
           <Route path="/players" element={<PlayersPage />} />
           <Route path="/player/:username" element={<PlayerProfilePage />} />
           <Route path="/profile" element={<ProfilePage />} />
+
+          {/**Manager Routes */}
+          <Route element={<ManagerRoute />}>
+            <Route path="/manager/dashboard" element={<ManagerDashboard />} />
+          </Route>
+
+          {/**Not found */}
           <Route
             path="*"
             element={
