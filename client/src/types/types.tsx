@@ -71,6 +71,10 @@ export type Team = {
   manager: string;
   members: TeamMember[];
   maxMembers: number;
+  logo?: {
+    url: string;
+    publicId: string;
+  };
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;

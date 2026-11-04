@@ -2,8 +2,8 @@ import { Link, Route, Routes, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import ManagerRoute from "./utils/ManagerRoute";
 import Home from "./pages/Home";
-import TournamentsPage from "./pages/TournamentsPage";
-import TournamentPage from "./pages/TournamentPage";
+import AllTournamentsPage from "./pages/AllTournamentsPage";
+import SingleTournamentPage from "./pages/SingleTournamentPage";
 import PlayersPage from "./pages/PlayersPage";
 import PlayerProfilePage from "./pages/PlayerProfilePage";
 import ProfilePage from "./pages/ProfilePage";
@@ -26,8 +26,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/tournaments" element={<TournamentsPage />} />
-          <Route path="/tournament/:id" element={<TournamentPage />} />
+          <Route path="/tournaments" element={<AllTournamentsPage />} />
+          <Route path="/tournament/:id" element={<SingleTournamentPage />} />
           <Route path="/players" element={<PlayersPage />} />
           <Route path="/player/:username" element={<PlayerProfilePage />} />
           <Route path="/profile" element={<ProfilePage />} />

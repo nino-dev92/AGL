@@ -81,7 +81,7 @@ export default function TeamManagement({ teams }: Props) {
     queryKey: ["tournaments"],
     queryFn: async () => {
       const res = await axiosPrivate.get<{ data: Tournament[] }>(
-        "/tournamentts",
+        "/tournaments",
       );
       return res.data.data;
     },
