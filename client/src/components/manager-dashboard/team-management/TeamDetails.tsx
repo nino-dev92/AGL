@@ -95,7 +95,7 @@ export default function TeamDetails({ team, setMode, setShowModal }: Props) {
         <div
           role="img"
           aria-label={`${team.name} banner`}
-          className="mb-4 aspect-[3/1] w-full rounded-xl border border-agl-border-light bg-cover bg-center"
+          className="mb-4 aspect-3/1 w-full rounded-xl border border-agl-border-light bg-cover bg-center"
           style={{ backgroundImage: `url("${team.logo.url}")` }}
         />
       )}
@@ -112,7 +112,7 @@ export default function TeamDetails({ team, setMode, setShowModal }: Props) {
               type="button"
               aria-label={`Edit ${team.name}`}
               title="Edit team and banner"
-              className="rounded-lg p-2 text-agl-white hover:bg-agl-border-light hover:text-agl-red focus-visible:outline focus-visible:outline-2 focus-visible:outline-agl-red"
+              className="rounded-lg p-2 text-agl-white hover:bg-agl-border-light hover:text-agl-red focus-visible:outline focus-visible:outline-agl-red"
               onClick={() => setShowEditModal(true)}
             >
               <RiEditLine size={20} />
