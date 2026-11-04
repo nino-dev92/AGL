@@ -13,16 +13,14 @@ export default function PlayerRoster({ teams }: Props) {
   const [filter, setFilter] = useState<string>("All");
   const [search, setSearch] = useState<string>("");
 
-  const players = teams.flatMap((team) => team.members) ?? [];
-
   const filteredPlayers = useMemo(() => {
-    return players.filter((player) => {
-      const searchTerm = search.toLowerCase();
-      const matchesSearch = player.userName.includes(searchTerm);
+    const players = teams.flatMap((team) => team.members);
+    const searchTerm = search.toLowerCase();
 
-      return matchesSearch;
+    return players.filter((player) => {
+      return player.userName.toLowerCase().includes(searchTerm);
     });
-  }, [players, search]);
+  }, [teams, search]);
 
   return (
     <div className="bg-agl-background-light text-agl-white border border-agl-border-light rounded-2xl">

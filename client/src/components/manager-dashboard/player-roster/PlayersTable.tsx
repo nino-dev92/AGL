@@ -5,7 +5,7 @@ type Props = {
 };
 
 export default function PlayersTable({ team }: Props) {
-  let players: TeamMember[] = [];
+  const players: TeamMember[] = [];
   const seenIds = new Set();
 
   team.forEach((member) => {

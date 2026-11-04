@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import type { Game, Team, Tournamen, User } from "../../../types/types";
+import type { Game, Team, Tournament, User } from "../../../types/types";
 import useAuth from "../../../hooks/useAuth";
 import TeamCard from "./TeamCard";
 import TeamDetails from "./TeamDetails";
@@ -80,17 +80,21 @@ export default function TeamManagement({ teams }: Props) {
   const tournamentQuery = useQuery({
     queryKey: ["tournaments"],
     queryFn: async () => {
-      const res = await axiosPrivate.get<{ data: Tournamen[] }>("/tournaments");
+      const res = await axiosPrivate.get<{ data: Tournament[] }>(
+        "/tournamentts",
+      );
       return res.data.data;
     },
   });
 
   const matchingPlayers = Array.from(
-    new Map((playerQuery.data ?? []).map((candidate) => [candidate.id, candidate])).values(),
+    new Map(
+      (playerQuery.data ?? []).map((candidate) => [candidate.id, candidate]),
+    ).values(),
   );
   const filteredPlayers = matchingPlayers.filter((candidate) => {
     const alreadyOnTeam = selectedTeam?.members.some(
-      (member) => (member.id ?? member._id) === candidate.id,
+      (member) => member._id === candidate.id,
     );
     return !alreadyOnTeam;
   });
@@ -124,8 +128,12 @@ export default function TeamManagement({ teams }: Props) {
       queryClient.invalidateQueries({ queryKey: ["teams"] });
       clearModal();
     },
-    onError: (error: any) => {
-      toast.error(error?.response?.data?.message || "Failed to create team");
+    onError: (error: Error) => {
+      const message = isAxiosError<{ message?: string }>(error)
+        ? error.response?.data?.message
+        : undefined;
+
+      toast.error(message ?? "Failed to create team");
     },
   });
 
@@ -439,7 +447,9 @@ export default function TeamManagement({ teams }: Props) {
                   <button
                     type="button"
                     className="px-2 py-1 text-[14px] text-black bg-agl-yellow rounded cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
-                    disabled={!selectedTeam || !player || addPlayerMutation.isPending}
+                    disabled={
+                      !selectedTeam || !player || addPlayerMutation.isPending
+                    }
                     onClick={() => {
                       if (selectedTeam && player) {
                         addPlayerMutation.mutate({
