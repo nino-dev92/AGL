@@ -273,7 +273,8 @@ describe("Team Service", () => {
       const result = await getAllTeams("", 1, 10, game._id.toString());
 
       expect(result.teams).toHaveLength(1);
-      expect(result.teams[0]?.game.toString()).toBe(game._id.toString());
+      expect(result.teams[0]?.game._id.toString()).toBe(game._id.toString());
+      expect(result.teams[0]?.game.name).toBe(game.name);
     });
 
     it("should paginate teams", async () => {
@@ -321,6 +322,7 @@ describe("Team Service", () => {
       expect(result).toBeDefined();
       expect(result._id.toString()).toBe(team._id.toString());
       expect(result.name).toBe(team.name);
+      expect(result.game.name).toBe(game.name);
     });
   });
 

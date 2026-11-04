@@ -103,7 +103,11 @@ export const getAllTeams = async (
       .skip(skip)
       .limit(limit)
       .sort({ createdAt: -1 })
-      .populate("members", TEAM_MEMBER_FIELDS),
+      .populate<{ game: { _id: Types.ObjectId; name: string } }>("game", "name")
+      .populate(
+        "members",
+        "userName totalKills totalDeaths tourneysPlayed tourneysWon totalGames",
+      ),
 
     Teams.countDocuments(filter),
   ]);
