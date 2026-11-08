@@ -55,7 +55,7 @@ export default function TournamentPage() {
 
   const filteredMatches = useMemo(() => {
     return matches?.filter((match) => match.tournament._id === tournament?._id);
-  }, [matches]);
+  }, [matches, tournament?._id]);
 
   if (!id) {
     return (
