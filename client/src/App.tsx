@@ -13,6 +13,8 @@ import ScrollToTop from "./components/ScrollTop";
 import GeneralLayout from "./layouts/GeneralLayout";
 import PageWrapper from "./utils/PageWrapper";
 import ManagerDashboard from "./pages/dashboard/ManagerDashboard";
+import MatchSchedule from "./pages/MatchSchedule";
+import TournamentStandingsPage from "./pages/TournamentStandingsPage";
 
 function App() {
   const location = useLocation();
@@ -31,6 +33,11 @@ function App() {
           <Route path="/players" element={<PlayersPage />} />
           <Route path="/player/:username" element={<PlayerProfilePage />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/match-schedule/:id" element={<MatchSchedule />} />
+          <Route
+            path="/tournament-standings/:id"
+            element={<TournamentStandingsPage />}
+          />
 
           {/**Manager Routes */}
           <Route element={<ManagerRoute />}>

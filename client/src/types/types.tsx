@@ -80,6 +80,61 @@ export type Team = {
   updatedAt: Date;
 };
 
+export type Match = {
+  _id: string;
+  tournament: {
+    _id: string;
+    name: string;
+    game: string;
+  };
+  teamA: {
+    _id: string;
+    name: string;
+    logo: {
+      url: string;
+      publicId: string;
+    };
+  };
+  teamB: {
+    _id: string;
+    name: string;
+  };
+  scheduledDate: Date;
+  scheduledTime?: string;
+  status: "upcoming" | "ongoing" | "completed" | "cancelled";
+  round: number;
+  matchNumber: number;
+  createdAt: Date;
+  updatedAt: Date;
+  result: string;
+  teamAScore: number;
+  teamBScore: number;
+  winner: {
+    _id: string;
+    name: string;
+    logo: {
+      url: string;
+      publicId: string;
+    };
+  };
+};
+
+export type TournamentStanding = {
+  team: {
+    _id: string;
+    name: string;
+    slug: string;
+    logo?: {
+      url: string;
+      publicId?: string;
+    };
+  };
+  mp: number;
+  mw: number;
+  ml: number;
+  points: number;
+};
+
 export type AnnounceMent = {
   _id: string;
   content: string;
