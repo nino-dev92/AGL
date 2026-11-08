@@ -104,6 +104,7 @@ export default function TournamentStandingsPage() {
       label: "PRIZE POOL",
       detail: tournament.prizePool,
       color: "agl-yellow",
+      currency: tournament.currency,
     },
   ];
 
