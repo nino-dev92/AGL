@@ -4,6 +4,7 @@ import Tournaments from "../../src/models/Tournaments";
 import Users from "../../src/models/Users";
 import Games from "../../src/models/Games";
 import Category from "../../src/models/Category";
+import "../../src/models/Teams";
 
 import {
   createNewTournament,
