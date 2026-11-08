@@ -39,7 +39,7 @@ const errorMiddleware = (
     if (err.code === "LIMIT_FILE_SIZE") {
       return res.status(400).json({
         success: false,
-        message: "Image size must not exceed 5MB",
+        message: "Image size must not exceed 0.5 MB",
       });
     }
 

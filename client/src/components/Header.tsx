@@ -164,11 +164,8 @@ export default function Header() {
             <div className="flex flex-col grow gap-3 mt-2">
               <button
                 type="button"
-                className="text-[14px] w-full border border-agl-red py-1.75 px-3.5 bg-agl-red hover:bg-red-400 rounded cursor-pointer font-bold transition-all duration-200"
-                onClick={() => {
-                  navigate("/profile");
-                  setShow(false);
-                }}
+                className={`${auth?.role === "manager" || auth?.role === "admin" || auth?.role === "organizer" ? "hidden" : ""} text-[14px] border border-agl-red py-1.75 px-3.5 bg-agl-red hover:bg-red-400 rounded cursor-pointer font-bold transition-all duration-200`}
+                onClick={() => navigate("/profile")}
               >
                 Profile
               </button>

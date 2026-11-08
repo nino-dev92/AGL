@@ -136,6 +136,9 @@ export const createMatch = async (userId: string, data: MatchDTO) => {
     teamA: data.teamA,
     teamB: data.teamB,
     scheduledDate: new Date(data.scheduledDate),
+    ...(data.scheduledTime !== undefined
+      ? { scheduledTime: data.scheduledTime }
+      : {}),
     round: data.round,
     matchNumber: data.matchNumber,
     organizer: userId,
@@ -271,6 +274,9 @@ export const createTournamentMatches = async (
     teamA: new Types.ObjectId(match.teamA),
     teamB: new Types.ObjectId(match.teamB),
     scheduledDate: new Date(match.scheduledDate),
+    ...(match.scheduledTime !== undefined
+      ? { scheduledTime: match.scheduledTime }
+      : {}),
     round: match.round,
     matchNumber: match.matchNumber,
     organizer: userId,
@@ -358,9 +364,9 @@ export const getAllMatches = async (
         matchNumber: 1,
       })
       .populate("tournament", "name game banner")
-      .populate("teamA", "name logo")
-      .populate("teamB", "name logo")
-      .populate("winner", "name logo"),
+      .populate("teamA", "name logo.url")
+      .populate("teamB", "name logo.url")
+      .populate("winner", "name logo.url"),
 
     Match.countDocuments(filter),
   ]);
@@ -378,9 +384,9 @@ export const getMatchById = async (matchId: string) => {
 
   const match = await Match.findById(matchId)
     .populate("tournament", "name game banner")
-    .populate("teamA", "name logo")
-    .populate("teamB", "name logo")
-    .populate("winner", "name logo");
+    .populate("teamA", "name logo.url")
+    .populate("teamB", "name logo.url")
+    .populate("winner", "name logo.url");
 
   if (!match) throw new ApiError("Match not found", 404);
 
@@ -418,6 +424,10 @@ export const updateMatch = async (
 
   if (update.scheduledDate !== undefined) {
     allowedUpdates.scheduledDate = update.scheduledDate;
+  }
+
+  if (update.scheduledTime !== undefined) {
+    allowedUpdates.scheduledTime = update.scheduledTime;
   }
 
   if (update.round !== undefined) {
@@ -489,8 +499,8 @@ export const startMatch = async (userId: string, matchId: string) => {
 
   if (!match) throw new ApiError("Match not found", 404);
 
-  // A match can only start when it is pending
-  if (match.status !== "pending") {
+  // A match can only start when it is upcoming
+  if (match.status !== "upcoming") {
     throw new ApiError(
       `Match cannot be started because it is currently ${match.status}`,
       400,

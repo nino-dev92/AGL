@@ -213,3 +213,25 @@ body {
   font-family: var(--font-sans);
   background-color: var(--color-agl-black);
 }
+
+.match-toggle-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-agl-gray-dark) transparent;
+}
+
+.match-toggle-scrollbar::-webkit-scrollbar {
+  height: 6px;
+}
+
+.match-toggle-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.match-toggle-scrollbar::-webkit-scrollbar-thumb {
+  background-color: var(--color-agl-gray-dark);
+  border-radius: 9999px;
+}
+
+.match-toggle-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-agl-red);
+}

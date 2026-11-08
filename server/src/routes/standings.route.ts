@@ -1,6 +1,5 @@
 import { Router } from "express";
 
-import verifyJWT from "../middleware/verifyJWT.middleware";
 import * as standingsController from "../controllers/standings.controller";
 
 const router = Router();
@@ -17,11 +16,9 @@ const router = Router();
  * /v1/standings/{tournamentId}:
  *   get:
  *     summary: Get tournament standings
- *     description: Returns the standings for all registered teams in a tournament based on completed matches.
+ *     description: Public endpoint. Returns standings for all registered teams based on completed matches.
  *     tags:
  *       - Standings
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: tournamentId
@@ -83,9 +80,6 @@ const router = Router();
  *                   type: string
  *                   example: Invalid tournament ID
  *
- *       401:
- *         description: Unauthorized - JWT token is missing or invalid
- *
  *       404:
  *         description: Tournament not found
  *         content:
@@ -101,10 +95,6 @@ const router = Router();
  *         description: Internal server error
  */
 
-router.get(
-  "/:tournamentId",
-  verifyJWT,
-  standingsController.getTournamentStandings,
-);
+router.get("/:tournamentId", standingsController.getTournamentStandings);
 
 export default router;
