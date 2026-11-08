@@ -358,9 +358,9 @@ export const getAllMatches = async (
         matchNumber: 1,
       })
       .populate("tournament", "name game banner")
-      .populate("teamA", "name logo")
-      .populate("teamB", "name logo")
-      .populate("winner", "name logo"),
+      .populate("teamA", "name logo.url")
+      .populate("teamB", "name logo.url")
+      .populate("winner", "name logo.url"),
 
     Match.countDocuments(filter),
   ]);
@@ -378,9 +378,9 @@ export const getMatchById = async (matchId: string) => {
 
   const match = await Match.findById(matchId)
     .populate("tournament", "name game banner")
-    .populate("teamA", "name logo")
-    .populate("teamB", "name logo")
-    .populate("winner", "name logo");
+    .populate("teamA", "name logo.url")
+    .populate("teamB", "name logo.url")
+    .populate("winner", "name logo.url");
 
   if (!match) throw new ApiError("Match not found", 404);
 
