@@ -123,10 +123,9 @@ export const getTeamById = async (teamId: string) => {
     throw new ApiError("Invalid team ID", 400);
   }
 
-  const selectedTeam = await Teams.findById(teamId).populate(
-    "members",
-    TEAM_MEMBER_FIELDS,
-  );
+  const selectedTeam = await Teams.findById(teamId)
+    .populate<{ game: { _id: Types.ObjectId; name: string } }>("game", "name")
+    .populate("members", TEAM_MEMBER_FIELDS);
 
   if (!selectedTeam) {
     throw new ApiError("Team not found", 404);
