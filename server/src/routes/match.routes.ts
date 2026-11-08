@@ -12,6 +12,7 @@ import {
   matchValidatorSchema,
   matchResultValidatorSchema,
   tournamentMatchesValidatorSchema,
+  updateMatchValidatorSchema,
 } from "../validators/match.validator";
 
 import * as matchChatController from "../controllers/matchChat.controller";
@@ -55,7 +56,7 @@ const router = express.Router();
  *         schema:
  *           type: string
  *           enum:
- *             - pending
+ *             - upcoming
  *             - ongoing
  *             - completed
  *             - cancelled
@@ -171,6 +172,12 @@ router.get("/:id", matchController.findMatchById);
  *                 format: date-time
  *                 example: 2026-10-20T15:00:00.000Z
  *
+ *               scheduledTime:
+ *                 type: string
+ *                 pattern: '^([01]\d|2[0-3]):[0-5]\d$'
+ *                 description: Optional scheduled time in 24-hour HH:mm format
+ *                 example: "15:00"
+ *
  *               round:
  *                 type: string
  *                 example: Quarter Final
@@ -247,6 +254,12 @@ router.post(
  *                 format: date-time
  *                 example: 2026-10-20T15:00:00.000Z
  *
+ *               scheduledTime:
+ *                 type: string
+ *                 pattern: '^([01]\d|2[0-3]):[0-5]\d$'
+ *                 description: Optional scheduled time in 24-hour HH:mm format
+ *                 example: "15:00"
+ *
  *               round:
  *                 type: string
  *                 example: Quarter Final
@@ -312,6 +325,12 @@ router.post(
  *                 format: date-time
  *                 example: 2026-10-20T18:00:00.000Z
  *
+ *               scheduledTime:
+ *                 type: string
+ *                 pattern: '^([01]\d|2[0-3]):[0-5]\d$'
+ *                 description: Optional scheduled time in 24-hour HH:mm format
+ *                 example: "18:00"
+ *
  *               round:
  *                 type: string
  *                 example: Semi Final
@@ -340,6 +359,7 @@ router.patch(
   "/:id",
   verifyJWT,
   authorizeRole(ROLES.ADMIN, ROLES.ORGANIZER),
+  validate(updateMatchValidatorSchema),
   matchController.editMatch,
 );
 

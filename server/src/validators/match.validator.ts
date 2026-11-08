@@ -11,6 +11,10 @@ export const matchValidatorSchema = Joi.object({
 
   scheduledDate: Joi.date().required(),
 
+  scheduledTime: Joi.string()
+    .pattern(/^([01]\d|2[0-3]):[0-5]\d$/)
+    .optional(),
+
   round: Joi.string().trim().required(),
 
   matchNumber: Joi.number().integer().min(1).required(),
@@ -21,8 +25,12 @@ export const matchValidatorSchema = Joi.object({
 export const updateMatchValidatorSchema = Joi.object({
   scheduledDate: Joi.date().optional(),
 
+  scheduledTime: Joi.string()
+    .pattern(/^([01]\d|2[0-3]):[0-5]\d$/)
+    .optional(),
+
   status: Joi.string()
-    .valid("pending", "ongoing", "completed", "cancelled")
+    .valid("upcoming", "ongoing", "completed", "cancelled")
     .optional(),
 
   result: Joi.string().trim().optional(),
@@ -40,6 +48,10 @@ export const tournamentMatchesValidatorSchema = Joi.object({
         teamB: Joi.string().required(),
 
         scheduledDate: Joi.date().required(),
+
+        scheduledTime: Joi.string()
+          .pattern(/^([01]\d|2[0-3]):[0-5]\d$/)
+          .optional(),
 
         round: Joi.string().trim().required(),
 

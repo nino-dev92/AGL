@@ -5,7 +5,8 @@ export interface IMatch extends Document {
   teamA: Types.ObjectId;
   teamB: Types.ObjectId;
   scheduledDate: Date;
-  status: "pending" | "ongoing" | "completed" | "cancelled";
+  scheduledTime?: string;
+  status: "upcoming" | "ongoing" | "completed" | "cancelled";
 
   teamAScore?: number;
   teamBScore?: number;
@@ -49,10 +50,16 @@ const matchSchema: Schema = new mongoose.Schema(
       required: true,
     },
 
+    scheduledTime: {
+      type: String,
+      match: /^([01]\d|2[0-3]):[0-5]\d$/,
+      required: false,
+    },
+
     status: {
       type: String,
-      enum: ["pending", "ongoing", "completed", "cancelled"],
-      default: "pending",
+      enum: ["upcoming", "ongoing", "completed", "cancelled"],
+      default: "upcoming",
     },
 
     teamAScore: {
