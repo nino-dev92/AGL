@@ -1,0 +1,179 @@
+/* =====================================================================
+   AGL dashboard design system (ported from the Bolt project).
+
+   - Self-contained: it builds its own Tailwind utilities for the files in
+     this folder, so nothing in your global index.css has to change.
+   - Every token is prefixed "dash-" so it can't clash with the site's theme.
+   - Component classes (.card, .btn, .input ...) only apply inside .dash-root.
+   ===================================================================== */
+@layer theme, base, components, utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap');
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities) source(none);
+@source "./";
+
+@theme {
+  --color-dash-red-50: #fff1f1;
+  --color-dash-red-100: #ffdfdf;
+  --color-dash-red-200: #ffc5c5;
+  --color-dash-red-300: #ff9d9d;
+  --color-dash-red-400: #ff6464;
+  --color-dash-red-500: #f83b3b;
+  --color-dash-red-600: #e51d1d;
+  --color-dash-red-700: #c11414;
+  --color-dash-red-800: #9f1414;
+  --color-dash-red-900: #831818;
+  --color-dash-red-950: #480707;
+
+  --color-dash-gold-50: #fffbeb;
+  --color-dash-gold-100: #fff3c4;
+  --color-dash-gold-200: #fce588;
+  --color-dash-gold-300: #fadb5f;
+  --color-dash-gold-400: #f7c948;
+  --color-dash-gold-500: #eab308;
+  --color-dash-gold-600: #ca8a04;
+  --color-dash-gold-700: #a16207;
+  --color-dash-gold-800: #854d0e;
+  --color-dash-gold-900: #713f12;
+  --color-dash-gold-950: #422006;
+
+  --color-dash-ink-50: #f6f6f7;
+  --color-dash-ink-100: #e1e1e3;
+  --color-dash-ink-200: #c2c2c6;
+  --color-dash-ink-300: #9a9aa1;
+  --color-dash-ink-400: #6f6f78;
+  --color-dash-ink-500: #52525b;
+  --color-dash-ink-600: #3f3f46;
+  --color-dash-ink-700: #2a2a30;
+  --color-dash-ink-800: #1c1c21;
+  --color-dash-ink-900: #121216;
+  --color-dash-ink-950: #08080b;
+
+  --font-dash-display: "Bebas Neue", system-ui, sans-serif;
+  --font-dash-sans: Inter, system-ui, sans-serif;
+
+  --shadow-dash-glow: 0 0 24px -4px rgba(248, 59, 59, 0.45);
+  --shadow-dash-gold: 0 0 24px -4px rgba(234, 179, 8, 0.4);
+  --shadow-dash-card: 0 8px 30px -12px rgba(0, 0, 0, 0.6);
+
+  --animate-dash-pulse-dot: dash-pulse-dot 1.8s ease-in-out infinite;
+  --animate-dash-slide-up: dash-slide-up 0.3s ease-out;
+  --animate-dash-fade-in: dash-fade-in 0.4s ease-out;
+  --animate-dash-scan: dash-scan 2.5s ease-in-out infinite;
+
+  @keyframes dash-pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.85); }
+  }
+  @keyframes dash-slide-up {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes dash-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes dash-scan {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+}
+
+@layer base {
+  .dash-root {
+    color-scheme: dark;
+    @apply bg-dash-ink-950 text-dash-ink-100 font-dash-sans antialiased;
+
+    /* Tailwind v3 palette values the original design used (v4 defaults differ slightly).
+       Scoped to the dashboard so the rest of the site is not affected. */
+    --color-blue-400: #60a5fa;
+    --color-blue-600: #2563eb;
+    --color-cyan-300: #67e8f9;
+    --color-cyan-500: #06b6d4;
+    --color-emerald-300: #6ee7b7;
+    --color-emerald-500: #10b981;
+    --color-green-300: #86efac;
+    --color-green-400: #4ade80;
+    --color-green-500: #22c55e;
+    --color-green-600: #16a34a;
+    --color-green-950: #052e16;
+    --color-orange-400: #fb923c;
+    --color-orange-600: #ea580c;
+    --color-gray-400: #9ca3af;
+  }
+  /* Tailwind v3 preflight behaviours that v4 dropped */
+  .dash-root button:not(:disabled),
+  .dash-root [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  .dash-root input::placeholder,
+  .dash-root textarea::placeholder {
+    opacity: 1;
+    color: #9ca3af;
+  }
+  .dash-root * {
+    scrollbar-width: thin;
+    scrollbar-color: #3f3f46 #121216;
+  }
+  .dash-root *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  .dash-root *::-webkit-scrollbar-track {
+    background: #121216;
+  }
+  .dash-root *::-webkit-scrollbar-thumb {
+    background: #3f3f46;
+    border-radius: 4px;
+  }
+  .dash-root *::-webkit-scrollbar-thumb:hover {
+    background: #52525b;
+  }
+  /* Tailwind v3 default border colour, which the original design relied on */
+  .dash-root *,
+  .dash-root *::before,
+  .dash-root *::after {
+    border-color: #e5e7eb;
+  }
+}
+
+@layer components {
+  .dash-root .card {
+    @apply rounded-xl border border-dash-ink-700/60 bg-dash-ink-900/70 backdrop-blur-xs shadow-dash-card;
+  }
+  .dash-root .card-hover {
+    @apply transition-all duration-200 hover:border-dash-red-600/50 hover:shadow-dash-glow;
+  }
+  .dash-root .btn,
+  .dash-root .btn-primary,
+  .dash-root .btn-gold,
+  .dash-root .btn-ghost,
+  .dash-root .btn-danger {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-all duration-200 focus:outline-hidden focus:ring-2 focus:ring-offset-2 focus:ring-offset-dash-ink-950 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .dash-root .btn-primary {
+    @apply bg-dash-red-600 text-white hover:bg-dash-red-700 focus:ring-dash-red-500 shadow-dash-glow;
+  }
+  .dash-root .btn-gold {
+    @apply bg-dash-gold-500 text-dash-ink-950 hover:bg-dash-gold-400 focus:ring-dash-gold-400;
+  }
+  .dash-root .btn-ghost {
+    @apply bg-dash-ink-800 text-dash-ink-100 hover:bg-dash-ink-700 focus:ring-dash-ink-600;
+  }
+  .dash-root .btn-danger {
+    @apply bg-dash-ink-800 text-dash-red-400 hover:bg-dash-red-950 hover:text-dash-red-300 focus:ring-dash-red-600;
+  }
+  .dash-root .input {
+    @apply w-full rounded-lg border border-dash-ink-700 bg-dash-ink-950/60 px-3 py-2 text-sm text-dash-ink-100 placeholder:text-dash-ink-400 transition-colors focus:border-dash-red-500 focus:outline-hidden focus:ring-1 focus:ring-dash-red-500;
+  }
+  .dash-root .label {
+    @apply mb-1.5 block text-xs font-semibold uppercase tracking-wider text-dash-ink-300;
+  }
+  .dash-root .badge {
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold;
+  }
+  .dash-root .stat-value {
+    @apply font-dash-display text-3xl tracking-wide;
+  }
+}
