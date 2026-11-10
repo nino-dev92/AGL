@@ -6,6 +6,7 @@ import Tournaments from "./pages/Tournaments";
 import Players from "./pages/Players";
 import PlayerProfile from "./pages/PlayerProfile";
 import Home from "./pages/Home";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   return (
@@ -19,6 +20,21 @@ function App() {
             <div className="flex flex-col bg-agl-black min-h-screen">
               <Header />
               <Home />
+              <Footer />
+            </div>
+          </>
+        }
+      />
+
+      <Route
+        path="/dashboard"
+        element={
+          <>
+            <title>Dashboard</title>
+
+            <div className="flex flex-col bg-agl-black min-h-screen">
+              <Header />
+              <Dashboard />
               <Footer />
             </div>
           </>
