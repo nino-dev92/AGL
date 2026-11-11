@@ -1,25 +1,10 @@
 import type { Tournament } from "../../types/types";
+import { formatDate } from "../../utils/formateDate";
 import { useNavigate } from "react-router-dom";
 
 type Props = {
   tournament: Tournament;
 };
-
-const statusBadgeClasses: Record<Tournament["status"], string> = {
-  "registration-open": "bg-yellow-400 text-black",
-  "registration-closed": "bg-red-600 text-white",
-  ongoing: "bg-green-600 text-white",
-  cancelled: "bg-red-600 text-white",
-  upcoming: "bg-yellow-400 text-black",
-  completed: "bg-agl-gray-dark text-white",
-};
-
-const formatTournamentDate = (date: Date) =>
-  new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  }).format(date);
 
 export default function TournamentCard({ tournament }: Props) {
   const navigate = useNavigate();
@@ -38,9 +23,7 @@ export default function TournamentCard({ tournament }: Props) {
         <button className="text-[11px] absolute top-3 left-3 font-extrabold bg-agl-black border border-agl-border-light p-1 rounded">
           {tournament.game.name.toUpperCase()}
         </button>
-        <button
-          className={`text-[11px] absolute top-3 right-3 font-extrabold px-2 py-1 rounded-2xl ${statusBadgeClasses[tournament.status]}`}
-        >
+        <button className="text-[11px] absolute top-3 right-3 font-extrabold bg-red-500 px-2 py-1 rounded-2xl">
           {tournament.status.toUpperCase()}
         </button>
       </section>
@@ -51,12 +34,11 @@ export default function TournamentCard({ tournament }: Props) {
             {tournament.game.name}
           </p>
           <h3 className="line-clamp-2 min-h-14 font-extrabold font-inter text-[19px]">
-            {tournament.name?.toUpperCase()}
+            {tournament.description?.toUpperCase()}
           </h3>
           <p className="mb-3 min-h-12 text-[16px] font-inter font-bold text-agl-gray-dark">
-            {formatTournamentDate(new Date(tournament.startDate))} -{" "}
-            {formatTournamentDate(new Date(tournament.endDate))} .{" "}
-            {tournament.region}
+            {formatDate(new Date(tournament.startDate))} -{" "}
+            {formatDate(new Date(tournament.endDate))} . {tournament.region}
           </p>
         </div>
 
