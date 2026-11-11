@@ -34,6 +34,21 @@ export const updateProfile = asyncHandler(
   },
 );
 
+export const setUserActiveStatus = asyncHandler(
+  async (req: Request, res: Response) => {
+    const user = await profileService.setUserActiveStatus(
+      req.params.id as string,
+      req.body.isActive,
+    );
+
+    res.status(200).json({
+      success: true,
+      message: `User ${user.isActive ? "activated" : "deactivated"} successfully`,
+      data: user,
+    });
+  },
+);
+
 export const uploadAvatar = asyncHandler(
   async (req: Request, res: Response) => {
     const userId = req.user?.userId as string;

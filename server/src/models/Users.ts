@@ -31,6 +31,7 @@ export interface IUser extends Document {
   tourneysWon?: number | undefined;
 
   role: UserRole;
+  isActive: boolean;
 
   refreshToken?: string | undefined;
 
@@ -122,6 +123,11 @@ const userSchema = new Schema<IUser>(
       type: String,
       enum: ["player", "admin", "manager", "organizer"],
       default: "player",
+    },
+
+    isActive: {
+      type: Boolean,
+      default: true,
     },
 
     totalKills: { type: Number, default: 0 },

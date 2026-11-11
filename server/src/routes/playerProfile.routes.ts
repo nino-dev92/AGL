@@ -7,6 +7,7 @@ import validate from "../middleware/validation.middleware";
 import {
   playerProfileValidator,
   playerStatsValidator,
+  userActiveStatusValidator,
 } from "../validators/user.validator";
 import upload from "../middleware/upload.middleware";
 
@@ -67,6 +68,55 @@ router.get(
   verifyJWT,
   authorizeRole(ROLES.PLAYER),
   playerProfileController.getMyProfile,
+);
+
+/**
+ * @swagger
+ * /v1/users/{id}/status:
+ *   patch:
+ *     summary: Activate or deactivate a user
+ *     description: Set a user's active status. Only administrators can change user status.
+ *     tags:
+ *       - Users
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - isActive
+ *             properties:
+ *               isActive:
+ *                 type: boolean
+ *                 example: false
+ *     responses:
+ *       200:
+ *         description: User status updated successfully
+ *       400:
+ *         description: Invalid user ID or request body
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Admin role required
+ *       404:
+ *         description: User not found
+ */
+router.patch(
+  "/:id/status",
+  verifyJWT,
+  authorizeRole(ROLES.ADMIN),
+  validate(userActiveStatusValidator),
+  playerProfileController.setUserActiveStatus,
 );
 
 /**

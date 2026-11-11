@@ -54,6 +54,10 @@ export const playerStatsValidator = Joi.object({
   tourneysWon: Joi.number().integer().min(0).optional(),
 }).min(1);
 
+export const userActiveStatusValidator = Joi.object({
+  isActive: Joi.boolean().required(),
+});
+
 export const forgotPasswordValidatorSchema = Joi.object({
   email: Joi.string().email().required(),
 });

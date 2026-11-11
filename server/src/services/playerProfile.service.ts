@@ -29,6 +29,31 @@ export const getMyProfile = async (userId: string) => {
   };
 };
 
+export const setUserActiveStatus = async (
+  userId: string,
+  isActive: boolean,
+) => {
+  if (!Types.ObjectId.isValid(userId)) {
+    throw new ApiError("Invalid user ID", 400);
+  }
+
+  const user = await Users.findByIdAndUpdate(
+    userId,
+    { $set: { isActive } },
+    { new: true, runValidators: true },
+  );
+
+  if (!user) {
+    throw new ApiError("User not found", 404);
+  }
+
+  return {
+    id: user._id.toString(),
+    userName: user.userName,
+    isActive: user.isActive,
+  };
+};
+
 export const updateProfile = async (userId: string, data: UpdateProfileDTO) => {
   const user = await Users.findById(userId);
 
