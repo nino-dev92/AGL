@@ -6,6 +6,15 @@ type Props = {
   tournament: Tournament;
 };
 
+const statusBackgrounds: Record<Tournament["status"], string> = {
+  upcoming: "bg-agl-yellow text-agl-black",
+  "registration-open": "bg-blue-500 text-white",
+  "registration-closed": "bg-agl-yellow text-agl-black",
+  ongoing: "bg-green-500 text-white",
+  completed: "bg-white text-agl-black",
+  cancelled: "bg-red-500 text-white",
+};
+
 export default function TournamentCard({ tournament }: Props) {
   const navigate = useNavigate();
   const slotsFilledPercent =
@@ -23,7 +32,9 @@ export default function TournamentCard({ tournament }: Props) {
         <button className="text-[11px] absolute top-3 left-3 font-extrabold bg-agl-black border border-agl-border-light p-1 rounded">
           {tournament.game.name.toUpperCase()}
         </button>
-        <button className="text-[11px] absolute top-3 right-3 font-extrabold bg-red-500 px-2 py-1 rounded-2xl">
+        <button
+          className={`text-[11px] absolute top-3 right-3 font-extrabold px-2 py-1 rounded-2xl ${statusBackgrounds[tournament.status]}`}
+        >
           {tournament.status.toUpperCase()}
         </button>
       </section>
@@ -34,7 +45,7 @@ export default function TournamentCard({ tournament }: Props) {
             {tournament.game.name}
           </p>
           <h3 className="line-clamp-2 min-h-14 font-extrabold font-inter text-[19px]">
-            {tournament.description?.toUpperCase()}
+            {tournament.name?.toUpperCase()}
           </h3>
           <p className="mb-3 min-h-12 text-[16px] font-inter font-bold text-agl-gray-dark">
             {formatDate(new Date(tournament.startDate))} -{" "}
