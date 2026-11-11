@@ -29,7 +29,6 @@ export function OrganizerDashboard() {
   const [loading, setLoading] = useState(true);
 
   const loadAll = useCallback(async () => {
-    setLoading(true);
     const [t, m, a, tm, reg] = await Promise.all([
       supabase.from('tournaments').select('*').order('start_date', { ascending: true }),
       supabase.from('matches').select('*').order('scheduled_at', { ascending: true }),
@@ -37,16 +36,16 @@ export function OrganizerDashboard() {
       supabase.from('teams').select('*').order('name'),
       supabase.from('tournament_registrations').select('*, tournament:tournaments(id, name, game, start_date), team:teams(id, name, tag, status)').order('registered_at', { ascending: false }),
     ]);
-    setTournaments(t.data ?? []);
-    setMatches(m.data ?? []);
-    setAnnouncements(a.data ?? []);
-    setTeams(tm.data ?? []);
+    setTournaments((t.data as Tournament[] | null) ?? []);
+    setMatches((m.data as Match[] | null) ?? []);
+    setAnnouncements((a.data as Announcement[] | null) ?? []);
+    setTeams((tm.data as Team[] | null) ?? []);
     setRegistrations((reg.data as TournamentRegistrationWithDetails[]) ?? []);
     setLoading(false);
   }, []);
 
   useEffect(() => {
-    loadAll();
+    void Promise.resolve().then(loadAll);
   }, [loadAll]);
 
   const tabs: { id: Tab; label: string; icon: typeof Trophy }[] = [
@@ -437,12 +436,13 @@ function ResultsPanel({
   teams: Team[];
   onChange: () => void;
 }) {
-  const [selectedTournament, setSelectedTournament] = useState<string>(tournaments[0]?.id ?? '');
+  const [selectedTournamentId, setSelectedTournament] = useState<string>(tournaments[0]?.id ?? '');
+  const selectedTournament = tournaments.some(
+    (tournament) => tournament.id === selectedTournamentId,
+  )
+    ? selectedTournamentId
+    : tournaments[0]?.id ?? '';
   const [showAdd, setShowAdd] = useState(false);
-
-  useEffect(() => {
-    if (!selectedTournament && tournaments.length > 0) setSelectedTournament(tournaments[0].id);
-  }, [tournaments, selectedTournament]);
 
   const tournamentMatches = matches.filter((m) => m.tournament_id === selectedTournament);
   const tournament = tournaments.find((t) => t.id === selectedTournament);

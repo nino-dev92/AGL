@@ -37,7 +37,6 @@ export function ManagerDashboard() {
   const [editing, setEditing] = useState<Player | null>(null);
 
   const loadAll = useCallback(async () => {
-    setLoading(true);
     const [p, a, tm, tnt, reg] = await Promise.all([
       supabase.from('players').select('*').order('kd_ratio', { ascending: false }),
       supabase.from('announcements').select('*').eq('is_active', true).order('created_at', { ascending: false }).limit(6),
@@ -45,16 +44,16 @@ export function ManagerDashboard() {
       supabase.from('tournaments').select('*').order('start_date', { ascending: true }),
       supabase.from('tournament_registrations').select('*, tournament:tournaments(id, name, game, start_date), team:teams(id, name, tag, status)').order('registered_at', { ascending: false }),
     ]);
-    setPlayers(p.data ?? []);
-    setAnnouncements(a.data ?? []);
-    setTeams(tm.data ?? []);
-    setTournaments(tnt.data ?? []);
+    setPlayers((p.data as Player[] | null) ?? []);
+    setAnnouncements((a.data as Announcement[] | null) ?? []);
+    setTeams((tm.data as Team[] | null) ?? []);
+    setTournaments((tnt.data as Tournament[] | null) ?? []);
     setRegistrations((reg.data as TournamentRegistrationWithDetails[]) ?? []);
     setLoading(false);
   }, []);
 
   useEffect(() => {
-    loadAll();
+    void Promise.resolve().then(loadAll);
   }, [loadAll]);
 
   const onlineCount = players.filter((p) => p.status === 'online').length;
@@ -70,12 +69,9 @@ export function ManagerDashboard() {
       list = list.filter((p) => p.username.toLowerCase().includes(q) || p.rank_tier.toLowerCase().includes(q));
     }
     const sorted = [...list].sort((a, b) => {
-      let cmp = 0;
-      if (sortKey === 'username' || sortKey === 'rank_tier') {
-        cmp = a[sortKey].localeCompare(b[sortKey]);
-      } else {
-        cmp = Number(a[sortKey]) - Number(b[sortKey]);
-      }
+      const cmp = sortKey === 'username' || sortKey === 'rank_tier'
+        ? a[sortKey].localeCompare(b[sortKey])
+        : Number(a[sortKey]) - Number(b[sortKey]);
       return sortDir === 'asc' ? cmp : -cmp;
     });
     return sorted;
@@ -292,7 +288,10 @@ function TeamsTab({
   registrations: TournamentRegistrationWithDetails[];
   onChange: () => void;
 }) {
-  const [selected, setSelected] = useState<string | null>(teams[0]?.id ?? null);
+  const [selectedId, setSelected] = useState<string | null>(teams[0]?.id ?? null);
+  const selected = teams.some((team) => team.id === selectedId)
+    ? selectedId
+    : teams[0]?.id ?? null;
   const [members, setMembers] = useState<TeamMembershipWithPlayer[]>([]);
   const [loadingMembers, setLoadingMembers] = useState(false);
   const [showCreate, setShowCreate] = useState(false);
@@ -300,15 +299,16 @@ function TeamsTab({
   const [showRegister, setShowRegister] = useState(false);
 
   useEffect(() => {
-    if (!teams.length) return;
-    if (!selected || !teams.find((t) => t.id === selected)) setSelected(teams[0].id);
-  }, [teams, selected]);
-
-  useEffect(() => {
-    if (!selected) { setMembers([]); return; }
-    setLoadingMembers(true);
-    supabase.from('team_memberships').select('*, player:players(id, username, avatar_url, is_suspended)').eq('team_id', selected)
-      .then(({ data }) => { setMembers((data as TeamMembershipWithPlayer[]) ?? []); setLoadingMembers(false); });
+    if (!selected) return;
+    void Promise.resolve()
+      .then(() => {
+        setLoadingMembers(true);
+        return supabase.from('team_memberships').select('*, player:players(id, username, avatar_url, is_suspended)').eq('team_id', selected);
+      })
+      .then(({ data }) => {
+        setMembers((data as TeamMembershipWithPlayer[]) ?? []);
+        setLoadingMembers(false);
+      });
   }, [selected]);
 
   const team = teams.find((t) => t.id === selected);

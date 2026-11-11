@@ -5,18 +5,11 @@ type Props = {
 };
 
 export default function PlayersTable({ team }: Props) {
-  let players: TeamMember[] = [];
-  const seenIds = new Set();
-
-  team.forEach((member) => {
-    // If we've already seen this member ID, skip it
-    if (seenIds.has(member._id)) {
-      return;
-    }
-
-    // Otherwise, log the ID and save the member
+  const seenIds = new Set<TeamMember["_id"]>();
+  const players = team.filter((member) => {
+    if (seenIds.has(member._id)) return false;
     seenIds.add(member._id);
-    players.push(member);
+    return true;
   });
 
   return (

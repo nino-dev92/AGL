@@ -171,9 +171,9 @@ export type Organizer = {
 };
 
 /* ------------------------------ The database ------------------------------ */
-type Row = Record<string, any>;
+type Row = Record<string, unknown>;
 type DbError = { message: string; code?: string };
-type Result = { data: any; error: DbError | null };
+type Result = { data: Row[] | null; error: DbError | null };
 
 const db: Record<string, Row[]> = {
   players: [],
@@ -242,7 +242,7 @@ function violatesUnique(table: string, row: Row, others: Row[]): DbError | null 
   return null;
 }
 
-const compare = (a: any, b: any) => {
+const compare = (a: unknown, b: unknown) => {
   if (a === b) return 0;
   if (a == null) return 1;
   if (b == null) return -1;

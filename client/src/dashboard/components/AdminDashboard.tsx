@@ -39,7 +39,6 @@ export function AdminDashboard() {
   const [loading, setLoading] = useState(true);
 
   const loadAll = useCallback(async () => {
-    setLoading(true);
     const [p, t, m, tm, d, al, org] = await Promise.all([
       supabase.from('players').select('*').order('created_at', { ascending: false }),
       supabase.from('tournaments').select('*').order('start_date', { ascending: true }),
@@ -49,17 +48,19 @@ export function AdminDashboard() {
       supabase.from('audit_log').select('*').order('created_at', { ascending: false }).limit(200),
       supabase.from('organizers').select('*').order('created_at', { ascending: false }),
     ]);
-    setPlayers(p.data ?? []);
-    setTournaments(t.data ?? []);
-    setMatches(m.data ?? []);
-    setTeams(tm.data ?? []);
-    setDisputes(d.data ?? []);
-    setAuditLog(al.data ?? []);
-    setOrganizers(org.data ?? []);
+    setPlayers((p.data as Player[] | null) ?? []);
+    setTournaments((t.data as Tournament[] | null) ?? []);
+    setMatches((m.data as Match[] | null) ?? []);
+    setTeams((tm.data as Team[] | null) ?? []);
+    setDisputes((d.data as Dispute[] | null) ?? []);
+    setAuditLog((al.data as AuditEntry[] | null) ?? []);
+    setOrganizers((org.data as Organizer[] | null) ?? []);
     setLoading(false);
   }, []);
 
-  useEffect(() => { loadAll(); }, [loadAll]);
+  useEffect(() => {
+    void Promise.resolve().then(loadAll);
+  }, [loadAll]);
 
   const tabs: { id: AdminTab; label: string; icon: typeof ShieldCheck }[] = [
     { id: 'overview', label: 'Overview', icon: ShieldCheck },
@@ -360,16 +361,25 @@ function SuspendModal({ player, onClose, onDone }: { player: Player; onClose: ()
 /* ================ TEAMS ================ */
 
 function TeamsPanel({ teams, players, onChange }: { teams: Team[]; players: Player[]; onChange: () => void }) {
-  const [selected, setSelected] = useState<string | null>(teams[0]?.id ?? null);
+  const [selectedId, setSelected] = useState<string | null>(teams[0]?.id ?? null);
+  const selected = teams.some((team) => team.id === selectedId)
+    ? selectedId
+    : teams[0]?.id ?? null;
   const [members, setMembers] = useState<TeamMembershipWithPlayer[]>([]);
   const [loadingMembers, setLoadingMembers] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
 
   useEffect(() => {
-    if (!selected) { setMembers([]); return; }
-    setLoadingMembers(true);
-    supabase.from('team_memberships').select('*, player:players(id, username, avatar_url, is_suspended)').eq('team_id', selected)
-      .then(({ data }) => { setMembers((data as TeamMembershipWithPlayer[]) ?? []); setLoadingMembers(false); });
+    if (!selected) return;
+    void Promise.resolve()
+      .then(() => {
+        setLoadingMembers(true);
+        return supabase.from('team_memberships').select('*, player:players(id, username, avatar_url, is_suspended)').eq('team_id', selected);
+      })
+      .then(({ data }) => {
+        setMembers((data as TeamMembershipWithPlayer[]) ?? []);
+        setLoadingMembers(false);
+      });
   }, [selected]);
 
   const setTeamStatus = async (team: Team, status: Team['status']) => {
